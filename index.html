@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="./imagenes/logo-icon squater.png" type="image/x-icon">
+    <title>Urbano Propiedades</title>
+    <!-- Material Icon CDN -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vina+Sans&display=swap" rel="stylesheet">
+    <!-- google icons -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <!-- Path of the materialize.min.css file -->
+    <link rel="stylesheet" href="node_modules/materialize-css/dist/css/materialize.css" media="screen,projection">
+    <!-- fontawesome css -->
+    <link rel="stylesheet" href="fontawesome-free-6.4.2-web/css/all.css">
+    <!-- Custom css file path -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="grey lighten-5">
+    <header>
+        <div class="parallax-container">
+            <div class="parallax"><img src="imagenes/_d_ambrosio_07._copy.jpg"></div>
+
+            <div class="parallax-action center">
+                <a href="./" class="brand-logo "><img src="./imagenes/logo horizontal transparente (2).png" alt="i"></a>
+                <form id="filtrarForm" class="row">
+                    <div class="input-field squater col s12 m4 offset-m2">
+                        <select id="filtrarTipo" class="browser-default">
+                            <option value="" selected>Todas las propiedades</option>
+                            <option value="Apartamento">Apartamentos</option>
+                            <option value="Casa">Casas</option>
+                            <option value="Edificio">Edificios</option>
+                            <option value="Terreno">Fincas</option>
+                            <option value="Locale">Locales</option>
+                            <option value="Mejora">Mejoras</option>
+                            <option value="Nave">Naves industriales</option>
+                            <option value="Plaza">Plazas</option>
+                            <option value="Terreno">Terrenos</option>
+                            <option value="Villa">Villas</option>
+                        </select>
+                    </div>
+                    <div class="input-field squater col s12 m4">
+                        <select id="filtrarUbicacion" class="browser-default">
+                            <option value="" selected>Todas las ubicaciones</option>
+                            <option value="Azua">Azua</option>
+                            <option value="Bani">Bani</option>
+                            <option value="Barahona">Barahona</option>
+                            <option value="Bavaro">Bavaro</option>
+                            <option value="bayaguana">bayaguana</option>
+                            <option value="bayahibe">bayahibe</option>
+                            <option value="Boca Chica">Boca chica</option>
+                            <option value="Bonao">Bonao</option>
+                            <option value="Contanza">Contanza</option>
+                            <option value="Cotui">Cotui</option>
+                            <option value="Dajabon">Dajabon</option>
+                            <option value="Duverge">Duverge</option>
+                            <option value="el seibo">el seibo</option>
+                            <option value="Elias PiÃ±a">Elias Piña</option>
+                            <option value="Espaillat">Espaillat</option>
+                            <option value="haina">haina</option>
+                            <option value="Hato Mayor">Hato Mayor</option>
+                            <option value="Higuey">Higuey</option>
+                            <option value="jarabacoa">jarabacoa</option>
+                            <option value="Juan Dolio">Juan Dolio</option>
+                            <option value="La Romana">La Romana</option>
+                            <option value="La Vega">La Vega</option>
+                            <option value="las terrenas">las terrenas</option>
+                            <option value="macao">macao</option>
+                            <option value="Mao">Mao</option>
+                            <option value="miches">miches</option>
+                            <option value="Moca">Moca</option>
+                            <option value="Monte Cristi">Monte Cristi</option>
+                            <option value="Monte Plata">Monte Plata</option>
+                            <option value="Nagua">Nagua</option>
+                            <option value="navarrete">navarrete</option>
+                            <option value="neiba">neiba</option>
+                            <option value="Neyba">Neyba</option>
+                            <option value="ocoa">ocoa</option>
+                            <option value="pedernales">pedernales</option>
+                            <option value="Puerto Plata">Puerto Plata</option>
+                            <option value="Punta Cana">Punta Cana</option>
+                            <option value="sabana de la mar">sabana de la mar</option>
+                            <option value="salcedo">salcedo</option>
+                            <option value="Samana">Samana</option>
+                            <option value="San Cristobal">San Cristobal</option>
+                            <option value="San Francisco de Macoris">San Francisco de Macoris</option>
+                            <option value="San Juan">San Juan</option>
+                            <option value="San Pedro de Macoris">San Pedro de Macoris</option>
+                            <option value="Sanchez">Sanchez</option>
+                            <option value="Santiago">Santiago</option>
+                            <option value="Santo Domingo">Santo Domingo</option>
+                            <option value="sosua">sosua</option>
+                            <option value="tamboril">tamboril</option>
+                            <option value="Tenares">Tenares</option>
+                            <option value="veron">veron</option>
+                            <option value="villa altagracia">villa altagracia</option>
+                            <option value="villa Tapia">villa Tapia</option>
+                            <option value="Yamasa">Yamasa</option>
+                        </select>
+                    </div>
+                    <div class="input-field col s12 center">
+                        <div class="switch">
+                            <label class="white-text">
+                                Alquiler
+                                <input id="filtrarOpcion" type="checkbox">
+                                <span class="lever"></span>
+                                Venta
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div id="nav" class="navbar-fixed">
+            <nav class="blue accent-4">
+                <div class="nav-wrapper">
+                    <div class="container">
+                        <a href="./" class="brand-logo"><img src="./imagenes/logo horizontal transparente.png"
+                                alt="i"></a>
+
+                        <ul class="right hide-on-med-and-down">
+                            <li><a href="#"><i class="fa-brands fa-facebook"></i>&nbsp;facebook</a></li>
+                            <li><a href="#"><i class="fa-brands fa-instagram"></i>&nbsp;Instagram</a></li>
+                            <li><a href="#"><i class="fa-brands fa-whatsapp"></i>&nbsp;Whatsapp</a></li>
+                        </ul>
+                    </div>
+
+                </div>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <div id="leerPropiedades" class="row">
+        </div>
+
+        <div id="paginacionCont" class="row">
+            <a id="paginacion" class="waves-effect waves-light btn col s10 offset-s1 m4 offset-m4">Ver mas</a>
+        </div>
+    </main>
+    <footer class="page-footer blue-grey darken-2">
+        <div class="container">
+            <div class="row">
+                <div class="col s12 m8 l6">
+                    <h5 class="white-text">Contactanos</h5>
+                    <p><a href="tel:+18097121925" class="white-text"><i class="fa-solid fa-phone"></i>&nbsp;(809)
+                            712-1925</a></p>
+                    <p><a href="tel:+18498782033" class="white-text"><i class="fa-solid fa-phone"></i>&nbsp;(849)
+                            878-2033</a></p>
+                    <p><a href="mailto:miurba87@outlook.com" class="white-text"><i
+                                class="fa-solid fa-envelope"></i>&nbsp;miurba87@outlook.com</a></p>
+                </div>
+                <div class="col s12 m4 l6">
+                    <h5 class="white-text">Redes sociales</h5>
+                    <p><a href="#" class="white-text"><i class="fa-brands fa-facebook"></i>&nbsp;facebook</a></p>
+                    <p><a href="#" class="white-text"><i class="fa-brands fa-instagram"></i>&nbsp;Instagram</a></p>
+                    <p><a href="#" class="white-text"><i class="fa-brands fa-whatsapp"></i>&nbsp;Whatsapp</a></p>
+                </div>
+            </div>
+        </div>
+        <div class="footer-copyright">
+            <div class="container">
+                © 2023 Urbano Propiedades SRL
+                <a class="grey-text text-lighten-4 right" href="https://www.aresmultiservices.com/">© Desarrollado por
+                    Ares Multiservices</a>
+            </div>
+        </div>
+    </footer>
+    <!-- Path of the materialize.min.js file -->
+    <script src="node_modules/materialize-css/dist/js/materialize.js"></script>
+    <!-- fontawesome js -->
+    <script src="fontawesome-free-6.4.2-web/js/all.js"></script>
+    <script type="module" src="./main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,125 @@
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+.parallax-action {
+    width: 100%;
+    height: 100%;
+    padding-top: 150px;
+    background: #00000050;
+
+}
+
+.parallax-action .brand-logo img {
+    width: 500px;
+}
+
+.navbar-fixed {
+    top: 0;
+    position: absolute;
+}
+
+nav .brand-logo>img {
+    position: relative;
+    color: #fff;
+    display: inline-block;
+    padding: 0;
+    border-radius: 10px;
+    width: 160px;
+    height: 64px;
+}
+
+.scrollable-container {
+    overflow: hidden;
+    /* Oculta el desbordamiento horizontal */
+}
+
+.scrollable-container .content {
+    width: 100%;
+    /* Ancho del contenido igual al del contenedor */
+    /* max-height: 50%; Altura máxima del contenido igual a la del contenedor */
+    overflow-y: auto;
+    /* Habilita el desplazamiento vertical si es necesario */
+    margin-top: -15px !important;
+}
+
+.sidenav .brand-logo {
+    margin-top: -15px !important;
+    margin-bottom: -15px !important;
+}
+
+.sidenav ul.content {
+    max-height: 50% !important;
+    /* Altura máxima del contenido igual a la del contenedor */
+}
+
+/* .carta{
+    height: 450px;
+} */
+
+.carta img {
+    height: 300px;
+    object-fit: cover;
+    object-position: center center;
+
+}
+
+/* .carta p{
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+
+} */
+
+/* .carta .item-container{
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between;
+    align-items: center;
+} */
+
+/* .items .element{
+    width: 60px;
+    display: flex !important;
+    flex-direction: row !important;
+} */
+
+
+@media only screen and (max-width:580px) {
+    .parallax-action .brand-logo img {
+        width: 250px;
+    }
+
+    nav .brand-logo>img {
+        position: relative;
+        color: #fff;
+        display: inline-block;
+        padding: 0;
+        border-radius: 10px;
+        width: 140px;
+        height: 55px;
+    }
+
+    .carta{
+    height: 290px;
+}
+    .carta img {
+        height: 150px;
+        object-fit: cover;
+        object-position: center center;
+
+    }
+    .carta .card-content {
+        padding-top: 10px;
+        font-size: 10px;
+
+    }
+
+}

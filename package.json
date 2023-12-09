@@ -1,0 +1,16 @@
+{
+  "name": "urbano-propiedades",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Ares multiservices",
+  "license": "ISC",
+  "dependencies": {
+    "@splidejs/splide": "^4.1.4",
+    "materialize-css": "^1.0.0-rc.2"
+  },
+  "description": ""
+}
