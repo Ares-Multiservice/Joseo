@@ -110,7 +110,7 @@
                         <div class="switch">
                             <label class="white-text">
                                 Alquiler
-                                <input id="filtrarOpcion" type="checkbox">
+                                <input id="filtrarOpcion" type="checkbox" value="Alquiler">
                                 <span class="lever"></span>
                                 Venta
                             </label>
@@ -127,23 +127,58 @@
                                 alt="i"></a>
 
                         <ul class="right hide-on-med-and-down">
-                            <li><a href="#"><i class="fa-brands fa-facebook"></i>&nbsp;facebook</a></li>
-                            <li><a href="#"><i class="fa-brands fa-instagram"></i>&nbsp;Instagram</a></li>
-                            <li><a href="#"><i class="fa-brands fa-whatsapp"></i>&nbsp;Whatsapp</a></li>
+                            <li><a href="#"><i class="fa-brands fa-facebook"></i>&nbsp;<span
+                                        class=" hide-on-med-and-down">facebook</span></a></li>
+                            <li><a href="#"><i class="fa-brands fa-instagram"></i>&nbsp;<span
+                                        class=" hide-on-med-and-down">Instagram</span></a></li>
+                            <li><a href="#"><i class="fa-brands fa-whatsapp"></i>&nbsp;<span
+                                        class=" hide-on-med-and-down">Whatsapp</span></a></li>
                         </ul>
                     </div>
-
                 </div>
             </nav>
         </div>
     </header>
     <main>
+
+        <div class="card z-depth-0">
+            <div id="textoIndicador" class="card-content no-pad no-padding">
+                <b><i class="fa-solid fa-filter"></i> Filtro: </b>
+                    <span class="chip">Todas las propiedades</span>
+                    <span class="chip">En alquiler</span>
+                    <span class="chip">En todo el pais</span>
+                    <span class="chip">Ver primero: Precios mas bajos</span>
+            </div>
+        </div>
+
+        <div id="noHayPropiedades" class="hide">
+            <div class="row">
+                <div class="card blue-grey darken-1">
+                    <div class="card-content white-text center">
+                        <i class="fa-solid fa-house-circle-exclamation"></i>
+                        <span class="card-title"><b>Aun no hay propiedades con estos parametros de filtro</b></span>
+                        <p>Intenta con algo diferente</p>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div id="leerPropiedades" class="row">
         </div>
 
-        <div id="paginacionCont" class="row">
-            <a id="paginacion" class="waves-effect waves-light btn col s10 offset-s1 m4 offset-m4">Ver mas</a>
-        </div>
+        <ul class="pagination center">
+            <li><a id="paginacionBack" class="waves-effect waves-light btn">anterior</a></li>
+            <li>
+                <ul id="paginacionCont" class="pagination hide">
+                    <li class="active"><a href="#!">1</a></li>
+                    <li class="waves-effect"><a href="#!">2</a></li>
+                    <li class="waves-effect"><a href="#!">3</a></li>
+                    <li class="waves-effect"><a href="#!">4</a></li>
+                    <li class="waves-effect"><a href="#!">5</a></li>
+                </ul>
+            </li>
+            <li><a id="paginacionNext" class="waves-effect waves-light btn">siguiente</a></li>
+        </ul>
+
     </main>
     <footer class="page-footer blue-grey darken-2">
         <div class="container">

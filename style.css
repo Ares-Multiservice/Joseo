@@ -70,26 +70,20 @@ nav .brand-logo>img {
 
 }
 
-/* .carta p{
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
+.btn {
+    font-size: 12pt !important;
+    text-transform: unset;
+    background: rgb(0, 110, 255);
+    color: white !important;
+}
 
-} */
-
-/* .carta .item-container{
-    display: flex !important;
-    flex-direction: row !important;
-    justify-content: space-between;
-    align-items: center;
-} */
-
-/* .items .element{
-    width: 60px;
-    display: flex !important;
-    flex-direction: row !important;
-} */
+#textoIndicador{
+    margin-top: 5px;
+    margin-left: 20px;
+}
+#textoIndicador b, span {
+    font-size: 14px;
+}
 
 
 @media only screen and (max-width:580px) {
@@ -107,19 +101,26 @@ nav .brand-logo>img {
         height: 55px;
     }
 
-    .carta{
-    height: 290px;
-}
+    .carta {
+        height: 290px;
+    }
+
     .carta img {
         height: 150px;
         object-fit: cover;
         object-position: center center;
 
     }
+
     .carta .card-content {
         padding-top: 10px;
         font-size: 10px;
 
     }
+
+    #textoIndicador b, span {
+        font-size: 10px !important;
+    }
+
 
 }

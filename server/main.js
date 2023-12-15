@@ -120,7 +120,9 @@ export const guardarPropiedad = async () => {
       // Puedes realizar acciones después de que todas las imágenes se hayan subido y almacenado en Firestore
       await Promise.all(uploadPromises);
       loadText.textContent = 'Finalizando...';
-      window.location.reload();
+      // window.location.reload();
+      loadWindous.classList.add('hide')
+      body.classList.remove('fixed');
 
     });
   }
@@ -135,10 +137,10 @@ const filtrarOption = document.getElementById('filtrarOpcion');
 
 // Función para realizar la lectura inicial
 async function leer() {
-// Agregar eventos de cambio a los elementos de filtro
-filtrarTipo.addEventListener('change', filtrar);
-filtrarUbicacion.addEventListener('change', filtrar);
-filtrarOption.addEventListener('change', filtrar);
+  // Agregar eventos de cambio a los elementos de filtro
+  filtrarTipo.addEventListener('change', filtrar);
+  filtrarUbicacion.addEventListener('change', filtrar);
+  filtrarOption.addEventListener('change', filtrar);
   // Limpiar el contenido antes de mostrar los nuevos resultados
   leerPropiedades.innerHTML = '';
 
@@ -196,9 +198,9 @@ filtrarOption.addEventListener('change', filtrar);
     // Verificar si el checkbox está marcado
     if (filtrarOption.checked) {
       q = query(q, where("opcion", "==", "Venta"));
-    }else{
+    } else {
       q = query(q, where("opcion", "==", "Alquiler"));
-      
+
     }
 
     // Realizar la consulta a la base de datos con las condiciones aplicadas
@@ -241,57 +243,57 @@ filtrarOption.addEventListener('change', filtrar);
   }
 }
 
-  async function borrarPropiedad(documentId) {
-    // const docRef = doc(fs, "propiedades", documentId);
-    // const docSnap = await getDoc(docRef);
+async function borrarPropiedad(documentId) {
+  // const docRef = doc(fs, "propiedades", documentId);
+  // const docSnap = await getDoc(docRef);
 
-    const carpetaRef = ref(st, documentId);
+  const carpetaRef = ref(st, documentId);
 
-    // Obtener la lista de objetos en la carpeta
-    const objetosEnCarpeta = await list(carpetaRef);
+  // Obtener la lista de objetos en la carpeta
+  const objetosEnCarpeta = await list(carpetaRef);
 
-    // Borrar cada objeto en la carpeta
-    await Promise.all(objetosEnCarpeta.items.map(async (objeto) => {
-      await deleteObject(objeto);
-    }));
+  // Borrar cada objeto en la carpeta
+  await Promise.all(objetosEnCarpeta.items.map(async (objeto) => {
+    await deleteObject(objeto);
+  }));
 
-    // Borrar la carpeta después de borrar todos los objetos
-    await deleteDoc(doc(fs, "propiedades", documentId))
-    window.location.reload();
-    await deleteObject(carpetaRef);
+  // Borrar la carpeta después de borrar todos los objetos
+  await deleteDoc(doc(fs, "propiedades", documentId))
+  window.location.reload();
+  await deleteObject(carpetaRef);
 
+}
+
+async function editarPropiedad(documentId) {
+
+  const docRef = doc(fs, "propiedades", documentId);
+  const docSnap = await getDoc(docRef);
+
+  document.getElementById('editar-precio').value = docSnap.data().precio;
+  document.getElementById('editar-descripcion').value = docSnap.data().descripcion;
+  document.getElementById('editar-opcion').value = docSnap.data().opcion;
+  const checkBox = document.getElementById('editar-opcion');
+  if (checkBox.value === 'Alquiler') {
+    checkBox.checked = true;
+  } else {
+    checkBox.checked = false;
   }
 
-  async function editarPropiedad(documentId) {
+}
 
-    const docRef = doc(fs, "propiedades", documentId);
-    const docSnap = await getDoc(docRef);
-
-    document.getElementById('editar-precio').value = docSnap.data().precio;
-    document.getElementById('editar-descripcion').value = docSnap.data().descripcion;
-    document.getElementById('editar-opcion').value = docSnap.data().opcion;
-    const checkBox = document.getElementById('editar-opcion');
-    if (checkBox.value === 'Alquiler') {
-      checkBox.checked = true;
-    } else {
-      checkBox.checked = false;
-    }
-
+// funciones de botones de las cartas
+leerPropiedades.addEventListener('click', (event) => {
+  const e = event.target;
+  const cardStacked = e.parentElement.parentElement;
+  const nombre = cardStacked.querySelector('b').textContent;
+  const documentId = nombre.replace(/\s/g, '');
+  if (e.classList.contains('red')) {
+    document.querySelector('#deletePropiedad').addEventListener('click', () => {
+      borrarPropiedad(documentId)
+    });
   }
 
-  // funciones de botones de las cartas
-  leerPropiedades.addEventListener('click', (event) => {
-    const e = event.target;
-    const cardStacked = e.parentElement.parentElement;
-    const nombre = cardStacked.querySelector('b').textContent;
-    const documentId = nombre.replace(/\s/g, '');
-    if (e.classList.contains('red')) {
-      document.querySelector('#deletePropiedad').addEventListener('click', () => {
-        borrarPropiedad(documentId)
-      });
-    }
-
-    if (e.classList.contains('orange')) {
-      editarPropiedad(documentId)
-    }
-  })
+  if (e.classList.contains('orange')) {
+    editarPropiedad(documentId)
+  }
+})

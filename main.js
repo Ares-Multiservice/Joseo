@@ -1,10 +1,9 @@
-
 M.AutoInit();
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, getDocs, query, where, orderBy, startAfter, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, getDocs, query, where, orderBy, limit, startAfter, startAt, endBefore, endAt } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// Your web app's Firebase configuration
+// Configuración de Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyAVeuOW5_frVCb1DLd-AUBe4MsGaMURHtI",
   authDomain: "urbanopropiedades-d3933.firebaseapp.com",
@@ -13,10 +12,8 @@ const firebaseConfig = {
   messagingSenderId: "326435470836",
   appId: "1:326435470836:web:e0524962b868c45ce34da1"
 };
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const fs = getFirestore(app);
-
 
 function onScroll() {
   var nav = document.querySelector('#nav');
@@ -41,117 +38,110 @@ window.addEventListener('DOMContentLoaded', () => {
   onScroll()
 });
 
-// Obtener referencias a los elementos del DOM
 const leerPropiedades = document.querySelector('#leerPropiedades');
-const paginacionBtn = document.querySelector('#paginacion');
+const noHayPropiedades = document.querySelector('#noHayPropiedades');
+const textoIndicador = document.querySelectorAll('#textoIndicador span');
+const paginacionBackBtn = document.querySelector('#paginacionBack');
+const paginacionNextBtn = document.querySelector('#paginacionNext');
 const filtrarTipo = document.getElementById('filtrarTipo');
 const filtrarUbicacion = document.getElementById('filtrarUbicacion');
 const filtrarOption = document.getElementById('filtrarOpcion');
 
-// Variables para la paginación
-let lastDocument = null;
-const pageSize = 16;
+const cantidadPorPagina = 2;
+var ultimoDoc = null;
+var primerDoc = null;
 
-// Función para realizar la lectura inicial
-async function leer() {
-  // Agregar eventos de cambio a los elementos de filtro
-  filtrarTipo.addEventListener('change', filtrar);
-  filtrarUbicacion.addEventListener('change', filtrar);
-  filtrarOption.addEventListener('change', filtrar);
 
-  // Limpiar el contenido antes de mostrar los nuevos resultados
-  leerPropiedades.innerHTML = '';
-
-  // Realizar la consulta a la base de datos
-  const querys = query(collection(fs, "propiedades"), orderBy("nombre"), limit(pageSize));
-  await mostrarResultados(querys);
-
-  // Agregar evento de clic al botón de paginación
-  paginacionBtn.addEventListener('click', cargarMas);
-}
-
-// Función para mostrar los resultados
-async function mostrarResultados(q) {
-  const querySnapshot = await getDocs(q);
-
-  querySnapshot.forEach(async (doc) => {
-    const { tipo, ubicacion, imagenes, nombre, precio } = doc.data();
-    const documentId = nombre.replace(/\s/g, '');
-
-    const tarjetaHTML = `<div class="col s6 m4 l3">
-      <a href="./propiedad/search?${documentId}">
-        <div class="card carta">
+const leerDocumentos = (document) => {
+  const documentos = document.docs;
+  if (documentos.length > 0) {
+    leerPropiedades.innerHTML = '';
+    documentos.forEach((docSnap) => {
+      const { tipo, ubicacion, imagenes, nombre, precio } = docSnap.data();
+      const documentId = nombre.replace(/\s/g, '');
+      const tarjetaHTML = `
+    <div class="col s6 m4 l3">
+     <a href="./propiedad/search?${documentId}">
+      <div class="card carta">
           <div class="card-image">
-            <img src="${imagenes.url3}" alt="i" />
+              <img src="${imagenes.url3}" alt="i" />
           </div>
           <div class="card-content blue-grey-text text-darken-3">
-            <b class="card-title truncate">${nombre}</b>
-            <p><b>Tipo:</b> <span>${tipo}</span></p>
-            <p><b>Ubicacion:</b> <span>${ubicacion}</span></p>
-            <b>$ <span>${precio}</span>.00 DOP</b>
+              <b class="card-title truncate">${nombre}</b>
+              <p><b>Tipo:</b> <span>${tipo}</span></p>
+              <p><b>Ubicacion:</b> <span>${ubicacion}</span></p>
+              <b>$${precio}DOP</b>
           </div>
-        </div>
-      </a>
-    </div>`;
-
-    leerPropiedades.innerHTML += tarjetaHTML;
-  });
-
-  // Actualizar el último documento recuperado
-  const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
-  lastDocument = lastVisible;
+      </div>
+    </a>
+      </div>`;
+      leerPropiedades.innerHTML += tarjetaHTML;
+    });
+    console.log(documentos);
+    ultimoDoc = documentos[documentos.length - 1] || null;
+    primerDoc = documentos[0] || null;
+    // paginacionBackBtn.classList.add('disabled');
+    // paginacionNextBtn.classList.remove('disabled');
+    noHayPropiedades.classList.add('hide');
+  }
 }
 
-// Función para realizar la filtración
-async function filtrar() {
-  // Limpiar el contenido antes de mostrar los nuevos resultados
-  leerPropiedades.innerHTML = '';
 
-  // Construir la consulta base
-  let q = query(collection(fs, "propiedades"), orderBy("nombre"), limit(pageSize));
-
+async function paginarDocumentos(orden, paginar) {
+  const querySnapshot = query(collection(fs, "propiedades"));
+  let queryInicial = query(querySnapshot, paginar, limit(cantidadPorPagina));
   // Agregar condiciones según las opciones seleccionadas
   if (filtrarTipo.value) {
-    q = query(q, where("tipo", "==", filtrarTipo.value));
+    queryInicial = query(queryInicial, where("tipo", "==", filtrarTipo.value));
+    textoIndicador[0].textContent = `${filtrarTipo.value}s`;
+  }else{
+    textoIndicador[0].textContent = `Todas las propiedades`;
   }
 
   if (filtrarUbicacion.value) {
-    q = query(q, where("ubicacion", "==", filtrarUbicacion.value));
+    queryInicial = query(queryInicial, where("ubicacion", "==", filtrarUbicacion.value));
+    textoIndicador[2].textContent = `En ${filtrarUbicacion.value}`;
+  }else{
+    textoIndicador[2].textContent = `En todo el pais`;
   }
 
   // Verificar si el checkbox está marcado
   if (filtrarOption.checked) {
-    q = query(q, where("opcion", "==", "Venta"));
+    queryInicial = query(queryInicial, where("opcion", "==", "Venta"));
+    textoIndicador[1].textContent = `En venta`
+
   } else {
-    q = query(q, where("opcion", "==", "Alquiler"));
+    queryInicial = query(queryInicial, where("opcion", "==", "Alquiler"));
+    textoIndicador[1].textContent = `En alquiler`
   }
 
-  // Realizar la consulta a la base de datos con las condiciones aplicadas
-  await mostrarResultados(q);
+  const documentos = await getDocs(queryInicial);
+  leerDocumentos(documentos);
+
+};
+
+
+// Cargar inicialmente los primeros documentos
+paginarDocumentos('asc', null);
+
+
+async function paginaSiguiente() {
+  const siguiente = startAfter(ultimoDoc) || null;
+  const orden = 'asc';
+  paginarDocumentos(orden, siguiente);
+  paginacionBackBtn.classList.remove('disabled');
+
+};
+
+async function paginaAnterior() {
+  const anterior = endBefore(primerDoc) || null;
+  const orden = 'asc';
+  paginarDocumentos(orden, anterior);
 }
 
- async function cargarMas() {
-   // Construir la consulta para obtener la siguiente página
-   let q = query(collection(fs, "propiedades"), orderBy("nombre"), startAfter(lastDocument), limit(pageSize));
- 
-   // Aplicar condiciones de filtración si es necesario
-   if (filtrarTipo.value) {
-     q = query(q, where("tipo", "==", filtrarTipo.value));
-   }
- 
-   if (filtrarUbicacion.value) {
-     q = query(q, where("ubicacion", "==", filtrarUbicacion.value));
-   }
- 
-   if (filtrarOption.checked) {
-     q = query(q, where("opcion", "==", "Venta"));
-   } else {
-     q = query(q, where("opcion", "==", "Alquiler"));
-   }
- 
-   // Mostrar los resultados de la siguiente página
-   await mostrarResultados(q);
- }
-
-// Llamar a la función de lectura inicial
-leer();
+// Agregar eventos de cambio a los elementos de filtro
+filtrarTipo.addEventListener('change', () => paginarDocumentos(null));
+filtrarUbicacion.addEventListener('change', () => paginarDocumentos(null));
+filtrarOption.addEventListener('change', () => paginarDocumentos(null));
+paginacionNextBtn.addEventListener('click', paginaSiguiente)
+paginacionBackBtn.addEventListener('click', paginaAnterior)
