@@ -20,7 +20,7 @@ function onScroll() {
   var main = document.querySelector('main');
   var scrollPosition = window.scrollY;
 
-  if (scrollPosition > 450) {
+  if (scrollPosition > 250) {
     nav.classList.add('navbar-fixed');
     main.style.paddingTop = `50px`;
 
@@ -43,7 +43,7 @@ const noHayPropiedades = document.querySelector('#noHayPropiedades');
 const textoIndicador = document.querySelectorAll('#textoIndicador span');
 const paginacionBackBtn = document.querySelector('#paginacionBack');
 const paginacionNextBtn = document.querySelector('#paginacionNext');
-const filtrarTipo = document.getElementById('filtrarTipo');
+const filtrarHabilidad = document.getElementById('filtrarHabilidad');
 const filtrarUbicacion = document.getElementById('filtrarUbicacion');
 const filtrarOption = document.getElementById('filtrarOpcion');
 
@@ -60,7 +60,7 @@ const leerDocumentos = (document) => {
       const { tipo, ubicacion, imagenes, nombre, precio } = docSnap.data();
       const documentId = nombre.replace(/\s/g, '');
       const tarjetaHTML = `
-    <div class="col s6 m4 l3">
+    <div class="col s6 m4 l3 xl2">
      <a href="./propiedad/search?${documentId}">
       <div class="card carta">
           <div class="card-image">
@@ -77,12 +77,14 @@ const leerDocumentos = (document) => {
       </div>`;
       leerPropiedades.innerHTML += tarjetaHTML;
     });
-    console.log(documentos);
     ultimoDoc = documentos[documentos.length - 1] || null;
     primerDoc = documentos[0] || null;
     // paginacionBackBtn.classList.add('disabled');
     // paginacionNextBtn.classList.remove('disabled');
     noHayPropiedades.classList.add('hide');
+  }else{
+    noHayPropiedades.classList.remove('hide');
+    
   }
 }
 
@@ -91,11 +93,11 @@ async function paginarDocumentos(orden, paginar) {
   const querySnapshot = query(collection(fs, "propiedades"));
   let queryInicial = query(querySnapshot, paginar, limit(cantidadPorPagina));
   // Agregar condiciones según las opciones seleccionadas
-  if (filtrarTipo.value) {
-    queryInicial = query(queryInicial, where("tipo", "==", filtrarTipo.value));
-    textoIndicador[0].textContent = `${filtrarTipo.value}s`;
+  if (filtrarHabilidad.value) {
+    queryInicial = query(queryInicial, where("tipo", "==", filtrarHabilidad.value));
+    textoIndicador[0].textContent = `${filtrarHabilidad.value}s`;
   }else{
-    textoIndicador[0].textContent = `Todas las propiedades`;
+    textoIndicador[0].textContent = `Todas las habilidades`;
   }
 
   if (filtrarUbicacion.value) {
@@ -140,7 +142,7 @@ async function paginaAnterior() {
 }
 
 // Agregar eventos de cambio a los elementos de filtro
-filtrarTipo.addEventListener('change', () => paginarDocumentos(null));
+filtrarHabilidad.addEventListener('change', () => paginarDocumentos(null));
 filtrarUbicacion.addEventListener('change', () => paginarDocumentos(null));
 filtrarOption.addEventListener('change', () => paginarDocumentos(null));
 paginacionNextBtn.addEventListener('click', paginaSiguiente)

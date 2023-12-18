@@ -24,15 +24,17 @@ main {
     top: 0;
     position: absolute;
 }
-
+nav .brand-logo{
+    margin-top: 10px;
+}
 nav .brand-logo>img {
     position: relative;
     color: #fff;
     display: inline-block;
     padding: 0;
     border-radius: 10px;
-    width: 160px;
-    height: 64px;
+    width: 176px;
+    height: 44px;
 }
 
 .scrollable-container {
@@ -59,12 +61,16 @@ nav .brand-logo>img {
     /* Altura máxima del contenido igual a la del contenedor */
 }
 
+
+.dropdown-content{
+    width: 150px !important;
+}
 /* .carta{
     height: 450px;
 } */
 
 .carta img {
-    height: 300px;
+    height: 200px;
     object-fit: cover;
     object-position: center center;
 
@@ -124,3 +130,5 @@ nav .brand-logo>img {
 
 
 }
+
+
