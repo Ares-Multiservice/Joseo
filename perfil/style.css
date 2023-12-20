@@ -8,6 +8,30 @@ main {
     flex: 1 0 auto;
 }
 
+
+.load-container {
+    position: absolute;
+    top: 0;
+    z-index: 3000;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+body.fixed-container {
+    display: block;
+    overflow: hidden;
+
+}
+
+.parallax-container {
+    height: 300px;
+}
+
 .parallax-action {
     width: 100%;
     height: 100%;
@@ -43,7 +67,7 @@ nav .brand-logo>img {
 
 /* contenedor de notificaciones */
 
-#notifications.on{
+#notifications {
     height: 200px;
 }
 
@@ -59,16 +83,6 @@ nav .brand-logo>img {
     overflow-y: auto;
     /* Habilita el desplazamiento vertical si es necesario */
     margin-top: -15px !important;
-}
-
-.sidenav .brand-logo {
-    margin-top: -15px !important;
-    margin-bottom: -15px !important;
-}
-
-.sidenav ul.content {
-    max-height: 50% !important;
-    /* Altura máxima del contenido igual a la del contenedor */
 }
 
 /* menu de usuario */
@@ -87,6 +101,7 @@ nav .brand-logo>img {
 #userMenu.dropdown-content b {
     font-size: 14pt;
 }
+
 #userMenu.dropdown-content div {
     margin-left: 5px;
 }
@@ -120,13 +135,6 @@ nav .brand-logo>img {
 }
 
 
-.carta img {
-    height: 200px;
-    object-fit: cover;
-    object-position: center center;
-
-}
-
 .pagination-btn {
     font-size: 12pt !important;
     text-transform: unset;
@@ -134,35 +142,80 @@ nav .brand-logo>img {
     color: white !important;
 }
 
-
-#textoIndicador {
-    margin-top: 5px;
-    margin-left: 20px;
+/* cartas desplegables */
+.contenedordecartas {
+    margin-top: -100px;
+    margin-bottom: -100px;
 }
 
-#textoIndicador b,
-span {
-    font-size: 14px;
+.contenedordecartas .card {
+    height: 300px;
+    padding: 0;
 }
 
-.load-container {
-    position: absolute;
-    top: 0;
-    z-index: 3000;
-    width: 100%;
+.contenedordecartas .card:hover {
+    z-index: 3;
+
+}
+
+.contenedordecartas .card img {
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(5px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    width: 100%;
+    position: absolute;
+    object-fit: cover;
+
 }
 
-body.fixed-container {
-    display: block;
+.contenedordecartas .card .card-content {
+    position: absolute;
+    z-index: -1;
+    height: 300px;
+    width: 115%;
+    padding: 10px;
+    margin-left: 0;
+    transition: margin-left 0.5s ease;
+    visibility: hidden;
+
+}
+
+.contenedordecartas .card:hover>.card-content {
+    margin-left: 100%;
+    visibility: visible;
+
+}
+
+.contenedordecartas .card .card-content .card-title {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
     overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 2;
+    /* Número de líneas a mostrar */
 
 }
+
+.contenedordecartas .card .card-content p {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 9;
+    /* Número de líneas a mostrar */
+
+}
+
+.view-data h3 {
+    margin-bottom: -10px;
+}
+
+.view-data span {
+    margin-left: 10px;
+}
+
+.starts-container{
+    margin-top: 35px;
+}
+
 
 @media only screen and (max-width:580px) {
 
@@ -185,9 +238,6 @@ body.fixed-container {
         height: 25px;
     }
 
-    .parallax-container{
-        height: 200px ;
-    }
     .parallax-action .brand-logo img {
         width: 150px;
     }

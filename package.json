@@ -1,5 +1,5 @@
 {
-  "name": "urbano-propiedades",
+  "name": "joseo",
   "version": "1.0.0",
   "main": "main.js",
   "scripts": {
@@ -12,5 +12,13 @@
     "@splidejs/splide": "^4.1.4",
     "materialize-css": "^1.0.0-rc.2"
   },
-  "description": ""
+  "description": "Pagina web de joseo de empleos online",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ares-Multiservice/Joseo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Ares-Multiservice/Joseo/issues"
+  },
+  "homepage": "https://github.com/Ares-Multiservice/Joseo#readme"
 }

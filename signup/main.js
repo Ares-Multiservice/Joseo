@@ -1,53 +1,55 @@
 M.AutoInit();
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-
-// Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyAVeuOW5_frVCb1DLd-AUBe4MsGaMURHtI",
-    authDomain: "urbanopropiedades-d3933.firebaseapp.com",
-    projectId: "urbanopropiedades-d3933",
-    storageBucket: "urbanopropiedades-d3933.appspot.com",
-    messagingSenderId: "326435470836",
-    appId: "1:326435470836:web:e0524962b868c45ce34da1"
-  };
+  apiKey: "AIzaSyBYNAIFu_BU4oav3I3PCFncS9QU5GvkiAU",
+  authDomain: "joseodo-72673.firebaseapp.com",
+  projectId: "joseodo-72673",
+  storageBucket: "joseodo-72673.appspot.com",
+  messagingSenderId: "1098719522238",
+  appId: "1:1098719522238:web:1cd896005f5264ad40ddef"
+};
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+firebase.initializeApp(firebaseConfig);
 
-document.getElementById('entrar').addEventListener('click', () => {
-    var email = document.getElementById('email').value;
-    var password = document.getElementById('password').value;
-    signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            const user = userCredential.user;
-            window.location.href = '../server/'
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            alert('Correo electronico o contraseña invalidos')
-        });
-})
+var ui = new firebaseui.auth.AuthUI(firebase.auth());
+var uiConfig = {
+  callbacks: {
+    signInSuccessWithAuthResult: function (authResult, redirectUrl) {
+      // User successfully signed in.
+      // Return type determines whether we continue the redirect automatically
+      // or whether we leave that to developer to handle.
+      return true;
+    },
+    uiShown: function () {
+      // The widget is rendered.
+      // Hide the loader.
+      // document.getElementById('loader').style.display = 'none';
+    }
+  },
+  // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
+  signInFlow: 'popup',
+  signInSuccessUrl: '../perfil/',
+  signInOptions: [
+    // Leave the lines as is for the providers you want to offer your users.
+    firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+    firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+    {
+      provider: 'apple.com',
+      providerName: 'Apple',
+      buttonColor: '#2F2F2F',
+      customParameters: {
+        prompt: 'consent'
+      }
+    }, {
+      provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
+      fullLabel: 'Acceder con correo y contraseña',
+    },
+    firebase.auth.PhoneAuthProvider.PROVIDER_ID
+  ],
+  // Terms of service url.
+  tosUrl: '<your-tos-url>',
+  // Privacy policy url.
+  privacyPolicyUrl: '<your-privacy-policy-url>'
+};
 
-document.getElementById('sendrecoverpass').addEventListener('click', () => {
-    var email = document.getElementById('recoverpass').value;
-    sendPasswordResetEmail(auth, email)
-        .then(() => {
-            alert('Correo de restablecimiento de contraseña enviado');
-            var elems = document.querySelectorAll('.modal');
-            var instances = M.Modal.init(elems, {
-                "dismissible": false
-            });
-            instances.close();
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            alert('Correo electronico invalido')
-            console.log(errorCode);
-        });
-})
-
+ui.start('#signContainer', uiConfig);

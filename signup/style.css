@@ -1,69 +1,38 @@
 body {
-    display: flex;
+    display: block;
+    overflow: hidden;
     min-height: 100vh;
-    flex-direction: column;
 }
 
 main {
     flex: 1 0 auto;
-    padding: 16px 0;
+    padding: 20px;
 }
 
-nav .brand-logo>img {
-    position: relative;
-    color: #fff;
-    display: inline-block;
-    padding: 0;
-    border-radius: 10px;
-    width: 160px;
-    height: 64px;
+.sign-content{
+   height: 90vh;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
 }
 
-.scrollable-container {
-    overflow: hidden;
-    /* Oculta el desbordamiento horizontal */
+.backBtncont{
+    width: 95%;
+    margin-top: 20px;
 }
 
-.scrollable-container .content {
-    width: 100%;
-    /* Ancho del contenido igual al del contenedor */
-    /* max-height: 50%; Altura máxima del contenido igual a la del contenedor */
-    overflow-y: auto;
-    /* Habilita el desplazamiento vertical si es necesario */
-    margin-top: -15px !important;
+.btn{
+    font-size: 16pt;
 }
-
-.sidenav .brand-logo{
-    margin-top: -15px !important;
-    margin-bottom: -15px !important;
-}
-
-.sidenav ul.content {
-    max-height: 50% !important;
-    /* Altura máxima del contenido igual a la del contenedor */
-}
-
-/* carrusel */
-/* carrusel */
-/* carrusel */
-
-.splide__slide img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-
 
 @media only screen and  (max-width:580px){
-    nav .brand-logo>img {
-        position: relative;
-        color: #fff;
-        display: inline-block;
+    main {
+        flex: 0 auto;
         padding: 0;
-        border-radius: 10px;
-        width: 140px;
-        height: 55px;
     }
     
+.sign-content{
+   height: 100vh;
+}
 }
