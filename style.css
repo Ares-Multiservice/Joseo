@@ -4,6 +4,25 @@ body {
     flex-direction: column;
 }
 
+body.fixed-container {
+    display: block;
+    overflow: hidden;
+
+}
+
+.load-container {
+    position: absolute;
+    top: 0;
+    z-index: 3000;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 main {
     flex: 1 0 auto;
 }
@@ -43,7 +62,7 @@ nav .brand-logo>img {
 
 /* contenedor de notificaciones */
 
-#notifications.on{
+#notifications.on {
     height: 200px;
 }
 
@@ -87,6 +106,7 @@ nav .brand-logo>img {
 #userMenu.dropdown-content b {
     font-size: 14pt;
 }
+
 #userMenu.dropdown-content div {
     margin-left: 5px;
 }
@@ -119,13 +139,38 @@ nav .brand-logo>img {
     width: 25px;
 }
 
+/* cartas de usuarios */
 
+/* .carta{
+    box-shadow: none;
+    border-bottom: 1px solid grey;
+
+} */
 .carta img {
     height: 200px;
     object-fit: cover;
     object-position: center center;
 
 }
+
+.carta .card-content {
+    padding: 10px;
+
+}
+
+
+.carta b {
+    font-size: 12pt;
+
+}
+
+.carta .badge {
+    color: white;
+    position: absolute;
+    margin-top: -40px;
+    right: 20px;
+}
+
 
 .pagination-btn {
     font-size: 12pt !important;
@@ -145,24 +190,7 @@ span {
     font-size: 14px;
 }
 
-.load-container {
-    position: absolute;
-    top: 0;
-    z-index: 3000;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(5px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
 
-body.fixed-container {
-    display: block;
-    overflow: hidden;
-
-}
 
 @media only screen and (max-width:580px) {
 
@@ -185,9 +213,10 @@ body.fixed-container {
         height: 25px;
     }
 
-    .parallax-container{
-        height: 200px ;
+    .parallax-container {
+        height: 200px;
     }
+
     .parallax-action .brand-logo img {
         width: 150px;
     }

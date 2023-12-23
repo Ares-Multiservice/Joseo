@@ -212,11 +212,17 @@ nav .brand-logo>img {
     margin-left: 10px;
 }
 
-.starts-container{
-    margin-top: 35px;
+.action-container{
+    margin-top: 30px;
 }
 
+.space-around{
+    justify-content: space-around;
+}
 
+.space-between{
+    justify-content: space-between;
+}
 @media only screen and (max-width:580px) {
 
     .nav-wrapper {
@@ -259,10 +265,9 @@ nav .brand-logo>img {
 
     }
 
-    #textoIndicador b,
-    span {
-        font-size: 10px !important;
-    }
-
+    
+.action-container{
+    margin-top: 0;
+}
 
 }

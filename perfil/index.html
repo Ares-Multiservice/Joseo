@@ -52,19 +52,16 @@
 
                     <!-- Menu -->
                     <ul id='userMenu' class='dropdown-content'>
-                        <li class="valign-wrapper">
-                            <img id="dropDown-image" class="circle" src="../imagenes/user-icon black.png" alt="user">
+                        <li class="valign-wrapper space-around">
+                            <img id="dropDown-image" class="circle" src="/imagenes/user-icon black.png" alt="user">
                             <div>&nbsp;<b id="dropDown-name">Lorem</b><br>
-                                <a href="../perfil/" class="waves-effect waves-light btn btn-small">editar perfil</a>
+                                <!-- <a href="./perfil/" class="waves-effect waves-light btn btn-small">ver perfil</a> -->
                             </div>
+                            <a href="#cerrarSesionModal" class="modal-trigger"><i class="fa-solid fa-power-off"></i></a>
                         </li>
-                        <li class="divider"></li>
-                        <li><a href="#!">two</a></li>
-                        <li><a href="#cerrarSesionModal" class="modal-trigger"><i class="fa-solid fa-power-off"></i>
-                                cerrar sesion</a></li>
                     </ul>
 
-                    <!-- Modad cerrar sesion -->
+                    <!-- Modal cerrar sesion -->
                     <div id="cerrarSesionModal" class="modal">
                         <div class="modal-content center black-text">
                             <h4>cerrar sesion</h4>
@@ -184,23 +181,23 @@
             <!-- Informacion -->
             <div class="col s12 m8 offset-m2">
                 <div class="row">
-                    <div class="valign-wrapper col m8">
+                    <div class="valign-wrapper col s12 m8">
                         <img id="userPhoto" class="circle" width="100px" src="../imagenes/logo bg rojo.png"
                             alt="user">&nbsp;
                         <div class="view-data">
                             <h3><b id="userName">JHON DOW</b></h3>
                             <p class="valign-wrapper ">
-                                <span id="userProfecion">Profecion</span>
-                                <span id="userUbicacion">Ubicacion</span>
+                                <b id="userProfecion" class="teal-text">Profecion</b>&nbsp;&nbsp;
+                                <b id="userUbicacion" class="teal-text">Ubicacion</b>
                             </p>
                         </div>
                     </div>
-                    <div class="col m4 center starts-container">
-                        <a href=""><i class="material-icons">star_border</i></a>
-                        <a href=""><i class="material-icons">star_border</i></a>
-                        <a href=""><i class="material-icons">star_border</i></a>
-                        <a href=""><i class="material-icons">star_border</i></a>
-                        <a href=""><i class="material-icons">star_border</i></a>
+                    <div class="col s12 m4 center action-container center">
+                        <span id="userUbicacion" class="chip">Recomendaciones 0</span><br>
+                        <button class="waves-effect waves-light btn blue-grey accent-4 hoverable"><i
+                                class="fa-solid fa-comment"></i></button>
+                        <button id="recomendarBtn" class="waves-effect waves-light btn orange accent-4 hoverable"><i
+                                class="fa-regular fa-pen-to-square"></i> editar perfil</button>
                     </div>
                     <div class="col s12">
                         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet ullam fuga laboriosam
@@ -210,6 +207,7 @@
                 </div>
 
             </div>
+            <!-- todos los proyectos -->
             <div class="col s12 m8 offset-m2">
                 <div id="leerproyectos" class="row">
 

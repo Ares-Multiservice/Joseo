@@ -44,9 +44,9 @@ function observador() {
         navImage.src = photoURL;
       }
       if (displayName) {
-        // var nombre = `${displayName}`;
-        // nombre = nombre.split(' ');
-        dropDownName.textContent = displayName;
+        var nombre = `${displayName}`;
+        nombre = nombre.split(' ');
+        dropDownName.textContent = nombre[0];
       }
       entrarBtn.classList.add('hide');
       userMenuTrigger.classList.remove('hide');

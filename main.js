@@ -36,24 +36,27 @@ const leerDocumentos = (document) => {
   if (documentos.length > 0) {
     leerUsuarios.innerHTML = '';
     documentos.forEach((docSnap) => {
-      const { tipo, ubicacion, imagenes, nombre, precio } = docSnap.data();
+      const { nombre, emailVerified, photoURL, recoms, profecion, provincia } = docSnap.data();
       const documentId = nombre.replace(/\s/g, '');
-      const tarjetaHTML = `
+      if (emailVerified) {
+        const tarjetaHTML = `
       <div class="col s6 m4 l3 xl2">
           <a href="./v/${documentId}">
            <div class="card carta">
                <div class="card-image">
-                   <img src="./imagenes/casa-de-madera-de-diseno-moderno21-645b7b443ba61.jpg" alt="i" />
+                   <img src="${photoURL}" alt="i" />
+                   <span class="badge blue accent-4"><i class="fa-regular fa-thumbs-up"></i> ${recoms}</span>
                </div>
                <div class="card-content blue-grey-text text-darken-3">
-                   <b class="card-title truncate">${nombre}</b>
-                   <p><span>${tipo}</span></p>
-                   <p><span>${ubicacion}</span></p>
+                   <b class="truncate">${nombre}</b>
+                   <p><span>${profecion}</span></p>
+                   <p><span>${provincia}</span></p>
                </div>
            </div>
          </a>
            </div>`;
-      leerUsuarios.innerHTML += tarjetaHTML;
+        leerUsuarios.innerHTML += tarjetaHTML;
+      }
     });
     ultimoDoc = documentos[documentos.length - 1] || null;
     primerDoc = documentos[0] || null;
@@ -67,19 +70,26 @@ const leerDocumentos = (document) => {
 }
 
 async function paginarDocumentos(orden, paginar) {
-  const querySnapshot = query(collection(fs, "propiedades"));
+  const querySnapshot = query(collection(fs, "usuarios"));
   let queryInicial = query(querySnapshot, paginar, limit(cantidadPorPagina));
   // Agregar condiciones según las opciones seleccionadas
-  if (filtrarHabilidad.value) {
-    queryInicial = query(queryInicial, where("tipo", "==", filtrarHabilidad.value));
-    textoIndicador[0].textContent = `${filtrarHabilidad.value}s`;
+  var habilidades = filtrarHabilidad.value;
+  if (habilidades) {
+    const queryString = habilidades.toString();
+    const filtro = decodeURIComponent(queryString);
+    queryInicial = query(queryInicial, where("profecion", "==", filtro));
+    textoIndicador[0].textContent = `${filtro}`;
   } else {
     textoIndicador[0].textContent = `Todas las profeciones`;
   }
 
-  if (filtrarUbicacion.value) {
-    queryInicial = query(queryInicial, where("ubicacion", "==", filtrarUbicacion.value));
-    textoIndicador[1].textContent = `En ${filtrarUbicacion.value}`;
+  var ubicacion = filtrarUbicacion.value;
+  if (ubicacion) {
+    const remplazo = ubicacion.replace('Ã±', 'ñ')
+    const queryString = remplazo.toString();
+    const filtro = decodeURIComponent(queryString);
+    queryInicial = query(queryInicial, where("provincia", "==", filtro));
+    textoIndicador[1].textContent = `En ${filtro}`;
   } else {
     textoIndicador[1].textContent = `En todo el pais`;
   }
@@ -116,13 +126,13 @@ paginacionBackBtn.addEventListener('click', paginaAnterior)
 
 
 function observador() {
-const body = document.querySelector('body');
-const loader = document.querySelector('.load-container');
-const entrarBtn = document.getElementById('entrarBtn');
-const userMenuTrigger = document.getElementById('userMenu-trigger');
-const dropDownName = document.getElementById('dropDown-name');
-const dropDownImage = document.getElementById('dropDown-image');
-const navImage = document.getElementById('nav-image');
+  const body = document.querySelector('body');
+  const loader = document.querySelector('.load-container');
+  const entrarBtn = document.getElementById('entrarBtn');
+  const userMenuTrigger = document.getElementById('userMenu-trigger');
+  const dropDownName = document.getElementById('dropDown-name');
+  const dropDownImage = document.getElementById('dropDown-image');
+  const navImage = document.getElementById('nav-image');
   onAuthStateChanged(auth, (user) => {
     if (user) {
       // User is signed in.
@@ -138,7 +148,7 @@ const navImage = document.getElementById('nav-image');
         navImage.src = photoURL;
       }
       if (displayName) {
-        
+
         var nombre = `${displayName}`;
         nombre = nombre.split(' ');
         dropDownName.textContent = nombre[0];

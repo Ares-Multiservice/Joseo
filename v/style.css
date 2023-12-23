@@ -8,6 +8,13 @@ main {
     flex: 1 0 auto;
 }
 
+.space-around{
+    justify-content: space-around;
+}
+
+.space-between{
+    justify-content: space-between;
+}
 
 .load-container {
     position: absolute;
@@ -25,18 +32,6 @@ main {
 body.fixed-container {
     display: block;
     overflow: hidden;
-
-}
-
-.parallax-container {
-    height: 300px;
-}
-
-.parallax-action {
-    width: 100%;
-    height: 100%;
-    padding-top: 44px;
-    background: #00000050;
 
 }
 
@@ -64,6 +59,10 @@ nav .brand-logo>img {
     width: 136px;
     height: 34px;
 }
+/* portada */
+.parallax-container {
+    height: 300px;
+}
 
 /* contenedor de notificaciones */
 
@@ -71,6 +70,7 @@ nav .brand-logo>img {
     height: 200px;
 }
 
+/* hacer un elemento scrolable */
 .scrollable-container {
     overflow: hidden;
     /* Oculta el desbordamiento horizontal */
@@ -85,7 +85,7 @@ nav .brand-logo>img {
     margin-top: -15px !important;
 }
 
-/* menu de usuario */
+/*cerrar sesion menu*/
 .dropdown-trigger img {
     width: 34px;
 }
@@ -120,7 +120,6 @@ nav .brand-logo>img {
 
 /* notificaciones */
 
-
 #notifications.dropdown-content {
     width: 300px !important;
     height: 500px;
@@ -133,7 +132,6 @@ nav .brand-logo>img {
 #notifications.dropdown-content img {
     width: 25px;
 }
-
 
 .pagination-btn {
     font-size: 12pt !important;
@@ -204,19 +202,40 @@ nav .brand-logo>img {
 
 }
 
-.view-data h3 {
-    margin-bottom: -10px;
+.username {
+    font-size: 28pt;
 }
 
-.view-data span {
-    margin-left: 10px;
+.view-data{
+    padding: 20px 0 !important;
 }
 
-.starts-container{
-    margin-top: 30px;
+.action-container {
+   display: flex;
+   flex-direction: column;
+   justify-content: right;
+   justify-items: right;
+    padding: 20px !important;
+}
+
+.action-container button {
+   margin: 6px 0;
 }
 
 
+/* carta de imagenes */
+
+/* .card-proyect{
+    height: 300px;
+
+} */
+
+.card-proyect img{
+    height: 200px;
+    object-fit: cover;
+    object-position: center center;
+
+}
 @media only screen and (max-width:580px) {
 
     .nav-wrapper {
@@ -238,10 +257,6 @@ nav .brand-logo>img {
         height: 25px;
     }
 
-    .parallax-action .brand-logo img {
-        width: 150px;
-    }
-
     .carta {
         height: 290px;
     }
@@ -259,10 +274,18 @@ nav .brand-logo>img {
 
     }
 
-    #textoIndicador b,
-    span {
-        font-size: 10px !important;
+    .userPhotoContainer {
+        margin-top: -60px;
+    }
+    .action-container {
+        text-align: center;
     }
 
-
+    .view-data{
+        text-align: center;
+    }
+    .card-proyect img{
+        height: 150px;
+    
+    }
 }

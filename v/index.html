@@ -35,36 +35,35 @@
                 <div class="nav-wrapper">
                     <a href="../" class="brand-logo left"><img src="../imagenes/logo horizontal teal.jpg" alt="i"></a>
 
-                    <ul class="right">
-                        <li><a href="#"><i class="fa-regular fa-message"></i></a></li>
-                        <li><a class="dropdown-trigger" data-target="notifications"><i
-                                    class="fa-regular fa-bell"></i></a></li>
+                    <ul id="navUserInactive" class="right hide">
                         <li>
-                            <a id="entrarBtn" class='hide' href="../signup/"><i
-                                    class="fa-regular fa-circle-user"></i>Entrar</a>
+                            <a id="entrarBtn" href="../signup/"><i
+                                    class="fa-regular fa-circle-user">&nbsp;</i>Entrar</a>
+                        </li>
+                    </ul>
+                    <ul id="navUserActive" class="right hide">
+                        <li><a href="#"><i class="fa-regular fa-message"></i></a></li>
+                        <li><a class="dropdown-trigger" data-target="notifications">
+                                <i class="fa-regular fa-bell"></i></a>
+                        </li>
+                        <li>
                             <!-- Dropdown Trigger -->
-                            <a id="userMenu-trigger" class='dropdown-trigger valign-wrapper hide'
-                                data-target='userMenu'>
-                                <img id="nav-image" class="circle" src="../imagenes/user-icon.png" alt="">&nbsp;
+                            <a data-target='userMenu' class='dropdown-trigger valign-wrapper'>
+                                <img id="nav-image" class="circle" src="../imagenes/user-icon.png" alt="user">&nbsp;
                                 <i class="material-icons">arrow_drop_down</i></a>
                         </li>
                     </ul>
-
                     <!-- Menu -->
                     <ul id='userMenu' class='dropdown-content'>
                         <li class="valign-wrapper">
-                            <img id="dropDown-image" class="circle" src="../imagenes/user-icon black.png" alt="user">
-                            <div>&nbsp;<b id="dropDown-name">Lorem</b><br>
-                                <a href="../perfil/" class="waves-effect waves-light btn btn-small">editar perfil</a>
+                            <img id="dropDown-image" class="circle" src="/imagenes/user-icon black.png" alt="user">
+                            <div>&nbsp;<b id="dropDown-name"></b><br>
+                                <a href="..//perfil/" class="waves-effect waves-light btn btn-small">ver perfil</a>
                             </div>
+                            <a href="#cerrarSesionModal" class="modal-trigger"><i class="fa-solid fa-power-off"></i></a>
                         </li>
-                        <li class="divider"></li>
-                        <li><a href="#!">two</a></li>
-                        <li><a href="#cerrarSesionModal" class="modal-trigger"><i class="fa-solid fa-power-off"></i>
-                                cerrar sesion</a></li>
                     </ul>
-
-                    <!-- Modad cerrar sesion -->
+                    <!-- Modal cerrar sesion -->
                     <div id="cerrarSesionModal" class="modal">
                         <div class="modal-content center black-text">
                             <h4>cerrar sesion</h4>
@@ -113,31 +112,8 @@
         <div id="leerPerfiles" class="row">
             <!-- contenedor de cartas -->
             <div class="col s12 m8 offset-m2">
-                <div class="row contenedordecartas">
-                    <div class="hide-on-small-and-down col m3">
-                        <a href="">
-                            <div data-target="card-content01" class="card display-card">
-                                <img src="../imagenes/casas-ecológicas_apertura-hogar-sostenibilidad-certificado-.jpg"
-                                    alt="image">
-                                <div id="card-content01" class="card-content blue-grey darken-1 white-text">
-                                    <span class="card-title">proyecto santo lino</span>
-                                    <p>I am a very simple card. I am good at containing small bits of information. I am
-                                        convenient because I require little markup to use effectively.</p>
-                                    <div class="card-action center">
-                                        <div class="valign-wrapper">
-                                            <i class="material-icons">star_border</i>
-                                            <i class="material-icons">star_border</i>
-                                            <i class="material-icons">star_border</i>
-                                            <i class="material-icons">star_border</i>
-                                            <i class="material-icons">star_border</i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-
-                    <div class="hide-on-small-and-down col m3">
+                <div class="row contenedordecartas hide-on-small-and-down">
+                    <div class="col m3">
                         <a href="">
                             <div data-target="card-content01" class="card display-card">
                                 <img src="../imagenes/casas-ecológicas_apertura-hogar-sostenibilidad-certificado-.jpg"
@@ -151,7 +127,7 @@
                         </a>
                     </div>
 
-                    <div class="hide-on-small-and-down col m3">
+                    <div class="col m3">
                         <a href="">
                             <div data-target="card-content01" class="card display-card">
                                 <img src="../imagenes/casas-ecológicas_apertura-hogar-sostenibilidad-certificado-.jpg"
@@ -165,7 +141,21 @@
                         </a>
                     </div>
 
-                    <div class="hide-on-small-and-down col m3">
+                    <div class="col m3">
+                        <a href="">
+                            <div data-target="card-content01" class="card display-card">
+                                <img src="../imagenes/casas-ecológicas_apertura-hogar-sostenibilidad-certificado-.jpg"
+                                    alt="image">
+                                <div id="card-content01" class="card-content blue-grey darken-1 white-text">
+                                    <span class="card-title">proyecto santo lino</span>
+                                    <p>I am a very simple card. I am good at containing small bits of information. I am
+                                        convenient because I require little markup to use effectively.</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="col m3">
                         <a href="">
                             <div data-target="card-content01" class="card display-card">
                                 <img src="../imagenes/casas-ecológicas_apertura-hogar-sostenibilidad-certificado-.jpg"
@@ -184,48 +174,49 @@
             <!-- Informacion -->
             <div class="col s12 m8 offset-m2">
                 <div class="row">
-                    <div class="valign-wrapper col s12 m8">
-                        <img id="userPhoto" class="circle" width="100px" src="../imagenes/logo bg rojo.png"
-                            alt="user">&nbsp;
-                        <div class="view-data">
-                            <h3><b id="userName">JHON DOW</b></h3>
-                            <p class="valign-wrapper ">
-                                <span id="userUbicacion" class="chip">Recomendaciones 0</span>
-                            </p>
-                        </div>
+                    <div class="col s12 m2 center userPhotoContainer">
+                        <img id="userPhoto" class="circle" width="100px" src="../imagenes/logo bg rojo.png" alt="user">
                     </div>
-                    <div class="col s12 m4 center starts-container center">
-                        <button id="recomendarBtn" class="waves-effect waves-light btn blue-grey accent-4 hoverable"><i class="fa-solid fa-comment"></i></button>
-                        <button id="recomendarBtn" class="waves-effect waves-light btn red accent-4 hoverable"><i class="fa-regular fa-thumbs-up"></i> recomendar</button>
+                    <div class="view-data col s12 m6">
+                        <span><b id="userName" class="username">Cargando...</b></span><br>
+                        <span id="userProfecionUbicacion" class="teal-text"></span><br>
+                        <b class="grey-text text-darken-2 recoms "><span id="recoms"></span>&nbsp;recomendaciones</b>
                     </div>
-                    <div class="col s12">
-                        <b id="userProfecion" class="teal-text">Profecion</b>
-                        <b id="userUbicacion" class="teal-text">Ubicacion</b>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet ullam fuga laboriosam
-                            laborum facilis, iusto mollitia earum qui, incidunt voluptas expedita non suscipit quidem?
-                            Illum error inventore eius minus beatae?</p>
+                    <div class="col s12 m4 action-container">
+                        <button id="sendMessageBtn"
+                            class="waves-effect waves-light btn btn-small blue-grey accent-4 hoverable disabled">
+                            <i class="fa-solid fa-comment"></i> enviar mensaje
+                        </button>
+                        <button id="recomendarBtn"
+                            class="waves-effect waves-light btn btn-small accent-4 hoverable disabled">
+                            <i class="fa-regular fa-thumbs-up"></i> <span>recomendar</span>
+                        </button>
+                    </div>
+                    <div class="col s12 m6 offset-m3">
+                        <p id="userDescripcion" class="center"></p>
                     </div>
                 </div>
 
             </div>
             <!-- todos los proyectos -->
             <div class="col s12 m8 offset-m2">
-                <div id="leerproyectos" class="row">
+                <div class="divider"></div>
+                <h5 class="grey-text"><i class="fa-brands fa-creative-commons-nd"></i> <b>servicios</b></h5>
+                <div id="leerproyectos" class="row no-padding">
 
                     <div class="col s6 m4 l3">
-                        <a href="../proyectos/">
-                            <div class="card">
-                                <div class="card-image">
-                                    <img src="../imagenes/casa-de-madera-de-diseno-moderno21-645b7b443ba61.jpg"
-                                        alt="image" />
-                                    <span class="card-title">proyecto</span>
+                            <div class="card card-proyect">
+                                <div class="card-image waves-effect waves-block waves-light">
+                                    <img src="../imagenes/casa-de-madera-de-diseno-moderno21-645b7b443ba61.jpg" alt="img" class="activator"/>
                                 </div>
                                 <div class="card-content">
-                                    <p>I am a very simple card. I am good at containing small bits of information.I am
-                                        convenient because I require little markup to use effectively.</p>
+                                    <b class="activator valign-wrapper space-around">Card Title <i class="material-icons">more_vert</i></b>
+                                </div>
+                                <div class="card-reveal">
+                                    <span class="card-title activator">Card Title<i class="material-icons right">close</i></span>
+                                    <p>Here is some more information about this product that is only revealed once clicked on.</p>
                                 </div>
                             </div>
-                        </a>
                     </div>
 
                 </div>
