@@ -77,6 +77,7 @@ async function leer(user) {
   const nombreCont = document.querySelector('#userName');
   const profecionUbicacionCont = document.querySelector('#userProfecionUbicacion');
   const descripcionCont = document.querySelector('#userDescripcion');
+  const descripcionContainer = document.querySelector('#descripcionContainer');
   const recomendaciones = document.querySelector('#recoms');
 
   // var hrefValue = window.location.href;
@@ -89,22 +90,31 @@ async function leer(user) {
   // leer los datos
   if (documentId !== '' || documentId !== 'index.html') {
     var filtrar = query(collection(fs, "usuarios"));
-    const docRef = query(filtrar, where("id", "==", documentId));
+    // const query = await getDocs(filtrar);
+    var docRef = query(filtrar, where("id", "==", documentId));
     const docSnap = await getDocs(docRef);
     docSnap.forEach((docSnap) => {
       const userId = docSnap.id;
-      const { photoURL, nombre, profecion, provincia, descripcion} = docSnap.data();
+      const { photoURL, nombre, profecion, provincia, presentacion} = docSnap.data();
       fotoDeperfil.src = photoURL;
       nombreCont.textContent = nombre;
       profecionUbicacionCont.textContent = `${profecion} en ${provincia}`;
-      descripcionCont.textContent = descripcion;
+
+
+      if (presentacion !== '') {
+      descripcionCont.textContent = presentacion;
+      descripcionContainer.classList.remove('hide')
+      } else {
+      descripcionContainer.classList.add('hide')
+        
+      }
 
       if(user) {
       onSnapshot(doc(fs, "usuarios", user.uid), (doc) => {
-        const recomName = doc.data().misRecomendados[nombre];
+        const userRecom = doc.data().misRecomendados[userId];
         recomendarBtn.classList.remove('disabled');
        const span = recomendarBtn.querySelector('span');
-        if (recomName) {
+        if (userRecom) {
           recomendarBtn.classList.add('green');
           recomendarBtn.classList.remove('red');
           span.textContent = 'recomendado';
@@ -145,9 +155,9 @@ async function recomedar(userId, photoURL, nombre, profecion, provincia) {
 
 
   const misRecomendados = docSnap.data().misRecomendados;
-  const recomName = docSnap2.data().misRecomendados[nombre];
+  const userRecom = docSnap2.data().misRecomendados[userId];
   if (misRecomendados) {
-    if (recomName) {
+    if (userRecom) {
       restarRecoms()
     } else {
       sumarRecoms()
@@ -162,7 +172,7 @@ async function recomedar(userId, photoURL, nombre, profecion, provincia) {
     // agregando recomendacion al usuario que se esta recomendando
     setDoc(docRef1, {
       meRecomendaron: {
-        [username]: {
+        [userId]: {
           photoURL: userFoto,
           nombre: username
         }
@@ -172,7 +182,7 @@ async function recomedar(userId, photoURL, nombre, profecion, provincia) {
 
     setDoc(docRef2, {
       misRecomendados: {
-        [nombre]: {
+        [userId]: {
           photoURL: photoURL,
           nombre: nombre,
           profecion: profecion,
@@ -189,14 +199,14 @@ async function recomedar(userId, photoURL, nombre, profecion, provincia) {
     // removiendo recomendacion al usuario que se esta des-recomendando
     setDoc(docRef1, {
       meRecomendaron: {
-        [username]: deleteField()
+        [userId]: deleteField()
       },
       recoms: increment(-1)
     }, { merge: true });
 
     setDoc(docRef2, {
       misRecomendados: {
-        [nombre]: deleteField()
+        [userId]: deleteField()
       }
     }, { merge: true });
   }

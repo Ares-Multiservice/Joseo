@@ -8,6 +8,17 @@ main {
     flex: 1 0 auto;
 }
 
+.space-around {
+    justify-content: space-around;
+}
+
+.space-between {
+    justify-content: space-between;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
 
 .load-container {
     position: absolute;
@@ -28,25 +39,30 @@ body.fixed-container {
 
 }
 
-.parallax-container {
-    height: 300px;
-}
-
-.parallax-action {
-    width: 100%;
-    height: 100%;
-    padding-top: 44px;
-    background: #00000050;
-
-}
-
 .navbar-fixed {
     top: 0;
     position: absolute;
 }
 
+.nav-wrapper-message {
+    height: 20px;
+    text-align: center;
+    font-size: 10pt;
+    line-height: 20px;
+}
+
+.nav-wrapper-message b {
+    margin: -10px 0 !important;
+}
+
 .nav-wrapper {
     padding: 0 20px;
+}
+
+.nav-wrapper .btn-small {
+    width: 25px;
+    height: 25px;
+    line-height: 25px;
 }
 
 nav .brand-logo {
@@ -65,12 +81,67 @@ nav .brand-logo>img {
     height: 34px;
 }
 
+/* portada */
+.parallax-container {
+    height: 300px;
+    background: rgb(0, 0, 0);
+    background: linear-gradient(180deg, rgba(0, 0, 0, 1) 10%, rgba(255, 255, 255, 1) 90%);
+}
+
 /* contenedor de notificaciones */
 
 #notifications {
     height: 200px;
 }
 
+/* notificaciones */
+
+#notifications.dropdown-content {
+    width: 300px !important;
+    height: 500px;
+}
+
+#notifications.dropdown-content li.active {
+    background: rgba(0, 119, 255, 0.4) !important;
+}
+
+#notifications.dropdown-content li a {
+    padding: 3px 10px;
+    pointer-events: none;
+}
+
+#notifications.dropdown-content img {
+    width: 40px;
+    pointer-events: none;
+}
+
+#notifications h5 {
+    margin-top: 200px;
+    pointer-events: none;
+}
+
+#notifications.dropdown-content span {
+    font-size: 10pt;
+    max-height: 3em;
+    /* Ajusta según tu necesidad */
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    /* Número de líneas que deseas mostrar */
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    color: #000;
+    pointer-events: none;
+    /* Agrega puntos suspensivos al final si el texto se trunca */
+
+}
+
+#notifications.dropdown-content b {
+    font-size: 8pt;
+    pointer-events: none;
+}
+
+/* hacer un elemento scrolable */
 .scrollable-container {
     overflow: hidden;
     /* Oculta el desbordamiento horizontal */
@@ -85,7 +156,7 @@ nav .brand-logo>img {
     margin-top: -15px !important;
 }
 
-/* menu de usuario */
+/*cerrar sesion menu*/
 .dropdown-trigger img {
     width: 34px;
 }
@@ -118,22 +189,6 @@ nav .brand-logo>img {
     margin-left: 0;
 }
 
-/* notificaciones */
-
-
-#notifications.dropdown-content {
-    width: 300px !important;
-    height: 500px;
-}
-
-#notifications h5 {
-    margin-top: 200px;
-}
-
-#notifications.dropdown-content img {
-    width: 25px;
-}
-
 
 .pagination-btn {
     font-size: 12pt !important;
@@ -143,14 +198,18 @@ nav .brand-logo>img {
 }
 
 /* cartas desplegables */
+/* cartas desplegables */
+/* cartas desplegables */
+
 .contenedordecartas {
-    margin-top: -100px;
-    margin-bottom: -100px;
+    margin-top: -230px;
+    /* margin-bottom: -100px; */
 }
 
 .contenedordecartas .card {
     height: 300px;
     padding: 0;
+    margin: 0;
 }
 
 .contenedordecartas .card:hover {
@@ -166,7 +225,8 @@ nav .brand-logo>img {
 
 }
 
-.contenedordecartas .card .card-content {
+/* desplegar carta a la derecha */
+.contenedordecartas .card .card-content.display-right {
     position: absolute;
     z-index: -1;
     height: 300px;
@@ -178,11 +238,32 @@ nav .brand-logo>img {
 
 }
 
-.contenedordecartas .card:hover>.card-content {
+.contenedordecartas .card:hover>.card-content.display-right {
     margin-left: 100%;
     visibility: visible;
 
 }
+
+/* desplegar carta a la izquierda */
+.contenedordecartas .card .card-content.display-left {
+    position: absolute;
+    z-index: -1;
+    height: 300px;
+    width: 115%;
+    padding: 10px;
+    margin-left: 0;
+    transition: margin-left 0.5s ease;
+    visibility: hidden;
+
+}
+
+.contenedordecartas .card:hover>.card-content.display-left {
+    margin-left: 100%;
+    visibility: visible;
+
+}
+
+/* texto de las cartas */
 
 .contenedordecartas .card .card-content .card-title {
     display: -webkit-box;
@@ -204,25 +285,113 @@ nav .brand-logo>img {
 
 }
 
-.view-data h3 {
-    margin-bottom: -10px;
+/* informacion del usuario */
+
+.userPhotoContainer img {
+    width: 100px;
 }
 
-.view-data span {
-    margin-left: 10px;
+.userPhotoContainer .btn {
+    position: absolute;
+    margin-top: 70px;
+    margin-left: -30px;
 }
 
-.action-container{
-    margin-top: 30px;
+.username {
+    font-size: 28pt;
 }
 
-.space-around{
-    justify-content: space-around;
+
+.view-data {
+    padding: 20px 0 !important;
 }
 
-.space-between{
-    justify-content: space-between;
+/* .view-data a:hover{
+    color: rgb(0, 142, 224) !important;
+} */
+
+.action-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: right;
+    justify-items: right;
+    padding: 20px !important;
 }
+
+.action-container a {
+    margin: 6px 0;
+}
+
+.description-container {
+    border: 1px solid rgb(13, 13, 26);
+    border-radius: 3px;
+}
+
+/* carta de imagenes */
+
+/* .card-proyect{
+    height: 300px;
+
+} */
+
+.card-proyect img {
+    height: 200px;
+    object-fit: cover;
+    object-position: center center;
+
+}
+
+.modal {
+    max-height: 100% !important;
+}
+
+.modal .modal-content {
+    padding: 0;
+}
+
+.modal .card {
+    border-radius: 10px !important;
+    background: rgba(255, 255, 255, 0.9);
+    margin: 0 !important;
+}
+
+.modal .card .card-action div {
+    border-radius: 10px !important;
+    padding: 20px;
+    margin: 6px 0;
+}
+
+.modal form {
+    border-radius: 6px;
+    margin-top: 6px;
+    color: #000;
+    padding: 6px 12px 6px 6px;
+}
+
+.modal form input {
+    border: 2px solid white !important;
+    border-radius: 6px !important;
+    color: #000;
+    background-color: #fff !important;
+    padding-left: 4px !important;
+}
+
+.modal form select[multiple] {
+    height: 200px;
+}
+
+.modal form input::placeholder {
+    color: #727272;
+}
+
+.element.style {
+    position: absolute !important;
+}
+
+.map-container {
+    height: 200px;
+}
+
 @media only screen and (max-width:580px) {
 
     .nav-wrapper {
@@ -231,7 +400,7 @@ nav .brand-logo>img {
 
     nav .brand-logo {
         height: 44px;
-        margin-top: 3px;
+        margin-top: 5px;
     }
 
     nav .brand-logo>img {
@@ -240,34 +409,56 @@ nav .brand-logo>img {
         display: inline-block;
         padding: 0;
         border-radius: 10px;
-        width: 100px;
-        height: 25px;
+        width: 120px;
+        height: 30px;
     }
 
-    .parallax-action .brand-logo img {
-        width: 150px;
+    /* cartas desplegables */
+    .contenedordecartas {
+        margin-top: -250px;
+        margin-bottom: -100px;
+        display: flex;
+        flex-direction: row;
     }
 
-    .carta {
-        height: 290px;
+    .contenedordecartas .col {
+        padding: 0;
     }
 
-    .carta img {
+    /* desplegar carta a la izquierda */
+    .contenedordecartas .card .card-content.display-left {
+        position: absolute;
+        z-index: -1;
+        height: 300px;
+        width: 100%;
+        padding: 10px;
+        margin-left: -15%;
+        transition: margin-left 0.5s ease;
+        visibility: hidden;
+
+    }
+
+    .contenedordecartas .card:hover>.card-content.display-left {
+        margin-left: -115%;
+        width: 115%;
+        visibility: visible;
+
+    }
+
+    .userPhotoContainer {
+        position: relative;
+    }
+
+    .action-container {
+        text-align: center;
+    }
+
+    .view-data {
+        text-align: center;
+    }
+
+    .card-proyect img {
         height: 150px;
-        object-fit: cover;
-        object-position: center center;
 
     }
-
-    .carta .card-content {
-        padding-top: 10px;
-        font-size: 10px;
-
-    }
-
-    
-.action-container{
-    margin-top: 0;
-}
-
 }

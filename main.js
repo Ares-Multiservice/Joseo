@@ -36,12 +36,12 @@ const leerDocumentos = (document) => {
   if (documentos.length > 0) {
     leerUsuarios.innerHTML = '';
     documentos.forEach((docSnap) => {
-      const { nombre, emailVerified, photoURL, recoms, profecion, provincia } = docSnap.data();
-      const documentId = nombre.replace(/\s/g, '');
+      const { id, nombre, emailVerified, photoURL, recoms, profecion, provincia } = docSnap.data();
+      // const documentId = nombre.replace(/\s/g, '');
       if (emailVerified) {
         const tarjetaHTML = `
       <div class="col s6 m4 l3 xl2">
-          <a href="./v/${documentId}">
+          <a href="./v/${id}">
            <div class="card carta">
                <div class="card-image">
                    <img src="${photoURL}" alt="i" />

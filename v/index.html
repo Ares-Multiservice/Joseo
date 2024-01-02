@@ -58,7 +58,7 @@
                         <li class="valign-wrapper">
                             <img id="dropDown-image" class="circle" src="/imagenes/user-icon black.png" alt="user">
                             <div>&nbsp;<b id="dropDown-name"></b><br>
-                                <a href="..//perfil/" class="waves-effect waves-light btn btn-small">ver perfil</a>
+                                <a href="../perfil/" class="waves-effect waves-light btn btn-small">ver perfil</a>
                             </div>
                             <a href="#cerrarSesionModal" class="modal-trigger"><i class="fa-solid fa-power-off"></i></a>
                         </li>
@@ -111,65 +111,64 @@
 
         <div id="leerPerfiles" class="row">
             <!-- contenedor de cartas -->
-            <div class="col s12 m8 offset-m2">
-                <div class="row contenedordecartas hide-on-small-and-down">
-                    <div class="col m3">
-                        <a href="">
-                            <div data-target="card-content01" class="card display-card">
-                                <img src="../imagenes/casas-ecológicas_apertura-hogar-sostenibilidad-certificado-.jpg"
-                                    alt="image">
-                                <div id="card-content01" class="card-content blue-grey darken-1 white-text">
-                                    <span class="card-title">proyecto santo lino</span>
-                                    <p>I am a very simple card. I am good at containing small bits of information. I am
-                                        convenient because I require little markup to use effectively.</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
+            <div class="row col s12 m8 offset-m2 contenedordecartas">
 
-                    <div class="col m3">
-                        <a href="">
-                            <div data-target="card-content01" class="card display-card">
-                                <img src="../imagenes/casas-ecológicas_apertura-hogar-sostenibilidad-certificado-.jpg"
-                                    alt="image">
-                                <div id="card-content01" class="card-content blue-grey darken-1 white-text">
-                                    <span class="card-title">proyecto santo lino</span>
-                                    <p>I am a very simple card. I am good at containing small bits of information. I am
-                                        convenient because I require little markup to use effectively.</p>
-                                </div>
+                <div class="col s3 m3">
+                    <a href="">
+                        <div class="card ">
+                            <img src="../imagenes/casas-ecológicas_apertura-hogar-sostenibilidad-certificado-.jpg"
+                                alt="image">
+                            <div class="card-content display-right blue-grey darken-1 white-text">
+                                <span class="card-title">proyecto santo lino</span>
+                                <p>I am a very simple card. I am good at containing small bits of information. I am
+                                    convenient because I require little markup to use effectively.</p>
                             </div>
-                        </a>
-                    </div>
-
-                    <div class="col m3">
-                        <a href="">
-                            <div data-target="card-content01" class="card display-card">
-                                <img src="../imagenes/casas-ecológicas_apertura-hogar-sostenibilidad-certificado-.jpg"
-                                    alt="image">
-                                <div id="card-content01" class="card-content blue-grey darken-1 white-text">
-                                    <span class="card-title">proyecto santo lino</span>
-                                    <p>I am a very simple card. I am good at containing small bits of information. I am
-                                        convenient because I require little markup to use effectively.</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-
-                    <div class="col m3">
-                        <a href="">
-                            <div data-target="card-content01" class="card display-card">
-                                <img src="../imagenes/casas-ecológicas_apertura-hogar-sostenibilidad-certificado-.jpg"
-                                    alt="image">
-                                <div id="card-content01" class="card-content blue-grey darken-1 white-text">
-                                    <span class="card-title">proyecto santo lino</span>
-                                    <p>I am a very simple card. I am good at containing small bits of information. I am
-                                        convenient because I require little markup to use effectively.</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-
+                        </div>
+                    </a>
                 </div>
+
+                <div class="col s3 m3">
+                    <a href="">
+                        <div class="card ">
+                            <img src="../imagenes/casas-ecológicas_apertura-hogar-sostenibilidad-certificado-.jpg"
+                                alt="image">
+                            <div class="card-content display-right blue-grey darken-1 white-text">
+                                <span class="card-title">proyecto santo lino</span>
+                                <p>I am a very simple card. I am good at containing small bits of information. I am
+                                    convenient because I require little markup to use effectively.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col s3 m3">
+                    <a href="">
+                        <div class="card ">
+                            <img src="../imagenes/casas-ecológicas_apertura-hogar-sostenibilidad-certificado-.jpg"
+                                alt="image">
+                            <div class="card-content display-right blue-grey darken-1 white-text">
+                                <span class="card-title">proyecto santo lino</span>
+                                <p>I am a very simple card. I am good at containing small bits of information. I am
+                                    convenient because I require little markup to use effectively.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col s3 m3">
+                    <a href="">
+                        <div class="card ">
+                            <img src="../imagenes/casas-ecológicas_apertura-hogar-sostenibilidad-certificado-.jpg"
+                                alt="image">
+                            <div class="card-content display-left blue-grey darken-1 white-text">
+                                <span class="card-title">proyecto santo lino</span>
+                                <p>I am a very simple card. I am good at containing small bits of information. I am
+                                    convenient because I require little markup to use effectively.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
             </div>
             <!-- Informacion -->
             <div class="col s12 m8 offset-m2">
@@ -179,8 +178,8 @@
                     </div>
                     <div class="view-data col s12 m6">
                         <span><b id="userName" class="username">Cargando...</b></span><br>
-                        <span id="userProfecionUbicacion" class="teal-text"></span><br>
-                        <b class="grey-text text-darken-2 recoms "><span id="recoms"></span>&nbsp;recomendaciones</b>
+                        <b id="userProfecionUbicacion" class="teal-text"></b>&nbsp;&nbsp;
+                        <b class="grey-text text-darken-2 chip"><span id="recoms"></span>&nbsp;recomendaciones</b>
                     </div>
                     <div class="col s12 m4 action-container">
                         <button id="sendMessageBtn"
@@ -192,31 +191,40 @@
                             <i class="fa-regular fa-thumbs-up"></i> <span>recomendar</span>
                         </button>
                     </div>
-                    <div class="col s12 m6 offset-m3">
-                        <p id="userDescripcion" class="center"></p>
+                    <div id="descripcionContainer" class="col s12 m10 offset-m1 center descripcion-container grey lighten-3 hide">
+                        <b class="center">Presentación</b><br>
+                        <p id="userDescripcion"></p>
                     </div>
                 </div>
 
             </div>
             <!-- todos los proyectos -->
             <div class="col s12 m8 offset-m2">
+               <div class="valign-wrapper space-between">
+                <h5 class="grey-text"><i class="fa-brands fa-creative-commons-nd"></i> <b>Mis Trabajos</b></h5>
+                <span class="chip">8 proyectos</span>
+            </div>
                 <div class="divider"></div>
-                <h5 class="grey-text"><i class="fa-brands fa-creative-commons-nd"></i> <b>servicios</b></h5>
                 <div id="leerproyectos" class="row no-padding">
 
                     <div class="col s6 m4 l3">
-                            <div class="card card-proyect">
-                                <div class="card-image waves-effect waves-block waves-light">
-                                    <img src="../imagenes/casa-de-madera-de-diseno-moderno21-645b7b443ba61.jpg" alt="img" class="activator"/>
-                                </div>
-                                <div class="card-content">
-                                    <b class="activator valign-wrapper space-around">Card Title <i class="material-icons">more_vert</i></b>
-                                </div>
-                                <div class="card-reveal">
-                                    <span class="card-title activator">Card Title<i class="material-icons right">close</i></span>
-                                    <p>Here is some more information about this product that is only revealed once clicked on.</p>
-                                </div>
+                        <div class="card card-proyect">
+                            <a href="">
+                            <div class="card-image waves-effect waves-block waves-light">
+                                <img src="../imagenes/casa-de-madera-de-diseno-moderno21-645b7b443ba61.jpg" alt="img"
+                                    class="activator" />
+                            </div></a>
+                            <div class="card-content">
+                                <b class="activator valign-wrapper space-around"><span class="truncate">Lorem, ipsum dolor.</span><i
+                                        class="material-icons cursor-pointer">visibility</i></b>
                             </div>
+                            <div class="card-reveal">
+                                <span class="card-title activator">Card Title<i
+                                        class="material-icons right">close</i></span>
+                                <p>Here is some more information about this product that is only revealed once clicked
+                                    on.</p>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
