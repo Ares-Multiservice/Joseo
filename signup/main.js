@@ -51,7 +51,6 @@ function leerMapa() {
 
 }
 
-
 const firebaseConfig = {
   apiKey: "AIzaSyBYNAIFu_BU4oav3I3PCFncS9QU5GvkiAU",
   authDomain: "joseodo-72673.firebaseapp.com",
@@ -98,8 +97,8 @@ var uiConfig = {
     uiShown: function () {
       //ejecuta cuando se renderize el widget.
       // Ocultar el cargador.
-      document.getElementById('load').classList.add('hide');
-      document.querySelector('body').classList.remove('fixed-container');
+      // document.getElementById('load').classList.add('hide');
+      // document.querySelector('body').classList.remove('fixed-container');
     }
   },
   // Utilizará una ventana emergente para el flujo de inicio de sesión
@@ -121,6 +120,7 @@ var uiConfig = {
     }, {
       provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
       fullLabel: 'Acceder con correo y contraseña',
+      requireDisplayName: false
     },
     firebase.auth.PhoneAuthProvider.PROVIDER_ID
   ],
@@ -184,6 +184,8 @@ firebase.auth().onAuthStateChanged((user) => {
       usuario.value = usuarioDefault;
       nombre.value = displayName;
     }
+
+    // obtener la fecha actual
     var fechaActual = new Date();
 
     var mesesAbreviados = [
@@ -201,6 +203,20 @@ firebase.auth().onAuthStateChanged((user) => {
     // Convertir la hora a formato de 12 horas
     hora = hora % 12;
     hora = hora === 0 ? 12 : hora;
+
+    // obtener un id generado al azar
+    function generarCodigo() {
+      var caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      var codigo = '';
+      for (var i = 0; i < 8; i++) {
+        var indice = Math.floor(Math.random() * caracteres.length);
+        codigo += caracteres.charAt(indice);
+      }
+      return codigo;
+    }
+    
+    // Ejemplo de uso
+    var codigoGenerado = generarCodigo();
 
     function crearFirestore() {
       user.updateProfile({
@@ -224,8 +240,8 @@ firebase.auth().onAuthStateChanged((user) => {
           misRecomendados: false,
           meRecomendaron: false,
           notificaciones: {
-            notificacion1: {
-              id: 'notificacion1',
+            [codigoGenerado]: {
+              id: codigoGenerado,
               visible: true,
               img: '/imagenes/logo bg azul.png',
               text: `Bienvenid@ <b>${nombre.value}</b>, ahora puedes comenzar a resivir clientes`,

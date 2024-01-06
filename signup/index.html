@@ -39,9 +39,10 @@
     <main>
         <div class="row">
             <div class="col s12 m6 offset-m3 l4 offset-l4 no-padding">
+                <a id="backBtn" href="../"
+                    class="waves-effect waves-light backBtn btn blue left hide-on-small-and-down">
+                    <i class="fa-regular fa-circle-left"></i></a>
                 <div class="sign-content black center">
-                    <a id="backBtn" href="../" class="waves-effect waves-light backBtn btn blue left">
-                        <i class="fa-regular fa-circle-left"></i></a>
 
                     <img class="logo" src="../imagenes/logo txt(2).png" alt="logo">
                     <div id="signContainer"></div>
@@ -50,13 +51,17 @@
                             <div class="input-field col s12 m8 offset-m2">
                                 <!-- <a onclick="M.toast({html: 'Solo se permite texto, guiones y guiones bajos'})" class="right"><i class="fa-solid fa-circle-exclamation"></i></a> -->
                                 <p id="verificar-usuario" class="helper-text green-text text-darken-2 right"></p>
-                                <input type="text" id="usuario" placeholder="Usuario" class="validate" title="Escribe tu nombre de usuario">
-                                <span class="helper-text grey-text">Usuario (solo texto, numeros, guion y guion bajo)</span>
+                                <input type="text" id="usuario" placeholder="Usuario" class="validate"
+                                    title="Escribe tu nombre de usuario">
+                                <span class="helper-text grey-text">Usuario (solo texto, numeros, guion y guion
+                                    bajo)</span>
                             </div>
                             <div class="input-field col s12 m8 offset-m2">
                                 <p id="verificar-nombre" class="helper-text red-text text-darken-2 right"></p>
-                                <input type="text" id="nombre" placeholder="Primer nombre y Apellido" class="validate" title="Escribe tu primer nombre y primer apellido">
-                                <span class="helper-text grey-text">Primer Nombre y Apellido (Solo texto y espacio)</span>
+                                <input type="text" id="nombre" placeholder="Primer nombre y Apellido" class="validate"
+                                    title="Escribe tu primer nombre y primer apellido">
+                                <span class="helper-text grey-text">Primer Nombre y Apellido (Solo texto y
+                                    espacio)</span>
                             </div>
                             <!-- profecion -->
                             <div class="input-field col s12 m8 offset-m2">
@@ -276,7 +281,7 @@
                             <!-- botones de siguiente -->
                             <div class="input-field col s12 m8 offset-m2 row btn-container">
                                 <a id="continuarDataBtn"
-                                class="waves-effect waves-light waves-yellow  btn btn-flat btn-small white-text col s12 blue">Continuar</a>
+                                    class="waves-effect waves-light waves-yellow  btn btn-flat btn-small white-text col s12 blue">Continuar</a>
                             </div>
                         </form>
                     </div>
@@ -348,7 +353,7 @@
                             </div>
                             <!-- botones de guardado -->
                             <div class="row">
-                                <div class="col s6"><a  id="regresarDataBtn"
+                                <div class="col s6"><a id="regresarDataBtn"
                                         class="waves-effect waves-light waves-yellow  btn btn-flat btn-small white-text">Regresar</a>
                                 </div>
                                 <div class="col s6"><a id="guardarDataBtn"
@@ -361,7 +366,7 @@
             </div>
         </div>
 
-        <div id="load" class="load-container">
+        <div id="load" class="load-container hide">
             <div class="preloader-wrapper active">
                 <!-- spinner-blue -->
                 <div class="spinner-layer spinner-blue">

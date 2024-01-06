@@ -29,6 +29,10 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet-fullscreen/dist/leaflet.fullscreen.css" />
     <!-- Leaflet Control Geocoder CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.css" />
+    <!-- cropperjs CSS -->
+    <link rel="stylesheet" href="../node_modules/cropperjs/dist/cropper.css" />
+    <!-- Splidejs CSS -->
+    <link rel="stylesheet" href="../node_modules/@splidejs/splide/dist/css/splide.min.css" />
     <!-- firebase js -->
     <script defer src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
@@ -36,6 +40,17 @@
 </head>
 
 <body class=" grey lighten-5">
+    <div id="load" class="load-container">
+        <img src="../imagenes/logo txt(2).png" alt="logo">
+        <div class="progress indigo lighten-3">
+          <div class="indeterminate indigo" style="width: 70%"></div>
+        </div>
+        <h6 id="load-text" class="center-align white-text">
+            Cargando...
+        </h6>
+        
+    </div>
+
     <header>
         <div id="nav" class="navbar-fixed">
             <nav class="black nav-extended">
@@ -66,7 +81,7 @@
                         <li class="valign-wrapper space-around">
                             <img id="dropDown-image" class="circle" src="/imagenes/user-icon black.png" alt="user">
                             <div>&nbsp;<b id="dropDown-name">Lorem</b><br>
-                                <!-- <a href="./perfil/" class="waves-effect waves-light btn btn-small">ver perfil</a> -->
+                                <a id="ver-perfil-btn" class="waves-effect waves-light btn btn-small">ver perfil</a>
                             </div>
                             <a href="#cerrarSesionModal" class="modal-trigger"><i class="fa-solid fa-power-off"></i></a>
                         </li>
@@ -84,8 +99,8 @@
                     <!-- Notificaciones -->
                     <ul id='notifications' class='dropdown-content center'>
                         <h6 class="black-text">Notificaciones</h6>
-                        <h5 id="vefifAlerts" class="black-text">No hay notificaciones...</h5>
-                        <div class="hide" id="alertsContainer">
+                        <h5 id="verifAlerts" class="black-text">No hay notificaciones...</h5>
+                        <div id="alertsContainer" class="hide">
                             <li class="active"><a href="#!">
                                     <div class="valign-wrapper"> <img class="circle"
                                             src="../imagenes/user-icon black.png" alt="user">&nbsp;
@@ -145,19 +160,44 @@
                             </div>
                             <!-- modal trigger editar la profecion y habilidades -->
                             <div class="col s12 valign-wrapper space-between grey">
-                                <p><b>Profecion</b><br><span id="modal-card-profecion">cargando...</span></p>
+                                <p><b>Profecion y habilidades</b><br>
+                                    <span id="modal-card-profecion">cargando...</span>
+                                    <span id="modal-card-habilidades" class="truncate"></span>
+                                </p>
                                 <a href="#modal-editarProfecion"
                                     class="modal-trigger modal-close waves-effect waves-light blue-text text-darken-2">editar</a>
                             </div>
                             <!-- modal trigger editar la ubicacion -->
                             <div class="col s12 valign-wrapper space-between grey">
                                 <p><b>Ubicacion</b><br><span id="modal-card-ubicacion">cargando...</span></p>
-                                <a href="#modal-editarUbicacion"
+                                <a id="openUbicacionmodal" href="#modal-editarUbicacion"
                                     class="modal-trigger modal-close waves-effect waves-light blue-text text-darken-2">editar</a>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Modal Editar foto de usuario -->
+        <div id="modal-editarFoto" class="modal no-autoinit modal-small">
+            <div class="modal-content">
+                <div class="valign-wrapper space-between">
+                    <h5><b>Editar foto de perfil</b></h5>
+                    <a id="cancelUserFoto" class="modal-close waves-effect waves-light btn-floating btn-small z-depth-0"
+                        title="salir"><i class="material-icons">close</i></a>
+                </div>
+                <div class="divider blue-grey"></div>
+                <div class="cropper-container center">
+                    <img id="croppperImg" src="" alt="logo">
+                    <p id="verif-foto" class="helper-text right red-text text-accent-4 hide">imagen con formato no
+                        admitido</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a id="guardar-foto" class="cursor-pointer btn-flat btn-small right" title="guardar"> <i
+                        class="fa-regular fa-floppy-disk"></i> guardar</a>
+
             </div>
         </div>
 
@@ -168,28 +208,31 @@
                     <div class="card-content">
                         <div class="valign-wrapper space-between">
                             <h5><b>Editar perfil</b></h5>
-                            <a href="#modal-editarPerfil" id="cancelUserName"
+                            <a href="#modal-editarPerfil" id="cancelUserId"
                                 class="modal-trigger modal-close waves-effect waves-light btn-floating btn-small z-depth-0"
                                 title="salir"><i class="material-icons">close</i></a>
                         </div>
-                        <form id="nameForm" class="row grey">
-                            <div class="left col s12"><b class="">Id del usuario</b>
-                            </div>
+                        <form id="userIdForm" class="row grey">
+                            <div class="left col s12"><b>Id del usuario</b></div>
                             <div class="input-field col s12 m8 offset-m2">
                                 <input type="text" id="editUsuario" placeholder="Id de usuario" name="usuario"
                                     class="validate">
-                                <span class="helper-text center black-text">Solo texto, numero, guion y guion bajo</span>
+                                <p id="verif-usuario" class="helper-text right red-text text-accent-4 hide">usuario
+                                    invalido</p>
+                                <span class="helper-text center black-text">Solo texto, numero, guion y guion
+                                    bajo</span>
                             </div>
-                            <div class="center-align">
-                                <a id="saveUserId" class="cursor-pointer btn-flat btn-small right hide"
-                                    title="guardar"> <i class="fa-regular fa-floppy-disk"></i> guardar</a>
+                            <div class="col s12">
+                                <a id="guardar-usuario" class="cursor-pointer btn-flat btn-small right hide"
+                                    title="guardar">
+                                    <i class="fa-regular fa-floppy-disk"></i> guardar</a>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-        
+
         <!-- Modal Editar nombre y apellidos -->
         <div id="modal-editarNombre" class="modal z-depth-0 transparent">
             <div class="modal-content">
@@ -236,37 +279,44 @@
                                 title="salir"><i class="material-icons">close</i></a>
                         </div>
                         <form id="profecionForm" class="row grey">
-                            <div class="left col s12"><b class="">Profecion y habilidades</b>
+                            <div class="left col s12"><b>Profecion y habilidades</b>
                             </div>
                             <!-- profecion -->
                             <div class="input-field col s12">
                                 <span class="helper-text">selecciona tu nueva profecion</span>
                                 <select id="editProfecion" class="browser-default">
+                                    <option value="" disabled>Selecciona tu profecion</option>
                                     <option value="Abogado">Abogado</option>
                                     <option value="Actor">Actor</option>
                                     <option value="Administracion">Administracion</option>
                                     <option value="Administrativa">Administrativa</option>
-                                    <option value="Aduanas">Aduanas</option>
                                     <option value="Agente">Agente</option>
-                                    <option value="Agronomaa">Agronoma</option>
-                                    <option value="Almacen">Almacen</option>
+                                    <option value="Agente">Agente de Aduanas</option>
+                                    <option value="Agente de Compras">Agente de Compras</option>
+                                    <option value="Agente de turismo">Agente de turismo</option>
+                                    <option value="Hoteles">Agente de viajes</option>
+                                    <option value="Agricultor">Agricultor</option>
+                                    <option value="Agricultora">Agricultora</option>
+                                    <option value="Agronoma">Agronoma</option>
+                                    <option value="Almacenista">Almacenista</option>
                                     <option value="Analista">Analista</option>
                                     <option value="Arquitecto">Arquitecto</option>
                                     <option value="Arquitectura">Arquitectura</option>
-                                    <option value="Artistas">Artistas</option>
+                                    <option value="Artista">Artista</option>
                                     <option value="Asesor">Asesor</option>
                                     <option value="Asistente">Asistente</option>
                                     <option value="Auditor">Auditor</option>
-                                    <option value="Automotriz">Automotriz</option>
                                     <option value="Auxiliar">Auxiliar</option>
                                     <option value="Ayudante">Ayudante</option>
                                     <option value="Banco">Banco</option>
+                                    <option value="Banquero">Banquero</option>
                                     <option value="Barbero">Barbero</option>
                                     <option value="Barista">Barista</option>
                                     <option value="Bartender">Bartender</option>
                                     <option value="Bioanalista">Bioanalista</option>
                                     <option value="Bobinadores">Bobinadores</option>
                                     <option value="Bordador">Bordador</option>
+                                    <option value="Boutique">boutique</option>
                                     <option value="Cablista">Cablista</option>
                                     <option value="Cajera">Cajera</option>
                                     <option value="Cajero">Cajero</option>
@@ -274,27 +324,26 @@
                                     <option value="Call Center">Call Center</option>
                                     <option value="Camarera">Camarera</option>
                                     <option value="Camarero">Camarero</option>
-                                    <option value="Camareros">Camareros</option>
                                     <option value="Camillero">Camillero</option>
+                                    <option value="Cantante">Cantante</option>
                                     <option value="Capacitacion">Capacitacion</option>
                                     <option value="Chef">Chef</option>
                                     <option value="Chofer">Chofer</option>
                                     <option value="Coach">Coach</option>
-                                    <option value="Cobros">Cobros</option>
+                                    <option value="Cobrador">Cobrador</option>
+                                    <option value="Cocinero">Cocinera</option>
                                     <option value="Cocinero">Cocinero</option>
                                     <option value="Comercial">Comercial</option>
-                                    <option value="Community">Community</option>
-                                    <option value="Comprador">Comprador</option>
-                                    <option value="Compras">Compras</option>
+                                    <option value="Community Manager">Community Manager</option>
                                     <option value="Comunicacion">Comunicacion</option>
-                                    <option value="Consejos">Consejos</option>
+                                    <option value="Consejos">Consejera</option>
+                                    <option value="Consejos">Consejero</option>
                                     <option value="Conserje">Conserje</option>
-                                    <option value="Conserjes">Conserjes</option>
                                     <option value="Consultor">Consultor</option>
-                                    <option value="Contabilidad">Contabilidad</option>
+                                    <option value="Contable">Contable</option>
                                     <option value="Contador">Contador</option>
                                     <option value="Contadora">Contadora</option>
-                                    <option value="Contratistas">Contratistas</option>
+                                    <option value="Contratista">Contratista</option>
                                     <option value="Coordinador">Coordinador</option>
                                     <option value="Coordinadora">Coordinadora</option>
                                     <option value="CopyWriter">CopyWriter</option>
@@ -303,17 +352,19 @@
                                     <option value="Cuentas">Cuentas</option>
                                     <option value="Delivey">Delivey</option>
                                     <option value="Dentista">Dentista</option>
-                                    <option value="Desarrollador">Desarrollador</option>
+                                    <option value="Desarrollador App">Desarrollador App</option>
+                                    <option value="Desarrollador Desktop">Desarrollador Desktop</option>
                                     <option value="Desarrollador Web">Desarrollador Web</option>
                                     <option value="Despacho">Despacho</option>
+                                    <option value="Dependiente de Tienda">Dependiente de Tienda</option>
                                     <option value="Diagramador">Diagramador</option>
                                     <option value="Dibujante">Dibujante</option>
-                                    <option value="Diesel">Diesel</option>
                                     <option value="Digitador">Digitador</option>
                                     <option value="Director">Director</option>
                                     <option value="Diseñador">Diseñador</option>
                                     <option value="Diseñadora">Diseñadora</option>
                                     <option value="Diseñador grafico">Diseñador grafico</option>
+                                    <option value="DJ">DJ</option>
                                     <option value="Doctor">Doctor</option>
                                     <option value="Domestica">Domestica</option>
                                     <option value="Drafter">Drafter</option>
@@ -341,11 +392,8 @@
                                     <option value="Finanzas">Finanzas</option>
                                     <option value="Fotografo">Fotógrafo</option>
                                     <option value="Fumigador">Fumigador</option>
-                                    <option value="General">General</option>
                                     <option value="Gerente">Gerente</option>
                                     <option value="Gestor">Gestor</option>
-                                    <option value="Herrero">Herrero</option>
-                                    <option value="Hoteles">Hoteles</option>
                                     <option value="Industrial">Industrial</option>
                                     <option value="Tecnologia">Tecnologia</option>
                                     <option value="Ingenieria">Ingenieria</option>
@@ -369,35 +417,41 @@
                                     <option value="Maquillista">Maquillista</option>
                                     <option value="Marketing">Marketing</option>
                                     <option value="Masajista">Masajista</option>
-                                    <option value="Mecanico">Mecánico</option>
+                                    <option value="Mecanico">Mecánico Automotriz</option>
+                                    <option value="Mecanico">Mecánico de Motocicletas</option>
+                                    <option value="Diesel">Mecánico Diesel</option>
                                     <option value="Medicina">Medicina</option>
                                     <option value="Medicos">Medicos</option>
                                     <option value="Mensajero">Mensajero</option>
                                     <option value="Mercadeo">Mercadeo</option>
-                                    <option value="Mercaderista">Mercaderista</option>
+                                    <option value="Mercadista">Mercadista</option>
+                                    <option value="Microbiologa">Microbiologa</option>
                                     <option value="Microbiologo">Microbiologo</option>
-                                    <option value="Modelos">Modelos</option>
+                                    <option value="Modelos">Modelo</option>
                                     <option value="Modista">Modista</option>
                                     <option value="Monitor">Monitor</option>
-                                    <option value="Montacargas">Montacargas</option>
-                                    <option value="Moto concho">Moto concho</option>
-                                    <option value="Negocios">Negocios</option>
-                                    <option value="Odontologos">Odontologos</option>
+                                    <option value="Montacarguista">Montacarguista</option>
+                                    <option value="Negociante">Negociante</option>
+                                    <option value="Odontologa">Odontologa</option>
+                                    <option value="Odontologo">Odontologo</option>
                                     <option value="Oficial">Oficial</option>
-                                    <option value="Operaciones">Operaciones</option>
-                                    <option value="Operadores">Operadores</option>
-                                    <option value="Pasantes">Pasantes</option>
+                                    <option value="Operador">Operador</option>
+                                    <option value="Operadora">Operadora</option>
+                                    <option value="Pantrista">Pantrista</option>
+                                    <option value="Pasante">Pasante</option>
                                     <option value="Periodista">Periodista</option>
                                     <option value="Planificador">Planificador</option>
                                     <option value="Presentador">Presentador</option>
+                                    <option value="Presentadora">Presentadora</option>
                                     <option value="Prevencionista">Prevencionista</option>
                                     <option value="Produccion">Produccion</option>
                                     <option value="Productor">Productor</option>
-                                    <option value="Profesores">Profesores</option>
+                                    <option value="Profesor">Profesor</option>
+                                    <option value="Profesora">Profesora</option>
                                     <option value="Programador">Programador</option>
+                                    <option value="Programador">Programadora</option>
                                     <option value="Promotor">Promotor</option>
                                     <option value="Promotora">Promotora</option>
-                                    <option value="Proyectos">Proyectos</option>
                                     <option value="Psicologo">Psicologo</option>
                                     <option value="Publicista">Publicista</option>
                                     <option value="Quimico">Quimico</option>
@@ -405,7 +459,6 @@
                                     <option value="Recibidor">Recibidor</option>
                                     <option value="Reclamaciones">Reclamaciones</option>
                                     <option value="Reclutamiento">Reclutamiento</option>
-                                    <option value="Recruiter">Recruiter</option>
                                     <option value="Recursos Humanos">Recursos Humanos</option>
                                     <option value="Redactor">Redactor</option>
                                     <option value="Repostero">Repostero</option>
@@ -421,15 +474,13 @@
                                     <option value="Sonografista">Sonografista</option>
                                     <option value="Soporte">Soporte</option>
                                     <option value="Superintendente">Superintendente</option>
-                                    <option value="Supermercados">Supermercados</option>
                                     <option value="Supervisor">Supervisor</option>
                                     <option value="Taller">Taller</option>
                                     <option value="Tasador">Tasador</option>
-                                    <option value="Tenico">Tenico</option>
+                                    <option value="Tecnico">Tecnico</option>
                                     <option value="Tecnologo">Tecnologo</option>
                                     <option value="Terapeuta">Terapeuta</option>
                                     <option value="Terapista">Terapista</option>
-                                    <option value="Tienda">Tienda</option>
                                     <option value="Topografo">Topografo</option>
                                     <option value="Tornero">Tornero</option>
                                     <option value="Traductor">Traductor</option>
@@ -441,34 +492,42 @@
                                     <option value="Visitador">Visitador</option>
                                 </select>
                             </div>
+                            <!-- habilidades -->
                             <div class="input-field col s12">
                                 <span class="helper-text">selecciona habilidades secundarias (Ctrl + click)</span>
                                 <select id="editHabilidades" class="browser-default" multiple>
+                                    <option value="" disabled>Selecciona habilidades secundarias</option>
                                     <option value="Abogado">Abogado</option>
                                     <option value="Actor">Actor</option>
                                     <option value="Administracion">Administracion</option>
                                     <option value="Administrativa">Administrativa</option>
-                                    <option value="Aduanas">Aduanas</option>
                                     <option value="Agente">Agente</option>
-                                    <option value="Agronomaa">Agronoma</option>
-                                    <option value="Almacen">Almacen</option>
+                                    <option value="Agente">Agente de Aduanas</option>
+                                    <option value="Agente de Compras">Agente de Compras</option>
+                                    <option value="Agente de turismo">Agente de turismo</option>
+                                    <option value="Hoteles">Agente de viajes</option>
+                                    <option value="Agricultor">Agricultor</option>
+                                    <option value="Agricultora">Agricultora</option>
+                                    <option value="Agronoma">Agronoma</option>
+                                    <option value="Almacenista">Almacenista</option>
                                     <option value="Analista">Analista</option>
                                     <option value="Arquitecto">Arquitecto</option>
                                     <option value="Arquitectura">Arquitectura</option>
-                                    <option value="Artistas">Artistas</option>
+                                    <option value="Artista">Artista</option>
                                     <option value="Asesor">Asesor</option>
                                     <option value="Asistente">Asistente</option>
                                     <option value="Auditor">Auditor</option>
-                                    <option value="Automotriz">Automotriz</option>
                                     <option value="Auxiliar">Auxiliar</option>
                                     <option value="Ayudante">Ayudante</option>
                                     <option value="Banco">Banco</option>
+                                    <option value="Banquero">Banquero</option>
                                     <option value="Barbero">Barbero</option>
                                     <option value="Barista">Barista</option>
                                     <option value="Bartender">Bartender</option>
                                     <option value="Bioanalista">Bioanalista</option>
                                     <option value="Bobinadores">Bobinadores</option>
                                     <option value="Bordador">Bordador</option>
+                                    <option value="Boutique">boutique</option>
                                     <option value="Cablista">Cablista</option>
                                     <option value="Cajera">Cajera</option>
                                     <option value="Cajero">Cajero</option>
@@ -476,27 +535,26 @@
                                     <option value="Call Center">Call Center</option>
                                     <option value="Camarera">Camarera</option>
                                     <option value="Camarero">Camarero</option>
-                                    <option value="Camareros">Camareros</option>
                                     <option value="Camillero">Camillero</option>
+                                    <option value="Cantante">Cantante</option>
                                     <option value="Capacitacion">Capacitacion</option>
                                     <option value="Chef">Chef</option>
                                     <option value="Chofer">Chofer</option>
                                     <option value="Coach">Coach</option>
-                                    <option value="Cobros">Cobros</option>
+                                    <option value="Cobrador">Cobrador</option>
+                                    <option value="Cocinero">Cocinera</option>
                                     <option value="Cocinero">Cocinero</option>
                                     <option value="Comercial">Comercial</option>
-                                    <option value="Community">Community</option>
-                                    <option value="Comprador">Comprador</option>
-                                    <option value="Compras">Compras</option>
+                                    <option value="Community Manager">Community Manager</option>
                                     <option value="Comunicacion">Comunicacion</option>
-                                    <option value="Consejos">Consejos</option>
+                                    <option value="Consejos">Consejera</option>
+                                    <option value="Consejos">Consejero</option>
                                     <option value="Conserje">Conserje</option>
-                                    <option value="Conserjes">Conserjes</option>
                                     <option value="Consultor">Consultor</option>
-                                    <option value="Contabilidad">Contabilidad</option>
+                                    <option value="Contable">Contable</option>
                                     <option value="Contador">Contador</option>
                                     <option value="Contadora">Contadora</option>
-                                    <option value="Contratistas">Contratistas</option>
+                                    <option value="Contratista">Contratista</option>
                                     <option value="Coordinador">Coordinador</option>
                                     <option value="Coordinadora">Coordinadora</option>
                                     <option value="CopyWriter">CopyWriter</option>
@@ -505,17 +563,19 @@
                                     <option value="Cuentas">Cuentas</option>
                                     <option value="Delivey">Delivey</option>
                                     <option value="Dentista">Dentista</option>
-                                    <option value="Desarrollador">Desarrollador</option>
+                                    <option value="Desarrollador App">Desarrollador App</option>
+                                    <option value="Desarrollador Desktop">Desarrollador Desktop</option>
                                     <option value="Desarrollador Web">Desarrollador Web</option>
                                     <option value="Despacho">Despacho</option>
+                                    <option value="Dependiente de Tienda">Dependiente de Tienda</option>
                                     <option value="Diagramador">Diagramador</option>
                                     <option value="Dibujante">Dibujante</option>
-                                    <option value="Diesel">Diesel</option>
                                     <option value="Digitador">Digitador</option>
                                     <option value="Director">Director</option>
                                     <option value="Diseñador">Diseñador</option>
                                     <option value="Diseñadora">Diseñadora</option>
                                     <option value="Diseñador grafico">Diseñador grafico</option>
+                                    <option value="DJ">DJ</option>
                                     <option value="Doctor">Doctor</option>
                                     <option value="Domestica">Domestica</option>
                                     <option value="Drafter">Drafter</option>
@@ -543,11 +603,8 @@
                                     <option value="Finanzas">Finanzas</option>
                                     <option value="Fotografo">Fotógrafo</option>
                                     <option value="Fumigador">Fumigador</option>
-                                    <option value="General">General</option>
                                     <option value="Gerente">Gerente</option>
                                     <option value="Gestor">Gestor</option>
-                                    <option value="Herrero">Herrero</option>
-                                    <option value="Hoteles">Hoteles</option>
                                     <option value="Industrial">Industrial</option>
                                     <option value="Tecnologia">Tecnologia</option>
                                     <option value="Ingenieria">Ingenieria</option>
@@ -571,35 +628,41 @@
                                     <option value="Maquillista">Maquillista</option>
                                     <option value="Marketing">Marketing</option>
                                     <option value="Masajista">Masajista</option>
-                                    <option value="Mecanico">Mecánico</option>
+                                    <option value="Mecanico">Mecánico Automotriz</option>
+                                    <option value="Mecanico">Mecánico de Motocicletas</option>
+                                    <option value="Diesel">Mecánico Diesel</option>
                                     <option value="Medicina">Medicina</option>
                                     <option value="Medicos">Medicos</option>
                                     <option value="Mensajero">Mensajero</option>
                                     <option value="Mercadeo">Mercadeo</option>
-                                    <option value="Mercaderista">Mercaderista</option>
+                                    <option value="Mercadista">Mercadista</option>
+                                    <option value="Microbiologa">Microbiologa</option>
                                     <option value="Microbiologo">Microbiologo</option>
-                                    <option value="Modelos">Modelos</option>
+                                    <option value="Modelos">Modelo</option>
                                     <option value="Modista">Modista</option>
                                     <option value="Monitor">Monitor</option>
-                                    <option value="Montacargas">Montacargas</option>
-                                    <option value="Moto concho">Moto concho</option>
-                                    <option value="Negocios">Negocios</option>
-                                    <option value="Odontologos">Odontologos</option>
+                                    <option value="Montacarguista">Montacarguista</option>
+                                    <option value="Negociante">Negociante</option>
+                                    <option value="Odontologa">Odontologa</option>
+                                    <option value="Odontologo">Odontologo</option>
                                     <option value="Oficial">Oficial</option>
-                                    <option value="Operaciones">Operaciones</option>
-                                    <option value="Operadores">Operadores</option>
-                                    <option value="Pasantes">Pasantes</option>
+                                    <option value="Operador">Operador</option>
+                                    <option value="Operadora">Operadora</option>
+                                    <option value="Pantrista">Pantrista</option>
+                                    <option value="Pasante">Pasante</option>
                                     <option value="Periodista">Periodista</option>
                                     <option value="Planificador">Planificador</option>
                                     <option value="Presentador">Presentador</option>
+                                    <option value="Presentadora">Presentadora</option>
                                     <option value="Prevencionista">Prevencionista</option>
                                     <option value="Produccion">Produccion</option>
                                     <option value="Productor">Productor</option>
-                                    <option value="Profesores">Profesores</option>
+                                    <option value="Profesor">Profesor</option>
+                                    <option value="Profesora">Profesora</option>
                                     <option value="Programador">Programador</option>
+                                    <option value="Programador">Programadora</option>
                                     <option value="Promotor">Promotor</option>
                                     <option value="Promotora">Promotora</option>
-                                    <option value="Proyectos">Proyectos</option>
                                     <option value="Psicologo">Psicologo</option>
                                     <option value="Publicista">Publicista</option>
                                     <option value="Quimico">Quimico</option>
@@ -607,7 +670,6 @@
                                     <option value="Recibidor">Recibidor</option>
                                     <option value="Reclamaciones">Reclamaciones</option>
                                     <option value="Reclutamiento">Reclutamiento</option>
-                                    <option value="Recruiter">Recruiter</option>
                                     <option value="Recursos Humanos">Recursos Humanos</option>
                                     <option value="Redactor">Redactor</option>
                                     <option value="Repostero">Repostero</option>
@@ -623,15 +685,13 @@
                                     <option value="Sonografista">Sonografista</option>
                                     <option value="Soporte">Soporte</option>
                                     <option value="Superintendente">Superintendente</option>
-                                    <option value="Supermercados">Supermercados</option>
                                     <option value="Supervisor">Supervisor</option>
                                     <option value="Taller">Taller</option>
                                     <option value="Tasador">Tasador</option>
-                                    <option value="Tenico">Tenico</option>
+                                    <option value="Tecnico">Tecnico</option>
                                     <option value="Tecnologo">Tecnologo</option>
                                     <option value="Terapeuta">Terapeuta</option>
                                     <option value="Terapista">Terapista</option>
-                                    <option value="Tienda">Tienda</option>
                                     <option value="Topografo">Topografo</option>
                                     <option value="Tornero">Tornero</option>
                                     <option value="Traductor">Traductor</option>
@@ -643,8 +703,8 @@
                                     <option value="Visitador">Visitador</option>
                                 </select>
                             </div>
-                            <div class="center">
-                                <a id="saveUserPrefecion" class="cursor-pointer btn-flat btn-small right"
+                            <div class="center col s12">
+                                <a id="guardar-profecion" class="cursor-pointer btn-flat btn-small right hide"
                                     title="guardar profecion"> <i class="fa-regular fa-floppy-disk"></i> guardar</a>
                             </div>
                         </form>
@@ -731,8 +791,8 @@
                                 <span class="helper-text">Edita tu ubicacion</span>
                                 <p id="map-container" class="map-container">
                             </div>
-                            <div class="">
-                                <a id="saveUserUbicacion" class="cursor-pointer btn-flat btn-small right"
+                            <div class="col s12">
+                                <a id="guardar-ubicacion" class="cursor-pointer btn-flat btn-small right hide"
                                     title="guardar ubicacion"> <i class="fa-regular fa-floppy-disk"></i> guardar</a>
                             </div>
                         </form>
@@ -740,6 +800,46 @@
                 </div>
             </div>
         </div>
+
+
+        <!-- Modal crear carta de trabajo -->
+        <div id="modal-crearTrabajo" class="modal modal-small no-autoinit">
+            <div class="modal-content">
+                <div class="center">
+                    <h5><b>agrega uno de tus proyectos</b></h5>
+                </div>
+                <div class="divider blue-grey"></div>
+                <div class="splide-container center ">
+                    <h6 id="no-file-alert" class=""><i class="material-icons">add_photo_alternate</i> <br> Sube algunas
+                        imagenes</h6>
+                    <section id="splide-carousel" class="splide hide">
+                        <div class="splide__track">
+                            <ul id="splideList" class="splide__list">
+                            </ul>
+                        </div>
+                    </section>
+                </div>
+                <div class="btns">
+                    <a id="agregar-mas-imagenes" class="btn-floating file-field btn-small waves-effect waves-light"
+                        title="Agregar imagenes"><i class="material-symbols-outlined">add_photo_alternate</i>
+                        <input type="file" accept="image/*" multiple></a>
+                </div>
+                <form class="row">
+                    <div class="input-field col s12">
+                        <input type="text" id="trabajo-title" class="validate" placeholder="Titulo">
+                    </div>
+                    <div class="input-field col s12">
+                        <textarea id="trabajo-descripcion" class="materialize-textarea" placeholder="Descripcion"></textarea>
+                    </div>
+                    <div class="input-field col s12 valign-wrapper space-around">
+                        <a id="cancelar-trabajo" class="modal-close waves-effect waves-light btn-flat btn-small "
+                            title="salir"><i class="material-icons">close</i> cancelar</a>
+                        <a id="guardar-trabajo" class="cursor-pointer btn-flat btn-small " title="guardar">
+                            <i class="fa-regular fa-floppy-disk"></i> guardar</a>
+                    </div>
+
+                </form>
+            </div>
         </div>
 
         <div id="leerPerfiles" class="row">
@@ -806,17 +906,19 @@
             <!-- Informacion -->
             <div class="col s12 m8 offset-m2">
                 <div class="row">
-                    <div class="col s12 m2 center userPhotoContainer">
+                    <div class="col s12 m2 center file-field userPhotoContainer">
                         <img id="userPhoto" class="circle" src="../imagenes/user-icon black.png" alt="user">
-                        <a href="#" class="waves-effect waves-light btn btn-floating btn-small"
-                            title="cambiar foto de perfil"><i class="material-symbols-outlined">add_a_photo</i></a>
+                        <a id="seleccionar-imagen-btn" class="waves-effect waves-light btn btn-floating btn-small"
+                            title="cambiar foto de perfil"><i class="material-symbols-outlined">add_a_photo</i>
+                            <input id="seleccionar-imagen-input" type="file" accept="image/*"></a>
                     </div>
                     <div class="view-data col s12 m6">
                         <!-- nombre de usuario -->
                         <span class="black-text"><b id="userName" class="username">Cargando...</b></span><br>
 
                         <!-- ubicacion o profecion -->
-                        <span class="teal-text"><b id="userProfecionUbicacion"></b></span>&nbsp;&nbsp;
+                        <span class="teal-text"><b id="userProfecionUbicacion"></b></span>&nbsp;&nbsp;<br
+                            class="hide-on-med-and-up">
 
                         <!-- conteo de recomendaciones -->
                         <b class="grey-text text-darken-2 chip "><span id="recoms"></span>&nbsp;recomendaciones</b>
@@ -854,8 +956,10 @@
             <div class="col s12 m8 offset-m2">
                 <div class="valign-wrapper space-between">
                     <h5 class="grey-text"><i class="fa-brands fa-creative-commons-nd"></i> <b>Mis trabajos</b></h5>
-                    <a href="" class="waves-effect waves-light btn btn-small blue accent-4 hoverable">
+                    <a id="selectFileBtn"
+                        class="waves-effect waves-light file-field btn btn-small blue accent-4 hoverable">
                         <i class="fa-solid fa-hammer"></i> <span>Agregar trabajo</span>
+                        <input type="file" accept="image/*" multiple>
                     </a>
                 </div>
                 <div class="divider"></div>
@@ -886,62 +990,6 @@
                 </div>
             </div>
         </div>
-
-        <div id="load" class="load-container hide">
-            <div class="preloader-wrapper active">
-                <!-- spinner-blue -->
-                <div class="spinner-layer spinner-blue">
-                    <div class="circle-clipper left">
-                        <div class="circle"></div>
-                    </div>
-                    <div class="gap-patch">
-                        <div class="circle"></div>
-                    </div>
-                    <div class="circle-clipper right">
-                        <div class="circle"></div>
-                    </div>
-                </div>
-                <!-- spinner-red -->
-                <div class="spinner-layer spinner-red">
-                    <div class="circle-clipper left">
-                        <div class="circle"></div>
-                    </div>
-                    <div class="gap-patch">
-                        <div class="circle"></div>
-                    </div>
-                    <div class="circle-clipper right">
-                        <div class="circle"></div>
-                    </div>
-                </div>
-                <!-- spinner-yellow -->
-                <div class="spinner-layer spinner-yellow">
-                    <div class="circle-clipper left">
-                        <div class="circle"></div>
-                    </div>
-                    <div class="gap-patch">
-                        <div class="circle"></div>
-                    </div>
-                    <div class="circle-clipper right">
-                        <div class="circle"></div>
-                    </div>
-                </div>
-                <!-- spinner-greem -->
-                <div class="spinner-layer spinner-green">
-                    <div class="circle-clipper left">
-                        <div class="circle"></div>
-                    </div>
-                    <div class="gap-patch">
-                        <div class="circle"></div>
-                    </div>
-                    <div class="circle-clipper right">
-                        <div class="circle"></div>
-                    </div>
-                </div>
-            </div>
-            <h3 class="center-align hide white-text"><i
-                    class="fa-solid fa-house-medical-circle-exclamation"></i><br>Error 404 <br> Usuario no encontrado
-            </h3>
-        </div>
     </main>
 
     <!-- Path of the materialize.min.js file -->
@@ -956,6 +1004,10 @@
     <!-- Leaflet Control Geocoder JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.js"
         charset="utf-8"></script>
+    <!-- cropperjs JS -->
+    <script src="../node_modules/cropperjs/dist/cropper.js"></script>
+    <!-- Splidejs JS -->
+    <script src="../node_modules/@splidejs/splide/dist/js/splide.min.js"></script>
     <!-- Firebase UI -->
     <script src="https://www.gstatic.com/firebasejs/ui/6.1.0/firebase-ui-auth.js"></script>
     <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/6.1.0/firebase-ui-auth.css" />

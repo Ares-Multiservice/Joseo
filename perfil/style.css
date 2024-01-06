@@ -21,16 +21,22 @@ main {
 }
 
 .load-container {
-    position: absolute;
-    top: 0;
+    position: fixed;
     z-index: 3000;
     width: 100%;
-    height: 100%;
+    height: 100vh;
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(5px);
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+.load-container .img{
+    width: 40%;
+}
+.load-container .progress{
+    width: 40%;
 }
 
 body.fixed-container {
@@ -263,7 +269,7 @@ nav .brand-logo>img {
 
 }
 
-/* texto de las cartas */
+/* texto de las cartas display */
 
 .contenedordecartas .card .card-content .card-title {
     display: -webkit-box;
@@ -285,30 +291,50 @@ nav .brand-logo>img {
 
 }
 
-/* informacion del usuario */
+/* imagen del contenedor de informacion */
+.userPhotoContainer {
+    /* padding: 0 !important; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
 
 .userPhotoContainer img {
     width: 100px;
 }
 
 .userPhotoContainer .btn {
-    position: absolute;
-    margin-top: 70px;
-    margin-left: -30px;
+    margin-top: -30px;
+    width: 2rem;
+    height: 2rem;
+    line-height: 2rem;
+    margin-left: 50px;
+
+}
+
+.cropper-container {
+    height: 400px;
+}
+
+.cropper-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover !important;
+}
+
+.cropper-modal {
+    background-color: rgb(255, 255, 255, 0.6) !important;
+    opacity: 0.5;
 }
 
 .username {
     font-size: 28pt;
 }
 
-
 .view-data {
-    padding: 20px 0 !important;
+    padding: 20px !important;
 }
-
-/* .view-data a:hover{
-    color: rgb(0, 142, 224) !important;
-} */
 
 .action-container {
     display: flex;
@@ -327,22 +353,25 @@ nav .brand-logo>img {
     border-radius: 3px;
 }
 
-/* carta de imagenes */
-
-/* .card-proyect{
-    height: 300px;
-
-} */
-
-.card-proyect img {
-    height: 200px;
-    object-fit: cover;
-    object-position: center center;
-
+.description-container textarea {
+    height: 80px;
 }
 
 .modal {
     max-height: 100% !important;
+}
+
+.modal-small {
+    width: 40% !important;
+    border-radius: 10px;
+}
+
+.modal h5 {
+    margin-left: 10px;
+}
+
+.modal-close {
+    margin-right: 10px;
 }
 
 .modal .modal-content {
@@ -384,12 +413,92 @@ nav .brand-logo>img {
     color: #727272;
 }
 
-.element.style {
-    position: absolute !important;
-}
-
 .map-container {
     height: 200px;
+}
+
+.input-field p.helper-text {
+    margin: -43px 0 0 10px;
+}
+
+/* agregar proyectos */
+
+#modal-crearTrabajo .splide-container {
+    height: 250px;
+    padding: 5px;
+    background: grey;
+}
+
+#modal-crearTrabajo .splide-container h6{
+    margin-top: 25%;
+    color: white;
+}
+
+#modal-crearTrabajo .splide__slide{
+    margin: 0 3px 0 3px;
+}
+
+#modal-crearTrabajo .splide__slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#modal-crearTrabajo .splide {
+    width: 100% !important;
+}
+#modal-crearTrabajo .splide__slide a {
+    position: absolute !important;
+    top: -7px !important;
+    right: 0 !important;
+    font-size: 16pt;
+    color: #F44336;
+    width: 20px;
+    height: 20px;
+
+}
+
+#modal-crearTrabajo .splide__slide a:hover {
+    color: rgb(134, 38, 38);
+
+}
+
+#modal-crearTrabajo .btns {
+    margin-top: -40px;
+    text-align: right;
+    padding-right: 20px;
+}
+
+#modal-crearTrabajo .input-field input {
+    background: rgb(221, 221, 221) !important;
+    border-radius: 3px !important;
+}
+
+#modal-crearTrabajo .input-field textarea {
+    background: rgb(221, 221, 221) !important;
+    border-radius: 3px;
+    width: 101%;
+    padding: 10px 0 0 10px;
+    margin-top: -15px;
+}
+
+#modal-crearTrabajo .input-field input::placeholder,
+#modal-crearTrabajo .input-field textarea::placeholder {
+    color: #000;
+}
+
+/* carta de imagenes */
+
+/* .card-proyect{
+    height: 300px;
+
+} */
+
+.card-proyect img {
+    height: 200px;
+    object-fit: cover;
+    object-position: center center;
+
 }
 
 @media only screen and (max-width:580px) {
@@ -411,6 +520,23 @@ nav .brand-logo>img {
         border-radius: 10px;
         width: 120px;
         height: 30px;
+    }
+
+    .modal-small {
+        width: 90% !important;
+    }
+
+    .modal .card .card-action {
+        padding: 0px;
+    }
+
+    .modal .card .card-action div {
+        margin: 6px 0;
+        padding: 10px;
+    }
+
+    .modal form select[multiple] {
+        height: 3rem;
     }
 
     /* cartas desplegables */
