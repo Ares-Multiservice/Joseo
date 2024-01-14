@@ -19,7 +19,7 @@ var thumbnails = new Splide('#splide-carousel', {
 
 thumbnails.mount();
 
-var modal = M.Modal.init(document.querySelector('#modal-crearTrabajo'));
+var modal = M.Modal.init(document.querySelector('#modal-crearServicio'));
 const selectFileBtn = document.querySelector('#selectFileBtn');
 const selectMoreFileBtn = document.querySelector('#agregar-mas-imagenes');
 const splideCarousel = document.querySelector('#splide-carousel');

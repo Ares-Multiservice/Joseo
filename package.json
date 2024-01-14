@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "@splidejs/splide": "^4.1.4",
+    "@splidejs/splide-extension-video": "^0.8.0",
     "cropperjs": "^1.6.1",
     "materialize-css": "^1.0.0-rc.2"
   },

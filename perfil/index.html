@@ -43,12 +43,12 @@
     <div id="load" class="load-container">
         <img src="../imagenes/logo txt(2).png" alt="logo">
         <div class="progress indigo lighten-3">
-          <div class="indeterminate indigo" style="width: 70%"></div>
+            <div class="indeterminate indigo" style="width: 70%"></div>
         </div>
         <h6 id="load-text" class="center-align white-text">
             Cargando...
         </h6>
-        
+
     </div>
 
     <header>
@@ -802,8 +802,8 @@
         </div>
 
 
-        <!-- Modal crear carta de trabajo -->
-        <div id="modal-crearTrabajo" class="modal modal-small no-autoinit">
+        <!-- Modal crear carta de servicio -->
+        <div id="modal-crearServicio" class="modal modal-small no-autoinit">
             <div class="modal-content">
                 <div class="center">
                     <h5><b>agrega uno de tus proyectos</b></h5>
@@ -826,15 +826,16 @@
                 </div>
                 <form class="row">
                     <div class="input-field col s12">
-                        <input type="text" id="trabajo-title" class="validate" placeholder="Titulo">
+                        <input type="text" id="servicio-title" class="validate" placeholder="Titulo">
                     </div>
                     <div class="input-field col s12">
-                        <textarea id="trabajo-descripcion" class="materialize-textarea" placeholder="Descripcion"></textarea>
+                        <textarea id="servicio-descripcion" class="materialize-textarea"
+                            placeholder="Descripcion"></textarea>
                     </div>
                     <div class="input-field col s12 valign-wrapper space-around">
-                        <a id="cancelar-trabajo" class="modal-close waves-effect waves-light btn-flat btn-small "
+                        <a id="cancelar-servicio" class="modal-close waves-effect waves-light btn-flat btn-small "
                             title="salir"><i class="material-icons">close</i> cancelar</a>
-                        <a id="guardar-trabajo" class="cursor-pointer btn-flat btn-small " title="guardar">
+                        <a id="guardar-servicio" class="cursor-pointer btn-flat btn-small " title="guardar">
                             <i class="fa-regular fa-floppy-disk"></i> guardar</a>
                     </div>
 
@@ -844,7 +845,7 @@
 
         <div id="leerPerfiles" class="row">
             <!-- contenedor de cartas -->
-            <div class="row col s12 m8 offset-m2 contenedordecartas">
+            <div class="row col s12 m8 offset-m2 contenedordecartas hide">
 
                 <div class="col s3 m3">
                     <a href="">
@@ -952,41 +953,19 @@
                 </div>
 
             </div>
-            <!-- todos los proyectos -->
+            <!-- todos mis servicios -->
             <div class="col s12 m8 offset-m2">
                 <div class="valign-wrapper space-between">
-                    <h5 class="grey-text"><i class="fa-brands fa-creative-commons-nd"></i> <b>Mis trabajos</b></h5>
+                    <h5 class="grey-text"><i class="fa-brands fa-creative-commons-nd"></i> <b>Mis servicios</b></h5>
                     <a id="selectFileBtn"
                         class="waves-effect waves-light file-field btn btn-small blue accent-4 hoverable">
-                        <i class="fa-solid fa-hammer"></i> <span>Agregar trabajo</span>
+                        <i class="fa-solid fa-hammer"></i> <span>Agregar servicio</span>
                         <input type="file" accept="image/*" multiple>
                     </a>
                 </div>
                 <div class="divider"></div>
-                <p class="center">Aun no hay trabajos en este perfil...</p>
-                <div id="leerproyectos" class="row no-padding hide">
-
-                    <div class="col s6 m4 l3">
-                        <div class="card card-proyect">
-                            <a href="">
-                                <div class="card-image waves-effect waves-block waves-light">
-                                    <img src="../imagenes/casa-de-madera-de-diseno-moderno21-645b7b443ba61.jpg"
-                                        alt="img" class="activator" />
-                                </div>
-                            </a>
-                            <div class="card-content">
-                                <b class="activator valign-wrapper space-around"><span class="truncate">Lorem, ipsum
-                                        dolor.</span><i class="material-icons cursor-pointer">visibility</i></b>
-                            </div>
-                            <div class="card-reveal">
-                                <span class="card-title activator">Card Title<i
-                                        class="material-icons right">close</i></span>
-                                <p>Here is some more information about this product that is only revealed once clicked
-                                    on.</p>
-                            </div>
-                        </div>
-                    </div>
-
+                <div id="leerServicios" class="row no-padding">
+                    <p class="center">Aun no hay servicios en este perfil...</p>
                 </div>
             </div>
         </div>

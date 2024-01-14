@@ -2,8 +2,8 @@ M.AutoInit();
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, collection, addDoc, setDoc, doc, deleteDoc, getDocs, getDoc, onSnapshot, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+import { getFirestore, collection, setDoc, doc, deleteDoc, getDocs, getDoc, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBYNAIFu_BU4oav3I3PCFncS9QU5GvkiAU",
@@ -92,10 +92,6 @@ async function leer(user) {
   const fotoDeperfil = document.querySelector('#userPhoto');
   const nombreCont = document.querySelector('#userName');
   const verPerfilBtn = document.querySelector('#ver-perfil-btn');
-  // notificaciones
-  const alertsBtn = document.querySelector('#alertsBtn');
-  const alertsContainer = document.querySelector('#alertsContainer');
-  const vefifAlerts = document.querySelector('#verifAlerts');
 
   const profecionUbicacionCont = document.querySelector('#userProfecionUbicacion');
   const presentacionCont = document.querySelector('#userpresentacion');
@@ -154,19 +150,8 @@ async function leer(user) {
   hora = hora % 12;
   hora = hora === 0 ? 12 : hora;
 
-  // // obtener un id generado al azar
-  // function generarCodigo() {
-  //   var caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  //   var codigo = '';
-  //   for (var i = 0; i < 8; i++) {
-  //     var indice = Math.floor(Math.random() * caracteres.length);
-  //     codigo += caracteres.charAt(indice);
-  //   }
-  //   return codigo;
-  // }
-
   // // Ejemplo de uso
-  // var codigoGenerado = generarCodigo();
+  var codigoGenerado = `${año}${dia}${hora < 10 ? '0' : ''}${hora}${minuto < 10 ? '0' : ''}${minuto}${segundo < 10 ? '0' : ''}${segundo}`;
 
   if (docSnap.exists()) {
     const { id, photoURL, nombre, presentacion, profecion, habilidades, provincia, ubicacion, recoms, notificaciones, proyectos } = docSnap.data();
@@ -183,35 +168,49 @@ async function leer(user) {
     // leer las notificaciones
     async function leerNotificaciones() {
 
-      // Convertir el objeto a un array de objetos
-      const organizador = Object.values(notificaciones);
-      
-      // Ordenar el array en base a la propiedad 'date' de manera descendente
-     const notif = organizador.sort((a, b) => new Date(b.id) - new Date(a.id));
+      M.Dropdown.init(document.querySelectorAll('.dropdown-trigger'), { closeOnClick: false });
 
+      const alertsBtn = document.querySelector('#alertsBtn');
+      const alertsContainer = document.getElementById('alertsContainer');
+      const vefifAlerts = document.querySelector('#verifAlerts');
+
+      // comprobar que no hayan elementos con la clase active y si hay alguno activar el boton de notificaciones
+      function activeBtn() {
+        const liElements = alertsContainer.querySelectorAll('li');
+        liElements.forEach(li => {
+          if (li.classList.contains('active')) {
+            // Código si la clase 'active' está presente en algún li
+            alertsBtn.innerHTML = `<i class="fa-solid fa-bell"></i>`;
+            alertsBtn.classList.add('red', 'pulse', 'btn-floating', 'btn-small');
+          } else {
+            alertsBtn.innerHTML = `<i class="fa-regular fa-bell"></i>`;
+            alertsBtn.classList.remove('red', 'pulse', 'btn-floating', 'btn-small');
+          }
+        });
+
+      }
+
+      // Ordenar el array en base a la propiedad 'date' de manera descendente
+      // Convertir el objeto a un array de objetos
+      const notificacionesArray = Object.values(notificaciones);
+
+      notificacionesArray.sort((a, b) => b.id - a.id);
       alertsContainer.innerHTML = '';
-      // Recorrer el objeto de notificaciones con un bucle for...in
-      for (var key in notif) {
-        if (notif[key]) {
+
+      notificacionesArray.forEach(notif => {
+        var docs = notificaciones[notif.id] = notif;
+        const id = docs.id;
+        const img = docs.img;
+        const text = docs.text;
+        const date = docs.date;
+
+        if (notif) {
           vefifAlerts.classList.add('hide');
           alertsContainer.classList.remove('hide');
         }
 
-        if (notif.hasOwnProperty(key)) {
-          var docs = notif[key];
-          const id = docs.id;
-          const img = docs.img;
-          const text = docs.text;
-          const date = docs.date;
-
-
-          const botonActive = () => {
-            alertsBtn.innerHTML = `<i class="fa-solid fa-bell"></i>`
-            alertsBtn.classList.add('red');
-            alertsBtn.classList.add('pulse');
-            alertsBtn.classList.add('btn-floating');
-            alertsBtn.classList.add('btn-small');
-            alertsContainer.innerHTML += `
+        const notificacionActive = () => {
+          alertsContainer.innerHTML += `
                   <li class="active" data-id="${id}">
                       <a>
                           <div class="valign-wrapper">
@@ -221,15 +220,10 @@ async function leer(user) {
                           <div class="center"><b>${date}</b></div>
                       </a>
                   </li>`;
-          }
+        }
 
-          const botonDisable = () => {
-            alertsBtn.innerHTML = `<i class="fa-regular fa-bell"></i>`
-            alertsBtn.classList.remove('red');
-            alertsBtn.classList.remove('pulse');
-            alertsBtn.classList.remove('btn-floating');
-            alertsBtn.classList.remove('btn-small');
-            alertsContainer.innerHTML += `
+        const notificacionDisable = () => {
+          alertsContainer.innerHTML += `
                   <li class="" data-id="${id}">
                       <a>
                           <div class="valign-wrapper">
@@ -239,30 +233,32 @@ async function leer(user) {
                           <div class="center"><b>${date}</b></div>
                       </a>
                   </li>`;
-          }
-
-          if (docs.visible) {
-            botonActive();
-
-            alertsContainer.addEventListener('click', (e) => {
-              const element = e.target;
-              const dataId = element.dataset.id;
-
-              setDoc(docRef, {
-                notificaciones: {
-                  [dataId]: {
-                    visible: false
-                  }
-                }
-              }, { merge: true }).then(() => {
-                botonDisable();
-              });
-            });
-          } else {
-            botonDisable();
-          }
         }
-      }
+
+        if (docs.visible) {
+          notificacionActive();
+          activeBtn()
+
+          alertsContainer.addEventListener('click', (e) => {
+            const element = e.target;
+            const dataId = element.dataset.id;
+
+            setDoc(docRef, {
+              notificaciones: {
+                [dataId]: {
+                  visible: false
+                }
+              },
+            }, { merge: true }).then(() => {
+              element.classList.remove('active');
+              activeBtn()
+            });
+          });
+        } else {
+          notificacionDisable();
+        }
+      });
+
     }
     leerNotificaciones();
 
@@ -311,8 +307,8 @@ async function leer(user) {
           setDoc(docRef, {
             id: editUsuario.value,
             notificaciones: {
-              [`${dia}${año}${hora}${minuto}${segundo}`]: {
-                id: `${dia}${año}${hora}${minuto}${segundo}`,
+              [codigoGenerado]: {
+                id: codigoGenerado,
                 visible: true,
                 img: '/imagenes/logo bg azul.png',
                 text: `<b>${nombre}</b>, haz cambiado tu id de usuario con exito <i class="fa-regular fa-face-smile"></i> !`,
@@ -395,8 +391,8 @@ async function leer(user) {
           setDoc(docRef, {
             nombre: `${editNombre.value} ${editNombre2.value}`,
             notificaciones: {
-              [`${dia}${año}${hora}${minuto}${segundo}`]: {
-                id: `${dia}${año}${hora}${minuto}${segundo}`,
+              [codigoGenerado]: {
+                id: codigoGenerado,
                 visible: true,
                 img: '/imagenes/logo bg azul.png',
                 text: `<b>${nombre}</b>, haz cambiado tu nombre con exito <i class="fa-regular fa-face-smile"></i> !`,
@@ -467,8 +463,8 @@ async function leer(user) {
           setDoc(docRef, {
             presentacion: presentacionCont.value,
             notificaciones: {
-              [`${dia}${año}${hora}${minuto}${segundo}`]: {
-                id: `${dia}${año}${hora}${minuto}${segundo}`,
+              [codigoGenerado]: {
+                id: codigoGenerado,
                 visible: true,
                 img: '/imagenes/logo bg azul.png',
                 text: `<b>${nombre}</b>, haz cambiado tu presentacion con exito <i class="fa-regular fa-face-smile"></i> !`,
@@ -504,8 +500,8 @@ async function leer(user) {
           profecion: editProfecion.value,
           habilidades: selectValues,
           notificaciones: {
-            [`${dia}${año}${hora}${minuto}${segundo}`]: {
-              id: `${dia}${año}${hora}${minuto}${segundo}`,
+            [codigoGenerado]: {
+              id: codigoGenerado,
               visible: true,
               img: '/imagenes/logo bg azul.png',
               text: `<b>${nombre}</b>, haz cambiado tu profecion con exito <i class="fa-regular fa-face-smile"></i> !`,
@@ -599,8 +595,8 @@ async function leer(user) {
             LongitudY: marker.getLatLng().lng
           },
           notificaciones: {
-            [`${dia}${año}${hora}${minuto}${segundo}`]: {
-              id: `${dia}${año}${hora}${minuto}${segundo}`,
+            [codigoGenerado]: {
+              id: codigoGenerado,
               visible: true,
               img: '/imagenes/logo bg azul.png',
               text: `<b>${nombre}</b>, haz cambiado tu ubicacion con exito <i class="fa-regular fa-face-smile"></i> !`,
@@ -637,7 +633,7 @@ async function leer(user) {
       // Función para manejar el cambio en la selección de la imagen
       function handleImageSelect(event) {
         var file = event.target.files;
-        
+
         if (file && file.length > 0) {
           var reader = new FileReader();
           reader.onload = function (e) {
@@ -672,7 +668,7 @@ async function leer(user) {
               // console.log('URL del Blob:', imageURL);
               // Puedes realizar acciones adicionales con la imagen recortada aquí
               // Create the file metadata
-              /** @type {any} */
+
               const metadata = {
                 contentType: 'image/jpeg'
               };
@@ -701,14 +697,15 @@ async function leer(user) {
                       setDoc(docRef, {
                         photoURL: downloadURL,
                         notificaciones: {
-                          [`${dia}${año}${hora}${minuto}${segundo}`]: {
-                            id: `${dia}${año}${hora}${minuto}${segundo}`,
+                          [codigoGenerado]: {
+                            id: codigoGenerado,
                             visible: true,
                             img: '/imagenes/logo bg azul.png',
-                            text: `<b>${nombre}</b>, haz cambiado tu foto de perfil con exito <i class="fa-regular fa-face-smile"></i> !`,
+                            text: `<b>${nombre}</b>, haz cambiado tu foto de perfil !`,
                             date: `${mes} ${dia}, ${año} ${hora < 10 ? '0' : ''}${hora}:${minuto < 10 ? '0' : ''}${minuto} ${meridiano}`
                           }
                         }
+
                       }, { merge: true }).then(() => {
                         window.location.reload();
                       })
@@ -741,101 +738,125 @@ async function leer(user) {
     };
     editarUserPhotoURL();
 
-    // guardar Nuevo trabajo 
-    // guardar Nuevo trabajo 
+    // guardar Nuevo servicio 
+    // guardar Nuevo servicio 
 
-    document.getElementById('guardar-trabajo').addEventListener('click', () => {
-      guardarTrabajo()
+    document.getElementById('guardar-servicio').addEventListener('click', () => {
+      guardarServicio();
     });
-    var modal = M.Modal.init(document.getElementById('modal-crearTrabajo'));
-    function guardarTrabajo() {
-      viewLoadWindows()
-      const trabajoTitle = document.getElementById('trabajo-title').value;
-      const trabajoDescripcion = document.getElementById('trabajo-descripcion').value;
+
+    var modal = M.Modal.init(document.getElementById('modal-crearServicio'));
+
+    async function guardarServicio() {
+      viewLoadWindows();
+      const servicioTitle = document.getElementById('servicio-title').value;
+      const servicioDescripcion = document.getElementById('servicio-descripcion').value;
       const splideList = document.querySelector('#splideList');
-      const documentId = trabajoTitle.replace(/\s/g, "");
+      const documentId = servicioTitle.replace(/\s/g, "");
 
-      // hacerle una carpeta a cada usuario para que guarde sus fotos en storage, comenzando desde el sign up
+      if (servicioTitle !== '' && servicioDescripcion !== '' && splideList && splideList.children.length > 0) {
+        modal.close();
+        viewLoadWindows();
 
-      if (trabajoTitle !== '' && trabajoDescripcion !== '' && splideList && splideList.children.length > 0) {
-        modal.close()
-        viewLoadWindows()
-        // Iterar sobre las imágenes en el carusel
-        Array.from(splideList.children).forEach(async (item) => {
-          const file = item.querySelector('img');
-          const uploadPromises = [];
-          let referencesUploaded = 0;
+        try {
+          // Crear una referencia única para cada proyecto
+          const storageRef = ref(st, `${uid}/proyectos/${documentId}`);
 
-          for (let i = 0; i < splideList.children.length; i++) {
-
-            // Convertir la URL de la imagen a un Blob
+          // Iterar sobre las imágenes en el carusel
+          await Promise.all(Array.from(splideList.children).map(async (item, index) => {
+            const file = item.querySelector('img');
             const response = await fetch(file.src);
             const blob = await response.blob();
-
-            // Crear una referencia única para cada imagen (1 al 10)
-            const imageNumber = i + 1;
+            const imageName = `url${index + 1}`;
 
             // Subir la imagen a Firebase Storage
-            const imageName = `url${imageNumber}`;
-            const storageRef = ref(st, `${uid}/proyectos/${file.alt}`);
-            // Subir la imagen a Firebase Storage
-            const uploadTask = uploadBytesResumable(storageRef, blob);
+            const imageRef = ref(storageRef, file.alt);
+            const uploadTask = uploadBytesResumable(imageRef, blob);
+            const snapshot = await uploadTask;
 
-            uploadPromises.push(uploadTask.then(async (snapshot) => {
-              // subir imagenes a firebase
-              const downloadURL = await getDownloadURL(snapshot.ref);
-              await setDoc(docRef, {
-                proyectos: {
-                  [documentId]: {
-                    imagenes: { [imageName]: downloadURL }
-                  }
+            // Obtener la URL de descarga de la imagen
+            const downloadURL = await getDownloadURL(snapshot.ref);
+
+            // Almacenar la URL en Firestore
+            await setDoc(docRef, {
+              proyectos: {
+                [documentId]: {
+                  imagenes: { [imageName]: downloadURL }
                 }
-              }, { merge: true })
-              referencesUploaded++;
-            }))
-            if (referencesUploaded === imageNumber) {
-              break;
-            }
-          }
+              }
+            }, { merge: true });
+          }));
 
-          // realizar acciones después de que todas las imágenes se hayan subido y almacenado en Firestore
-          await Promise.all(uploadPromises);
-          setDoc(docRef, {
+          // Almacenar la información general del proyecto en Firestore
+          await setDoc(docRef, {
             proyectos: {
               [documentId]: {
                 id: documentId,
-                title: trabajoTitle,
-                desc: trabajoDescripcion
+                title: servicioTitle,
+                desc: servicioDescripcion
               }
             },
             notificaciones: {
-              [`${dia}${año}${hora}${minuto}${segundo}`]: {
-                id: `${dia}${año}${hora}${minuto}${segundo}`,
+              [codigoGenerado]: {
+                id: codigoGenerado,
                 visible: true,
                 img: '/imagenes/logo bg azul.png',
-                text: `<b>${nombre}</b>, Se ha creado tu proyecto <i class="fa-regular fa-face-smile"></i> !`,
+                text: `<b>${nombre}</b>, Se ha creado tu proyecto !`,
                 date: `${mes} ${dia}, ${año} ${hora < 10 ? '0' : ''}${hora}:${minuto < 10 ? '0' : ''}${minuto} ${meridiano}`
               }
             }
+          }, { merge: true });
 
-          }, { merge: true }).then(() => {
-            window.location.reload();
-
-          }).catch((error) => {
-            hideLoadWindows()
-            modal.open()
-            alert('ha ocurrido un error al subir el documento, intenta de nuevo mas tarde');
-          });
-
-        });
+          window.location.reload();
+        } catch (error) {
+          hideLoadWindows();
+          modal.open();
+          console.error('Error al subir el documento:', error);
+          alert('Ha ocurrido un error al subir el documento. Intente de nuevo más tarde.');
+        }
 
       } else {
-        alert('Aun falta algo para crearlo');
-        hideLoadWindows()
+        alert('Aún falta algo para crearlo');
+        hideLoadWindows();
       }
     }
+
+
+    function leerServicios() {
+      const proyectContent = document.getElementById('leerServicios');
+
+      proyectContent.innerHTML = '';
+      const querySnapshot = Object.values(proyectos);
+      querySnapshot.forEach(docs => {
+        const imagenes = Object.values(docs.imagenes);
+        const { title, desc } = docs;
+        const proyectId = docs.id
+        console.log(querySnapshot.length); // contar la cantidad de servicios agregados
+        proyectContent.innerHTML += `
+        <div class="col s6 m4 l3">
+            <div class="card card-proyect">
+                <a href="../proyecto/search?id=${id}&proyecto=${proyectId}">
+                    <div class="card-image waves-effect waves-block waves-light">
+                        <img src="${imagenes[0]}"
+                            alt="img" class="activator" />
+                    </div>
+                </a>
+                <div class="card-content">
+                    <b class="activator valign-wrapper space-around"><span class="truncate">${title}</span>
+                    <i class="material-icons cursor-pointer">visibility</i></b>
+                </div>
+                <div class="card-reveal">
+                <b class="activator valign-wrapper space-around"><span class="truncate">${title}</span>
+                <i class="material-icons cursor-pointer card-title activator">close</i></b>
+                    <p>${desc}</p>
+                </div>
+            </div>
+        </div>
+        `;
+      });
+    } leerServicios()
     // se ejecuta cuando la ventana carge
     document.addEventListener('DOMContentLoaded', hideLoadWindows())
-    
+
   }
 }

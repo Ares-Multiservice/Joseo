@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Material Icon CDN -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vina+Sans&display=swap" rel="stylesheet">
+    <!-- google icons -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <!-- Path of the materialize.min.css file -->
+    <link rel="stylesheet" href="../node_modules/materialize-css/dist/css/materialize.css" media="screen,projection">
+    <!-- Path of the splide.min.css fil -->
+    <link rel="stylesheet" href="../node_modules/@splidejs/splide/dist/css/splide.min.css" media="screen,projection">e
+    <!-- Path of the splide video.min.css file -->
+    <link rel="stylesheet"
+        href="../node_modules/@splidejs/splide-extension-video/dist/css/splide-extension-video.min.css"
+        media="screen,projection">
+    <!-- Path of the splide video.min.css file
+    <link rel="stylesheet" href="../node_modules/rellax/css/main.css" media="screen,projection"> -->
+    <!-- fontawesome css -->
+    <link rel="stylesheet" href="../fontawesome-free-6.4.2-web/css/all.css">
+    <!-- Custom css file path -->
+    <link rel="stylesheet" href="style.css">
+    <link class="headIcon" rel="shortcut icon" href="../imagenes/logo bg teal.png" type="image/x-icon">
+    <title>cargando..</title>
+</head>
+
+<body class=" grey lighten-5">
+    <header>
+        <div id="nav" class="navbar-fixed">
+            <nav class="teal darken-4">
+                <div class="nav-wrapper">
+                    <a href="../" class="brand-logo left"><img src="../imagenes/logo horizontal teal.jpg" alt="i"></a>
+
+                    <ul id="navUserInactive" class="right hide">
+                        <li>
+                            <a id="entrarBtn" href="../signup/"><i
+                                    class="fa-regular fa-circle-user">&nbsp;</i>Entrar</a>
+                        </li>
+                    </ul>
+                    <ul id="navUserActive" class="right hide">
+                        <li><a href="#"><i class="fa-regular fa-message"></i></a></li>
+                        <li><a class="dropdown-trigger" data-target="notifications">
+                                <i class="fa-regular fa-bell"></i></a>
+                        </li>
+                        <li>
+                            <!-- Dropdown Trigger -->
+                            <a data-target='userMenu' class='dropdown-trigger valign-wrapper'>
+                                <img id="nav-image" class="circle" src="../imagenes/user-icon.png" alt="user">&nbsp;
+                                <i class="material-icons">arrow_drop_down</i></a>
+                        </li>
+                    </ul>
+                    <!-- Menu -->
+                    <ul id='userMenu' class='dropdown-content'>
+                        <li class="valign-wrapper">
+                            <img id="dropDown-image" class="circle" src="/imagenes/user-icon black.png" alt="user">
+                            <div>&nbsp;<b id="dropDown-name"></b><br>
+                                <a href="../perfil/" class="waves-effect waves-light btn btn-small">ver perfil</a>
+                            </div>
+                            <a href="#cerrarSesionModal" class="modal-trigger"><i class="fa-solid fa-power-off"></i></a>
+                        </li>
+                    </ul>
+                    <!-- Modal cerrar sesion -->
+                    <div id="cerrarSesionModal" class="modal">
+                        <div class="modal-content center black-text">
+                            <h4>cerrar sesion</h4>
+                            <p>Estas seguro que deseas continuar?</p>
+                            <a id="cerrarSesionBtn" class="waves-effect waves-light btn">continuar</a>
+                            <a class="waves-effect waves-light btn modal-close">cancelar</a>
+                        </div>
+                    </div>
+                    <!-- Notificaciones -->
+                    <ul id='notifications' class='dropdown-content center'>
+                        <h6 class="black-text">Notificaciones</h6>
+                        <h5 class="black-text">No hay notificaciones...</h5>
+                        <div class="hide" id="notifications-container">
+                            <li><a href="#!">
+                                    <div class="valign-wrapper"> <img class="circle"
+                                            src="../imagenes/user-icon black.png" alt="user">&nbsp;
+                                        <span>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Repellat,
+                                            eos.</span>
+                                    </div>
+                                </a>
+                            </li>
+                        </div>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <div class="parallax-container">
+        <div class="parallax"><img id="parallax-image" src="../imagenes/casa-de-madera-de-diseno-moderno21-645b7b443ba61.jpg" alt="img"></div>
+        </div>
+
+        <div class="section">
+            <div class="container center">
+                    <h2 id="titulo" class="title">Cargando...</h2>
+                    <div class="chips-container transparent">
+                        <a id="chip-contact" class="chip chip-contact">
+                            <img id="userPhoto" src="../imagenes/logo bg azul.png">
+                            <p><b id="displayName" class="black-text">cargando...</b><br>
+                                <span id="profecionCont" class="teal-text text-darken-2"></span>
+                            </p>
+                        </a>
+                        <div class="chip-action">
+                            <a href="#" id="sendMessageBtn" class="btn-small waves-effect waves-light blue z-depth-0">
+                                <i class="fa-regular fa-message"></i> Mensaje</a>
+
+                            <div class="chip chip-recomns"><b>recomns&nbsp;&nbsp;<span id="recoms">0</span></b>&nbsp;&nbsp;
+                                <a id="recomendar-Btn"
+                                    class="btn-floating btn-small waves-effect waves-light disabled z-depth-0">
+                                    <i class="material-icons">thumb_up</i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <p id="descripcion">cargando</p>
+                    <div class="divider grey"></div>
+                <br>
+                <div id="pintarImagenes" class="row grey lighten-2">
+                    <div class="col s12 center">
+                        <h6>Cargando imagenes...</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="load" class="load-container hide">
+            <div class="preloader-wrapper active">
+                <!-- spinner-blue -->
+                <div class="spinner-layer spinner-blue">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+                <!-- spinner-red -->
+                <div class="spinner-layer spinner-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+                <!-- spinner-yellow -->
+                <div class="spinner-layer spinner-yellow">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+                <!-- spinner-greem -->
+                <div class="spinner-layer spinner-green">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <h3 class="center-align hide white-text"><i
+                    class="fa-solid fa-house-medical-circle-exclamation"></i><br>Error 404 <br> Usuario no encontrado
+            </h3>
+        </div>
+    </main>
+
+    <!-- Path of the materialize.min.js file -->
+    <script src="../node_modules/materialize-css/dist/js/materialize.js"></script>
+    <!-- Path of the splide.min.js file -->
+    <script src="../node_modules/@splidejs/splide/dist/js/splide.min.js"></script>
+    <!-- Path of the splide video.min.js file -->
+    <script src="../node_modules/@splidejs/splide-extension-video/dist/js/splide-extension-video.min.js"></script>
+    <!-- Path of the splide video.min.js file
+    <script src="../node_modules/rellax/rellax.min.js"></script> -->
+    <!-- fontawesome JS -->
+    <script src="../fontawesome-free-6.4.2-web/js/all.js"></script>
+    <!-- Firebase UI -->
+    <script src="https://www.gstatic.com/firebasejs/ui/6.1.0/firebase-ui-auth.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/6.1.0/firebase-ui-auth.css" />
+
+    <script type="module" src="./main.js"></script>
+    <script src="./materialize.js"></script>
+</body>
+
+</html>

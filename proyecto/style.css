@@ -1,0 +1,302 @@
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+body.fixed-container {
+    display: block;
+    overflow: hidden;
+}
+
+main {
+    flex: 1 0 auto;
+    padding: 10px 0 0 0;
+
+}
+
+.space-around {
+    justify-content: space-around;
+}
+
+.space-between {
+    justify-content: space-between;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.load-container {
+    position: fixed;
+    top: 0;
+    z-index: 3000;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbar-fixed {
+    top: 0;
+    position: absolute;
+}
+
+.nav-wrapper {
+    padding: 0 20px;
+}
+
+nav .brand-logo {
+    height: 44px;
+    margin-top: 5px;
+    left: auto;
+}
+
+nav .brand-logo>img {
+    position: relative;
+    color: #fff;
+    display: inline-block;
+    padding: 0;
+    border-radius: 10px;
+    width: 136px;
+    height: 34px;
+}
+
+/*cerrar sesion menu*/
+.dropdown-trigger img {
+    width: 34px;
+}
+
+#userMenu.dropdown-content {
+    width: 200px !important;
+}
+
+#userMenu.dropdown-content img {
+    width: 44px;
+}
+
+#userMenu.dropdown-content b {
+    font-size: 14pt;
+}
+
+#userMenu.dropdown-content div {
+    margin-left: 5px;
+}
+
+#userMenu.dropdown-content .btn {
+    font-size: 12px !important;
+    text-transform: unset;
+    background: rgb(0, 110, 255);
+    color: white !important;
+    height: 20px;
+    width: 80px;
+    padding: 0;
+    line-height: 20px;
+    margin-left: 0;
+}
+
+
+/* contenedor de notificaciones */
+
+#notifications {
+    height: 200px;
+}
+
+#notifications.dropdown-content {
+    width: 300px !important;
+    height: 500px;
+}
+
+#notifications h5 {
+    margin-top: 200px;
+}
+
+#notifications.dropdown-content img {
+    width: 25px;
+}
+
+/* carusel
+
+
+.splide {
+    height: 450px !important;
+    overflow: hidden;
+    position: relative;
+    border-radius: 10px;
+}
+
+
+.splide__slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    cursor: zoom-in;
+    transition: transform 0.3s ease-out;
+    border-radius: 10px;
+} */
+.parallax-container{
+    height: 350px;
+}
+
+.imagen-completa {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: auto;
+    object-fit: contain !important;
+    z-index: 9999;
+    margin: 20%;
+    cursor: zoom-out !important;
+}
+.section {
+    padding: 0 !important;
+}
+/* Chip con la informacion del usuario leido */
+
+.chips-container {
+    height: 46px;
+    line-height: 46px;
+    width: 100%;
+    padding: 0 20px;
+    text-align: left !important;
+}
+
+/* informacion del usuario */
+.chip-contact {
+    height: 46px;
+    line-height: 46px;
+    width: 265px;
+    border-radius: 20px;
+    background: rgb(158, 158, 158, 0.7);
+    cursor: pointer;
+    user-select: none;
+}
+
+.chip-contact img {
+    height: 46px;
+    width: 46px;
+}
+
+.chip-contact p {
+    text-align: left;
+    line-height: 12px;
+
+}
+
+.chip-contact #displayName {
+    font-size: 14pt;
+}
+
+.chip-contact span {
+    font-size: 12px;
+}
+
+/*chips con los botones de accion */
+.chip-action {
+    height: 46px;
+    line-height: 46px;
+    float: right;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* boton de enviar un mensaje */
+.chip-action .blue {
+    height: 32px;
+    line-height: 32px;
+    border-radius: 20px !important;
+    margin-right: 10px;
+
+}
+
+/* boton de recoms */
+.chip-action .chip-recomns {
+    height: 32px;
+    line-height: 32px;
+    padding: 0 0 0 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+.chip-action .chip-recomns .btn-floating {
+    width: 32px;
+    height: 32px;
+}
+
+h2.title {
+    font-size: 28pt !important;
+    line-height: 28pt !important;
+    padding: 0 ;
+    margin: 10px 0;
+    font-weight: bold;
+}
+
+/* descripcion */
+.descripcion-container {
+    padding: 10px;
+    margin-top: 5px;
+}
+
+.materialboxed {
+    width: 100%;
+    height: 250px !important;
+    margin: 10px 0;
+    object-fit: cover;
+    object-position: center center;
+    cursor: zoom-in;
+    transition: transform 0.3s ease-out;
+    border-radius: 10px;
+}
+
+@media only screen and (max-width:580px) {
+
+    .nav-wrapper {
+        padding: 0;
+    }
+
+    nav .brand-logo {
+        height: 44px;
+        margin-top: 5px;
+    }
+
+    nav .brand-logo>img {
+        position: relative;
+        color: #fff;
+        display: inline-block;
+        padding: 0;
+        border-radius: 10px;
+        width: 120px;
+        height: 30px;
+    }
+    
+   .title {
+        font-size: 18pt;
+        line-height: 0.8
+    }
+    
+    .chips-container {
+        height: 100px;
+        line-height: 50px;
+    }
+    
+    /* informacion del usuario */
+    .chip-contact {
+        width: 100%;
+        float: none;
+    }
+
+    /*chips con los botones de accion */
+    .chip-action {
+        float: none;
+        justify-content: space-around;
+    }
+
+}

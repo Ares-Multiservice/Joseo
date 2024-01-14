@@ -153,6 +153,28 @@ const campos = {
   fecha: false,
   hora: false
 };
+// obtener la fecha actual
+var fechaActual = new Date();
+
+var mesesAbreviados = [
+  'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
+  'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'
+];
+
+var año = fechaActual.getFullYear();
+var mes = mesesAbreviados[fechaActual.getMonth()]; // Obtener el nombre del mes abreviado
+var dia = fechaActual.getDate();
+var hora = fechaActual.getHours();
+var minuto = fechaActual.getMinutes();
+var segundo = fechaActual.getSeconds();
+var meridiano = hora >= 12 ? 'PM' : 'AM';
+
+// Convertir la hora a formato de 12 horas
+hora = hora % 12;
+hora = hora === 0 ? 12 : hora;
+
+// // Ejemplo de uso
+var codigoGenerado = `${año}${dia}${hora < 10 ? '0' : ''}${hora}${minuto < 10 ? '0' : ''}${minuto}${segundo < 10 ? '0' : ''}${segundo}`;
 
 const usuario = document.getElementById('usuario');
 const nombre = document.getElementById('nombre');
@@ -185,38 +207,6 @@ firebase.auth().onAuthStateChanged((user) => {
       nombre.value = displayName;
     }
 
-    // obtener la fecha actual
-    var fechaActual = new Date();
-
-    var mesesAbreviados = [
-      'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
-      'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'
-    ];
-
-    var año = fechaActual.getFullYear();
-    var mes = mesesAbreviados[fechaActual.getMonth()]; // Obtener el nombre del mes abreviado
-    var dia = fechaActual.getDate();
-    var hora = fechaActual.getHours();
-    var minuto = fechaActual.getMinutes();
-    var meridiano = hora >= 12 ? 'PM' : 'AM';
-
-    // Convertir la hora a formato de 12 horas
-    hora = hora % 12;
-    hora = hora === 0 ? 12 : hora;
-
-    // obtener un id generado al azar
-    function generarCodigo() {
-      var caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-      var codigo = '';
-      for (var i = 0; i < 8; i++) {
-        var indice = Math.floor(Math.random() * caracteres.length);
-        codigo += caracteres.charAt(indice);
-      }
-      return codigo;
-    }
-    
-    // Ejemplo de uso
-    var codigoGenerado = generarCodigo();
 
     function crearFirestore() {
       user.updateProfile({
