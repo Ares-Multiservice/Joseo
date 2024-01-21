@@ -54,7 +54,6 @@ document.addEventListener('fullscreenchange', function () {
 });
 
 document.addEventListener('DOMContentLoaded', function () {
-    console.log('se ejecuta');
     // const splideList = document.querySelector('#splide__list');
     // splideList.addEventListener('click', (event) => {
     //     const imagen = event.target;
@@ -71,8 +70,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // });
 
-    const pintarImagenes = document.querySelector('#pintarImagenes');
-    pintarImagenes.addEventListener('click', (event) => {
+    const imageContainer = document.querySelector('#image-container');
+    imageContainer.addEventListener('click', (event) => {
         const imagen = event.target;
 
         if (imagen.classList.contains('materialboxed')) {

@@ -2,6 +2,8 @@ body {
     display: flex;
     min-height: 100vh;
     flex-direction: column;
+    box-sizing: border-box;
+
 }
 
 body.fixed-container {
@@ -11,6 +13,8 @@ body.fixed-container {
 
 main {
     flex: 1 0 auto;
+    height: 90vh;
+
 }
 
 .space-around {
@@ -25,11 +29,15 @@ main {
     cursor: pointer;
 }
 
+.btn-pildore {
+    border-radius: 100px;
+}
+
 .load-container {
     position: fixed;
     z-index: 3000;
-    width: 100%;
     height: 100vh;
+    width: 100vw;
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(5px);
     display: flex;
@@ -37,17 +45,32 @@ main {
     justify-content: center;
     align-items: center;
 }
-.load-container .img{
+
+.load-container img {
     width: 40%;
 }
-.load-container .progress{
+
+.load-container .progress {
     width: 40%;
+}
+
+#nav,
+nav {
+    /* height: 10vh !important;
+    line-height: 10vh !important; */
+    transition: background-color 1s ease;
+}
+
+.black-transparent {
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
 }
 
 .navbar-fixed {
     top: 0;
     position: absolute;
 }
+
 
 .nav-wrapper-message {
     height: 20px;
@@ -63,6 +86,12 @@ main {
 .nav-wrapper {
     padding: 0 20px;
 }
+
+.nav-wrapper #navbar svg {
+    border-radius: 50%;
+    box-shadow: 0 0 5px black;
+}
+
 
 .nav-wrapper .btn-small {
     width: 25px;
@@ -88,18 +117,159 @@ nav .brand-logo>img {
 
 /* portada */
 .parallax-container {
-    height: 300px;
-    background: rgb(0, 0, 0);
-    background: linear-gradient(180deg, rgba(0, 0, 0, 1) 10%, rgba(255, 255, 255, 1) 90%);
+    height: 100vh;
 }
 
+.parallax img {
+    object-fit: cover;
+    /* height: 150vh; */
+    object-position: center top  !important;
+    filter: blur(10px);
+
+}
+
+.parallax-container .subcontent {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+}
+
+/* .section {
+    height: 90vh !important;
+} */
+
+/* hacer un elemento scrolable
+.section .scrollable-container {
+    overflow: hidden !important;
+    height: 55vh;
+}
+
+.section .scrollable-container .content {
+    width: 100%;
+    max-height: 100%;
+    overflow-y: scroll;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 3px;
+} */
+
+/* informacion del usuario leido */
+.contact-container {
+    position: relative;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    padding: 50px;
+    background-image: radial-gradient(89.01% 112.44% at 8.9% 11.35%, #ffabd8 2.59%, #fff280 38.54%, #e7ff7d 60.18%, #a4cbff 92.1%);
+}
+
+.foto-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    height: 200px;
+}
+
+.foto-container img {
+    width: 200px;
+}
+
+.foto-container .btn {
+    position: absolute;
+    height: 2rem;
+    line-height: 2rem;
+    width: 2rem;
+    right: 15px;
+    bottom: 15px;
+
+}
+
+/* cortar la imagen */
+.cropper-container {
+    height: 400px;
+}
+
+.cropper-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover !important;
+}
+
+.cropper-modal {
+    background-color: rgb(255, 255, 255, 0.6) !important;
+    opacity: 0.5;
+}
+
+/* botones e informaciones del contenedor del usuario */
+/* botones e informaciones del contenedor del usuario */
+/* botones e informaciones del contenedor del usuario */
+
+.data-container p {
+    margin-top: -10px;
+}
+
+.data-container p {
+    display: flex;
+    flex-direction: column;
+}
+
+.data-container .data-nombre {
+    font-size: 28pt;
+    font-weight: bold;
+}
+
+.data-container p b {
+    margin-top: -10px;
+}
+
+.data-container a.data-presentacion {
+    color: #000000;
+    margin-top: 20px;
+}
+
+.data-container a.data-presentacion:hover {
+    color: #0086c4;
+}
+
+.chip-recoms {
+    position: absolute;
+    top: 20px;
+    right: 10px;
+}
+
+/* botones de accion */
+.action-container {
+    position: absolute;
+    bottom: 0;
+    right: 10px;
+    height: 100px;
+    line-height: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    justify-items: center;
+}
+
+.action-container .btn-small {
+    margin: 6px;
+}
+
+
+/* contenedor de notificaciones */
+/* contenedor de notificaciones */
 /* contenedor de notificaciones */
 
 #notifications {
     height: 200px;
 }
-
-/* notificaciones */
 
 #notifications.dropdown-content {
     width: 300px !important;
@@ -146,22 +316,10 @@ nav .brand-logo>img {
     pointer-events: none;
 }
 
-/* hacer un elemento scrolable */
-.scrollable-container {
-    overflow: hidden;
-    /* Oculta el desbordamiento horizontal */
-}
-
-.scrollable-container .content {
-    width: 100%;
-    /* Ancho del contenido igual al del contenedor */
-    /* max-height: 50%; Altura máxima del contenido igual a la del contenedor */
-    overflow-y: auto;
-    /* Habilita el desplazamiento vertical si es necesario */
-    margin-top: -15px !important;
-}
-
 /*cerrar sesion menu*/
+/*cerrar sesion menu*/
+/*cerrar sesion menu*/
+
 .dropdown-trigger img {
     width: 34px;
 }
@@ -194,35 +352,27 @@ nav .brand-logo>img {
     margin-left: 0;
 }
 
-
-.pagination-btn {
-    font-size: 12pt !important;
-    text-transform: unset;
-    background: rgb(0, 110, 255);
-    color: white !important;
-}
-
 /* cartas desplegables */
 /* cartas desplegables */
 /* cartas desplegables */
 
-.contenedordecartas {
+.cartas-container {
     margin-top: -230px;
     /* margin-bottom: -100px; */
 }
 
-.contenedordecartas .card {
+.cartas-container .card {
     height: 300px;
     padding: 0;
     margin: 0;
 }
 
-.contenedordecartas .card:hover {
+.cartas-container .card:hover {
     z-index: 3;
 
 }
 
-.contenedordecartas .card img {
+.cartas-container .card img {
     height: 100%;
     width: 100%;
     position: absolute;
@@ -231,7 +381,7 @@ nav .brand-logo>img {
 }
 
 /* desplegar carta a la derecha */
-.contenedordecartas .card .card-content.display-right {
+.cartas-container .card .card-content.display-right {
     position: absolute;
     z-index: -1;
     height: 300px;
@@ -243,14 +393,14 @@ nav .brand-logo>img {
 
 }
 
-.contenedordecartas .card:hover>.card-content.display-right {
+.cartas-container .card:hover>.card-content.display-right {
     margin-left: 100%;
     visibility: visible;
 
 }
 
 /* desplegar carta a la izquierda */
-.contenedordecartas .card .card-content.display-left {
+.cartas-container .card .card-content.display-left {
     position: absolute;
     z-index: -1;
     height: 300px;
@@ -262,15 +412,15 @@ nav .brand-logo>img {
 
 }
 
-.contenedordecartas .card:hover>.card-content.display-left {
+.cartas-container .card:hover>.card-content.display-left {
     margin-left: 100%;
     visibility: visible;
 
 }
 
-/* texto de las cartas display */
+/* texto de las cartas desplegables */
 
-.contenedordecartas .card .card-content .card-title {
+.cartas-container .card .card-content .card-title {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     overflow: hidden;
@@ -280,7 +430,7 @@ nav .brand-logo>img {
 
 }
 
-.contenedordecartas .card .card-content p {
+.cartas-container .card .card-content p {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     overflow: hidden;
@@ -290,71 +440,10 @@ nav .brand-logo>img {
 
 }
 
-/* imagen del contenedor de informacion */
-.userPhotoContainer {
-    /* padding: 0 !important; */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
 
-.userPhotoContainer img {
-    width: 100px;
-}
-
-.userPhotoContainer .btn {
-    margin-top: -30px;
-    width: 2rem;
-    height: 2rem;
-    line-height: 2rem;
-    margin-left: 50px;
-
-}
-
-.cropper-container {
-    height: 400px;
-}
-
-.cropper-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover !important;
-}
-
-.cropper-modal {
-    background-color: rgb(255, 255, 255, 0.6) !important;
-    opacity: 0.5;
-}
-
-.username {
-    font-size: 28pt;
-}
-
-.view-data {
-    padding: 20px !important;
-}
-
-.action-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: right;
-    justify-items: right;
-    padding: 20px !important;
-}
-
-.action-container a {
-    margin: 6px 0;
-}
-
-.description-container {
-    border: 1px solid rgb(13, 13, 26);
-    border-radius: 3px;
-}
-
-.description-container textarea {
-    height: 80px;
-}
+/* modales */
+/* modales */
+/* modales */
 
 .modal {
     max-height: 100% !important;
@@ -420,33 +509,77 @@ nav .brand-logo>img {
     margin: -43px 0 0 10px;
 }
 
-/* agregar proyectos */
+/* edicion de la presentacion del usuario */
+.modal .presentacion-container {
+    background: rgb(206, 206, 206);
+    border-radius: 10px;
+    text-align: center;
+}
 
-#modal-crearservicio .splide-container {
-    height: 250px;
+.modal .presentacion-container textarea {
+    height: 80px;
+    text-align: center;
+    border-bottom: 0px solid transparent !important;
+}
+
+
+/* menu de seleccion de ventanas del usuario */
+
+.tabs a {
+    font-size: 14pt !important;
+    /* font-family: 'Vina Sans', sans-serif; */
+    color: rgb(0, 0, 0) !important;
+}
+
+ul.tabs li.indicator {
+    background-color: rgb(0, 102, 255) !important;
+}
+
+/* modales pequeños centrados*/
+
+.modal-centred {
+    top: 30% !important;
+}
+
+.modal-centred .btn {
+    margin-top: 10px !important;
+}
+
+/* agregar y editar los servicios */
+/* agregar y editar los servicios */
+/* agregar y editar los servicios */
+
+.modal-servicio {
+    top: 3% !important;
+    bottom: 3% !important;
+}
+
+.modal-servicio .splide-container {
+    height: 300px;
     padding: 5px;
     background: grey;
 }
 
-#modal-crearservicio .splide-container h6{
+.modal-servicio .splide-container h6 {
     margin-top: 25%;
     color: white;
 }
 
-#modal-crearservicio .splide__slide{
+.modal-servicio .splide__slide {
     margin: 0 3px 0 3px;
 }
 
-#modal-crearservicio .splide__slide img {
+.modal-servicio .splide__slide img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-#modal-crearservicio .splide {
+.modal-servicio .splide {
     width: 100% !important;
 }
-#modal-crearservicio .splide__slide a {
+
+.modal-servicio .splide__slide a {
     position: absolute !important;
     top: -7px !important;
     right: 0 !important;
@@ -457,23 +590,23 @@ nav .brand-logo>img {
 
 }
 
-#modal-crearservicio .splide__slide a:hover {
+.modal-servicio .splide__slide a:hover {
     color: rgb(134, 38, 38);
 
 }
 
-#modal-crearservicio .btns {
+.modal-servicio .btns {
     margin-top: -40px;
     text-align: right;
     padding-right: 20px;
 }
 
-#modal-crearservicio .input-field input {
+.modal-servicio .input-field input {
     background: rgb(221, 221, 221) !important;
     border-radius: 3px !important;
 }
 
-#modal-crearservicio .input-field textarea {
+.modal-servicio .input-field textarea {
     background: rgb(221, 221, 221) !important;
     border-radius: 3px;
     width: 101%;
@@ -481,22 +614,184 @@ nav .brand-logo>img {
     margin-top: -15px;
 }
 
-#modal-crearservicio .input-field input::placeholder,
-#modal-crearservicio .input-field textarea::placeholder {
+.modal-servicio .input-field input::placeholder,
+.modal-servicio .input-field textarea::placeholder {
     color: #000;
 }
 
-/* carta de imagenes */
+/* poner pantalla complata las imagenes */
+/* poner pantalla complata las imagenes */
+/* poner pantalla complata las imagenes */
 
-/* .card-proyect{
-    height: 300px;
+.imagen-completa {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: auto;
+    object-fit: contain !important;
+    z-index: 9999;
+    margin: 20%;
+    cursor: zoom-out !important;
+}
 
-} */
+.materialboxed {
+    width: 100%;
+    height: 200px !important;
+    margin: 10px 0;
+    object-fit: cover;
+    object-position: center center;
+    cursor: pointer;
+    transition: transform 0.3s ease-out;
+    border-radius: 10px;
+}
 
-.card-proyect img {
+.mis-fotos {
+    position: relative;
+}
+
+/*  boton gatillo del modal en mis servicios y galeria floating top right */
+
+a.trigger {
+    position: absolute;
+    top: 13px;
+    right: 13px;
+    float: right;
+    cursor: pointer;
+    /* visibility: hidden; */
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    background: rgb(0, 0, 0, 0.3);
+    color: white;
+    text-align: center;
+    border-radius: 50%;
+    box-shadow: 0 0 5px black;
+}
+
+a.trigger svg {
+    pointer-events: none;
+    font-size: 14pt;
+}
+
+
+/* boton de crear servicio */
+.crear-servicio-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.crear-servicio-container .header-text {
+    font-family: 'Roboto', sans-serif;
+    color: #212121;
+    text-shadow: none !important;
+}
+
+#crear-servicio-btn {
+    /* font-size: 14pt !important;
+    font-family: 'Roboto', sans-serif;
+    width: 30%;
+    line-height: 46px !important; */
+    margin-bottom: 20px;
+    padding: 0 100px;
+    /* border: 2px solid #008cff;
+    border-bottom: 5px solid #006797;
+    top: 0;
+    transition: top 0.1s, border-bottom 0.1s;
+    Agregamos la propiedad transition */
+}
+
+.filter-container {
+    width: 100%;
+    position: relative;
+    left: 0;
+}
+
+.filter-container .input-field {
+    width: 150px;
+    float: right;
+    right: 20px;
+    position: relative;
+    border-radius: 10px;
+}
+
+/* agregar imagenes */
+/* agregar imagenes */
+/* agregar imagenes */
+
+#modal-subir-imagenes .splide-container {
+    height: 400px;
+    padding: 5px;
+    background: grey;
+}
+
+
+
+
+
+/* carta de servicios */
+/* carta de servicios */
+/* carta de servicios */
+.servicios-container {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.section .col {
+    padding: 0 0.25rem !important;
+}
+
+#misServicios{
+    padding: 0;
+}
+
+.card-servicios {
+    border-radius: 10px;
+    padding: 0 !important;
+}
+
+.card-servicios img {
     height: 200px;
     object-fit: cover;
     object-position: center center;
+    border-radius: 10px 10px 0 0 !important;
+
+}
+
+.card-servicios .card-content+.card-reveal {
+    padding: 12px;
+}
+
+@media only screen and (max-width:785px) {
+
+
+    /* informacion del usuario leido */
+    .foto-container {
+        position: relative;
+    }
+
+    .data-container .data-nombre {
+        font-size: 20pt;
+        font-weight: bold;
+    }
+
+    .chip-recoms {
+        top: 0;
+        right: 0;
+    }
+
+    .action-container {
+        position: relative;
+        height: 46px;
+        line-height: 46px;
+        width: 75%;
+        right: 0;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        justify-items: center;
+    }
+
 
 }
 
@@ -521,6 +816,10 @@ nav .brand-logo>img {
         height: 30px;
     }
 
+    .parallax img {
+        height: 200% !important;
+    }
+
     .modal-small {
         width: 90% !important;
     }
@@ -539,19 +838,19 @@ nav .brand-logo>img {
     }
 
     /* cartas desplegables */
-    .contenedordecartas {
+    .cartas-container {
         margin-top: -250px;
         margin-bottom: -100px;
         display: flex;
         flex-direction: row;
     }
 
-    .contenedordecartas .col {
+    .cartas-container .col {
         padding: 0;
     }
 
     /* desplegar carta a la izquierda */
-    .contenedordecartas .card .card-content.display-left {
+    .cartas-container .card .card-content.display-left {
         position: absolute;
         z-index: -1;
         height: 300px;
@@ -563,26 +862,19 @@ nav .brand-logo>img {
 
     }
 
-    .contenedordecartas .card:hover>.card-content.display-left {
+    .cartas-container .card:hover>.card-content.display-left {
         margin-left: -115%;
         width: 115%;
         visibility: visible;
 
     }
 
-    .userPhotoContainer {
-        position: relative;
-    }
 
     .action-container {
-        text-align: center;
+        width: 100%;
     }
 
-    .view-data {
-        text-align: center;
-    }
-
-    .card-proyect img {
+    .card-servicios img {
         height: 150px;
 
     }

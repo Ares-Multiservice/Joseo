@@ -137,8 +137,8 @@ nav .brand-logo>img {
     transition: transform 0.3s ease-out;
     border-radius: 10px;
 } */
-.parallax-container{
-    height: 350px;
+.parallax-container {
+    height: 470px;
 }
 
 .imagen-completa {
@@ -151,9 +151,22 @@ nav .brand-logo>img {
     margin: 20%;
     cursor: zoom-out !important;
 }
+
+.materialboxed {
+    width: 100%;
+    height: 200px !important;
+    margin: 10px 0;
+    object-fit: cover;
+    object-position: center center;
+    cursor: zoom-in;
+    transition: transform 0.3s ease-out;
+    border-radius: 10px;
+}
+
 .section {
     padding: 0 !important;
 }
+
 /* Chip con la informacion del usuario leido */
 
 .chips-container {
@@ -170,7 +183,8 @@ nav .brand-logo>img {
     line-height: 46px;
     width: 265px;
     border-radius: 20px;
-    background: rgb(158, 158, 158, 0.7);
+    background: rgb(2, 95, 159);
+    background: linear-gradient(90deg, rgb(0, 128, 212) 0%, rgba(255, 255, 255, 0) 100%);
     cursor: pointer;
     user-select: none;
 }
@@ -226,6 +240,14 @@ nav .brand-logo>img {
 
 }
 
+.chip-action .chip-recomns.green-border{
+    box-shadow: 0 0 10px  rgb(0, 255, 0);
+}
+
+.chip-action .chip-recomns.red-border{
+    border: 1px solid rgb(255, 0, 0);
+}
+
 .chip-action .chip-recomns .btn-floating {
     width: 32px;
     height: 32px;
@@ -234,7 +256,7 @@ nav .brand-logo>img {
 h2.title {
     font-size: 28pt !important;
     line-height: 28pt !important;
-    padding: 0 ;
+    padding: 0;
     margin: 10px 0;
     font-weight: bold;
 }
@@ -245,16 +267,6 @@ h2.title {
     margin-top: 5px;
 }
 
-.materialboxed {
-    width: 100%;
-    height: 250px !important;
-    margin: 10px 0;
-    object-fit: cover;
-    object-position: center center;
-    cursor: zoom-in;
-    transition: transform 0.3s ease-out;
-    border-radius: 10px;
-}
 
 @media only screen and (max-width:580px) {
 
@@ -276,17 +288,17 @@ h2.title {
         width: 120px;
         height: 30px;
     }
-    
-   .title {
+
+    .title {
         font-size: 18pt;
         line-height: 0.8
     }
-    
+
     .chips-container {
         height: 100px;
         line-height: 50px;
     }
-    
+
     /* informacion del usuario */
     .chip-contact {
         width: 100%;

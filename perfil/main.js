@@ -2,8 +2,8 @@ M.AutoInit();
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, collection, setDoc, doc, deleteDoc, getDocs, getDoc, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { getStorage, ref, uploadBytesResumable, getDownloadURL} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+import { getFirestore, collection, setDoc, doc, deleteDoc, updateDoc, deleteField, getDocs, getDoc, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getStorage, ref, uploadBytesResumable, uploadBytes, getDownloadURL, listAll, deleteObject } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBYNAIFu_BU4oav3I3PCFncS9QU5GvkiAU",
@@ -33,6 +33,7 @@ function viewLoadWindows() {
   body.classList.add('fixed-container');
   loader.classList.remove('hide');
 }
+viewLoadWindows()
 
 function hideLoadWindows() {
   body.classList.remove('fixed-container');
@@ -60,11 +61,13 @@ function observador() {
       if (photoURL) {
         dropDownImage.src = photoURL;
         navImage.src = photoURL;
+        // document.querySelector('.icon-head').href = photoURL;
       }
       if (displayName) {
         var nombre = `${displayName}`;
         nombre = nombre.split(' ');
         dropDownName.textContent = nombre[0];
+        document.title = displayName;
       }
       if (emailVerified) {
         navWrapperMessage.classList.add('hide');
@@ -94,6 +97,7 @@ async function leer(user) {
   const verPerfilBtn = document.querySelector('#ver-perfil-btn');
 
   const profecionUbicacionCont = document.querySelector('#userProfecionUbicacion');
+  const dataPresentacion = document.querySelector('#data-presentacion');
   const presentacionCont = document.querySelector('#userpresentacion');
   const recomendaciones = document.querySelector('#recoms');
 
@@ -162,6 +166,7 @@ async function leer(user) {
     nombreCont.textContent = nombre;
     profecionUbicacionCont.textContent = `${profecion} en ${provincia}`;
     presentacionCont.textContent = presentacion;
+    dataPresentacion.textContent = presentacion;
     recomendaciones.textContent = recoms;
     verPerfilBtn.href = `../v/${id}`
 
@@ -644,7 +649,7 @@ async function leer(user) {
             cropper = new Cropper(document.getElementById('croppperImg'), {
               aspectRatio: 1, // Relación de aspecto cuadrada para un área de corte circular
               viewMode: 1, // Fijar el área de recorte, la imagen se mueve dentro de ella
-              dragMode: 'none', // Habilitar el modo de arrastre para mover la imagen dentro del área de recorte
+              dragMode: 'move', // Habilitar el modo de arrastre para mover la imagen dentro del área de recorte
               cropBoxResizable: false, // Desactivar el redimensionamiento del cuadro de recorte
               cropBoxMovable: false, // Desactivar el movimiento del cuadro de recorte
               autoCrop: true, // Activar el recorte automático al cargar la imagen
@@ -738,6 +743,116 @@ async function leer(user) {
     };
     editarUserPhotoURL();
 
+    function leerFotos() {
+      const imageContainer = document.getElementById('contenedor-imagenes');
+      const parallaxImage = document.getElementById('parallax-image');
+
+      const eliminarFotoBtn = document.getElementById('eliminar-foto-btn');
+      const usarfotobtn = document.getElementById('usar-antigua-foto-btn');
+
+      const listRef = ref(st, `${uid}/fotos de perfil`);
+      imageContainer.innerHTML = '';
+      listAll(listRef).then((result) => {
+        result.items.forEach(async (imageRef) => {
+          const url = await getDownloadURL(imageRef);
+          // comprovar que no se pueda borrar la imagen de perfil actual
+          if (url === photoURL) {
+            imageContainer.innerHTML += `
+                 <div class="col s6 m4 l3 mis-fotos">
+                     <img class="materialboxed responsive-img" src="${url}">
+                </div>
+            `;
+          } else {
+            imageContainer.innerHTML += `
+                 <div class="col s6 m4 l3 mis-fotos">
+                     <img class="materialboxed responsive-img" src="${url}">
+                     <a data-id='${imageRef}' href='#modal-foto-opciones' class="modal-trigger trigger" title='Opciones'><i class="fa-solid fa-ellipsis-vertical"></i></a>
+                </div>
+            `;
+
+          }
+
+          // Agrega un evento de clic al botón de eliminar
+          imageContainer.addEventListener('click', (event) => {
+            const target = event.target;
+            if (target.classList.contains('modal-trigger')) {
+              eliminarFotoBtn.dataset.id = target.dataset.id;
+              usarfotobtn.dataset.id = target.parentElement.querySelector('img').src;
+            }
+
+          });
+
+        });
+        async function parallaxAutoplay() {
+          let index = 0;
+          let dataBucked = result.items[index];
+
+          const updateParallaxImage = async () => {
+            const url = await getDownloadURL(dataBucked);
+            parallaxImage.src = url;
+          };
+
+          setInterval(() => {
+            index = (index < result.items.length - 1) ? index + 1 : 0;
+            dataBucked = result.items[index];
+            updateParallaxImage();
+          }, 30000);
+
+          updateParallaxImage();
+        }
+
+        parallaxAutoplay();
+
+
+        // usar foto como perfil
+        usarfotobtn.addEventListener('click', async (e) => {
+          const imageRef = e.target.dataset.id;
+          try {
+            await updateProfile(auth.currentUser, {
+              photoURL: imageRef
+            }).then(() => {
+              setDoc(docRef, {
+                photoURL: imageRef,
+                notificaciones: {
+                  [codigoGenerado]: {
+                    id: codigoGenerado,
+                    visible: true,
+                    img: '/imagenes/logo bg azul.png',
+                    text: `<b>${nombre}</b>, has cambiado tu foto de perfil !`,
+                    date: `${mes} ${dia}, ${año} ${hora < 10 ? '0' : ''}${hora}:${minuto < 10 ? '0' : ''}${minuto} ${meridiano}`
+                  }
+                }
+
+              }, { merge: true }).then(() => {
+                window.location.reload();
+              })
+            }).catch(function () {
+              alert('algo salio mal, vuelve a intentarlo en un rato');
+              hideLoadWindows();
+            })
+          } catch (error) {
+            alert('Ha ocurrido un error. Inténtalo de nuevo más tarde.');
+          }
+
+        });
+
+        // Luego, en tu modal, manejas el clic del botón de eliminación
+        eliminarFotoBtn.addEventListener('click', async (e) => {
+          const imageRef = e.target.dataset.id;
+          // Elimina la imagen de Firebase Storage
+          await deleteObject(ref(st, imageRef)).then(() => {
+            window.location.reload();
+          }).catch((error) => {
+            alert('No se ha podido borrar, intenta luego')
+          });
+
+        });
+
+      });
+
+    }
+    leerFotos()
+
     // guardar Nuevo servicio 
     // guardar Nuevo servicio 
 
@@ -745,7 +860,7 @@ async function leer(user) {
       guardarServicio();
     });
 
-    var modal = M.Modal.init(document.getElementById('modal-crearServicio'));
+    var modal = M.Modal.init(document.getElementById('modal-crear-servicio'));
 
     async function guardarServicio() {
       viewLoadWindows();
@@ -771,7 +886,7 @@ async function leer(user) {
 
             // Subir la imagen a Firebase Storage
             const imageRef = ref(storageRef, file.alt);
-            const uploadTask = uploadBytesResumable(imageRef, blob);
+            const uploadTask = uploadBytes(imageRef, blob);
             const snapshot = await uploadTask;
 
             // Obtener la URL de descarga de la imagen
@@ -821,40 +936,318 @@ async function leer(user) {
       }
     }
 
-
     function leerServicios() {
-      const proyectContent = document.getElementById('leerServicios');
+      const crearServicioBtn = document.getElementById('crear-servicio-btn');
+      const serviciosContent = document.getElementById('leer-servicios');
+      const ordenSelect = document.getElementById('orden-select');
 
-      proyectContent.innerHTML = '';
-      const querySnapshot = Object.values(proyectos);
-      querySnapshot.forEach(docs => {
-        const imagenes = Object.values(docs.imagenes);
-        const { title, desc } = docs;
-        const proyectId = docs.id
-        console.log(querySnapshot.length); // contar la cantidad de servicios agregados
-        proyectContent.innerHTML += `
-        <div class="col s6 m4 l3">
-            <div class="card card-proyect">
-                <a href="../proyecto/search?id=${id}&proyecto=${proyectId}">
+      // Asegúrate de tener el elemento correcto aquí
+
+      function renderizarProyectos(querySnapshot) {
+        // Resto del código para renderizar los proyectos
+        serviciosContent.innerHTML = '';
+
+        querySnapshot.forEach(docs => {
+          const imagenes = Object.values(docs.imagenes);
+          const { title, desc } = docs;
+          const proyectId = docs.id;
+
+          if (querySnapshot.length === 12) {
+            crearServicioBtn.classList.add('disabled');
+          } else if (querySnapshot.length === 0) {
+            serviciosContent.innerHTML = '<p class="center">Aun no hay servicios en este perfil...</p>';
+          }
+          serviciosContent.innerHTML += `
+        <div class="col s6 m4">
+            <div class="card card-servicios">
+                <a href="../servicio/search?id=${id}&proyecto=${proyectId}">
                     <div class="card-image waves-effect waves-block waves-light">
                         <img src="${imagenes[0]}"
                             alt="img" class="activator" />
+
+                    <a data-id='${proyectId}' href='#modal-servicio-opciones' class="modal-trigger trigger"
+                        title='Opciones'><i class="fa-solid fa-ellipsis-vertical"></i></a>
                     </div>
                 </a>
                 <div class="card-content">
-                    <b class="activator valign-wrapper space-around"><span class="truncate">${title}</span>
-                    <i class="material-icons cursor-pointer">visibility</i></b>
+                    <b class="activator valign-wrapper space-between"><span
+                            class="truncate">${title}</span>
+                        <i class="material-icons cursor-pointer">visibility</i></b>
                 </div>
                 <div class="card-reveal">
-                <b class="activator valign-wrapper space-around"><span class="truncate">${title}</span>
-                <i class="material-icons cursor-pointer card-title activator">close</i></b>
+                    <b class="activator valign-wrapper space-between"><span
+                            class="truncate">${title}</span>
+                        <i class="material-icons cursor-pointer card-title activator">close</i></b>
                     <p>${desc}</p>
                 </div>
             </div>
         </div>
         `;
+        });
+
+      }
+
+      function ordenarProyectos() {
+        const querySnapshot = Object.values(proyectos);
+
+        // Obtener el valor seleccionado en el select
+        const ordenSeleccionado = ordenSelect.value;
+
+        // Ordenar los proyectos según la opción seleccionada
+        querySnapshot.sort((a, b) => {
+          const idA = a.id.toString();
+          const idB = b.id.toString();
+
+          if (ordenSeleccionado === 'Ascendente') {
+            return idA.localeCompare(idB);
+          } else if (ordenSeleccionado === 'Descendente') {
+            return idB.localeCompare(idA);
+          }
+        });
+
+        // Renderizar los proyectos ordenados
+        renderizarProyectos(querySnapshot);
+      }
+
+      // Agrega un evento change al select para reordenar los proyectos
+      ordenSelect.addEventListener('change', ordenarProyectos);
+
+      // Llama a la función para ordenar y renderizar inicialmente
+      ordenarProyectos();
+
+      // carusel splide
+      var carusel = new Splide('#splide-carousel', {
+        fixedHeight: 290,
+        gap: 5,
+        perPage: 1,
+        perMove: 1,
+        rewind: true,
+        arrows: true
       });
+
+      carusel.mount();
+
+      const form = document.querySelector('#crear-servicio-btn form');
+      const selectFileBtn = document.querySelector('#crear-servicio-btn');
+      const selectMoreFileBtn = document.querySelector('#agregar-mas-imagenes');
+      const eliminarServicioBtn = document.getElementById('eliminar-servicio-btn');
+      const splideCarousel = document.querySelector('#splide-carousel');
+      const splideList = document.querySelector('#splideList');
+      const h5Header = document.querySelector('#modal-crear-servicio h5 b');
+
+      const title = document.querySelector('#servicio-title');
+      const descripcion = document.querySelector('#servicio-descripcion');
+
+      // cancela la edicion del servicio
+      document.querySelector('#cancelar-servicio').addEventListener('click', () => {
+        modal.close();
+        form.reset();
+        splideList.innerHTML = ''
+      });
+
+      serviciosContent.addEventListener('click', (e) => {
+        const element = e.target;
+        if (element.classList.contains('trigger')) {
+          const doc = proyectos[element.dataset.id];
+          handleFileSelect(doc.imagenes);
+          title.value = doc.title;
+          descripcion.value = doc.desc;
+          h5Header.textContent = "Editar servicio";
+          eliminarServicioBtn.dataset.id = doc.id;
+
+        }
+      });
+
+      // boton inicial de seleccion de imagenes
+      selectFileBtn.addEventListener('change', (e) => {
+        const files = e.target.files;
+        handleMoreFileSelect(files);
+        title.value = '';
+        descripcion.value = '';
+        modal.open();
+        h5Header.textContent = "Agregar servicio";
+
+      });
+
+      // agregar mas imagenes al carusel
+      selectMoreFileBtn.addEventListener('change', (e) => {
+        const files = e.target.files;
+        handleMoreFileSelect(files);
+      });
+
+      function handleFileSelect(doc) {
+        splideCarousel.classList.remove('hide');
+        const imagenes = Object.values(doc);
+
+        imagenes.forEach(url => {
+
+          const listItem = document.createElement('li');
+          listItem.classList.add('splide__slide');
+
+          var image = document.createElement('img');
+          image.src = url;
+
+          const deleteButton = document.createElement('a');
+          deleteButton.innerHTML = '<i class="fa-solid fa-xmark" title="eliminar"></i>';
+          deleteButton.addEventListener('click', () => {
+            listItem.remove();
+            carusel.refresh();
+            disableBtn();
+          });
+
+          listItem.appendChild(deleteButton);
+          listItem.appendChild(image);
+          splideList.appendChild(listItem);
+
+        });
+        carusel.refresh();
+        disableBtn();
+
+      }
+
+      function handleMoreFileSelect(files) {
+        splideCarousel.classList.remove('hide');
+
+        // bucle iterador de imagenes
+        for (const file of files) {
+          if (splideList.children.length >= 10) {
+            alert('Solo puedes seleccionar 10 imágenes, algunas fueron omitidas.');
+            break;
+          }
+
+          const extension = file.name.split('.').pop().toLowerCase();
+          const allowedExtensions = ['jpeg', 'jpg', 'png'];
+
+          if (allowedExtensions.includes(extension)) {
+            const listItem = document.createElement('li');
+            listItem.classList.add('splide__slide');
+
+            var image = document.createElement('img');
+            image.src = URL.createObjectURL(file);
+            image.alt = file.name;
+
+            const deleteButton = document.createElement('a');
+            deleteButton.innerHTML = '<i class="fa-solid fa-xmark" title="eliminar"></i>';
+            deleteButton.addEventListener('click', () => {
+              listItem.remove();
+              carusel.refresh();
+              disableBtn();
+            });
+
+            listItem.appendChild(deleteButton);
+            listItem.appendChild(image);
+            splideList.appendChild(listItem);
+          } else {
+            alert(`El archivo ${file.name} no es una imagen JPEG, JPG o PNG y será omitido.`);
+          }
+        }
+        carusel.refresh();
+        disableBtn();
+      }
+
+      function disableBtn() {
+        // Desactivar el botón si se alcanza el límite de 10 imágenes
+        if (splideList.children.length >= 10) {
+          selectMoreFileBtn.classList.add('disabled');
+        } else {
+          selectMoreFileBtn.classList.remove('disabled');
+        }
+        // si no hay imagenes aparece el mensaje que indica que se deben agregar algunas imagenes
+        const noFileAlert = document.getElementById('no-file-alert');
+        if (!splideList.children.length > 0) {
+          console.log(splideList.children.length);
+          splideCarousel.classList.add('hide');
+          noFileAlert.classList.remove('hide');
+        } else {
+          splideCarousel.classList.remove('hide');
+          noFileAlert.classList.add('hide');
+
+        }
+      }
+
+      eliminarServicioBtn.addEventListener('click', (e) => {
+        const folder = e.target.dataset.id
+        const storagePath = ref(st, uid + '/fotos de perfil/');
+        const url = getDownloadURL(storagePath);
+        console.log(url);
+        // deleteObject(url).then(() => {
+        //   // File deleted successfully
+        //   console.log('se elimino');
+        // }).catch((error) => {
+        //   // Uh-oh, an error occurred!
+        //   console.log(error);
+        // });
+        // Find all the prefixes and items.
+        // listAll(storagePath).then((res) => {
+        //   res.prefixes.forEach((folderRef) => {
+        //     console.log(folderRef);
+        //   });
+        // })
+        // await updateDoc(docRef, {
+        //   [`proyectos.${item.name}`]: deleteField()
+        // });
+      });
+
+
     } leerServicios()
+
+      document.getElementById('guardar-imagenes').addEventListener('click', async () => {
+        viewLoadWindows();
+        const splideList = document.querySelector('#splideList2');
+
+        if (splideList && splideList.children.length > 0) {
+          modal.close();
+          viewLoadWindows();
+
+          try {
+            // Crear una referencia única para cada proyecto
+            const storageRef = ref(st, `${uid}/fotos de perfil`);
+
+            // Iterar sobre las imágenes en el carusel
+            await Promise.all(Array.from(splideList.children).map(async (item) => {
+              const file = item.querySelector('img');
+              const response = await fetch(file.src);
+              const blob = await response.blob();
+
+              // Subir la imagen a Firebase Storage
+              const imageRef = ref(storageRef, file.alt);
+              const uploadTask = uploadBytes(imageRef, blob);
+
+            }));
+
+            // Almacenar la información general del proyecto en Firestore
+            await setDoc(docRef, {
+              notificaciones: {
+                [codigoGenerado]: {
+                  id: codigoGenerado,
+                  visible: true,
+                  img: '/imagenes/logo bg azul.png',
+                  text: `<b>${nombre}</b>, Se han subido nuevas imagenes a tu proyecto!`,
+                  date: `${mes} ${dia}, ${año} ${hora < 10 ? '0' : ''}${hora}:${minuto < 10 ? '0' : ''}${minuto} ${meridiano}`
+                }
+              }
+            }, { merge: true }).then(() => {
+              
+            }).catch((err) => {
+              
+            });
+
+            window.location.reload();
+
+          } catch (error) {
+            hideLoadWindows();
+            modal.open();
+            console.error('Error al subir el documento:', error);
+            alert('Ha ocurrido un error al subir el documento. Intente de nuevo más tarde.');
+          }
+
+        } else {
+          alert('Aún falta algo para crearlo');
+          hideLoadWindows();
+        }
+
+      })
+    
     // se ejecuta cuando la ventana carge
     document.addEventListener('DOMContentLoaded', hideLoadWindows())
 

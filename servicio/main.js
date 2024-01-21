@@ -76,14 +76,17 @@ observador()
 // Función para realizar la lectura inicial
 
 async function leer(user) {
-  const pintarImagenes = document.querySelector('#pintarImagenes');
-  const chipContact = document.querySelector('#chip-contact');
   const fotoDeperfil = document.querySelector('#userPhoto');
   const displayName = document.querySelector('#displayName');
   const miProfecion = document.querySelector('#profecionCont');
   const recomendaciones = document.querySelector('#recoms');
   const titulo = document.querySelector('#titulo');
   const descripcion = document.querySelector('#descripcion');
+  const chipContact = document.querySelector('#chip-contact');
+  const parallaxImage = document.querySelector('#parallax-image');
+  const imageContainer = document.querySelector('#image-container');
+  const recomendarBtn = document.getElementById('recomendar-Btn');
+  const chipRecomns = document.querySelector('.chip-recomns');
 
   // Obtener la URL actual
   var urlActual = window.location.href;
@@ -118,7 +121,6 @@ async function leer(user) {
 
       }
     })
-
     // pintar las imagenes
     // const carouselContainer = document.querySelector('.splide__list');
 
@@ -159,19 +161,32 @@ async function leer(user) {
 
     const proyectImg = Object.values(docSnap.data().proyectos[proyecto].imagenes);
 
-    pintarImagenes.innerHTML = ''
+    function parallaxAutoplay() {
+      let index = 0;
+      parallaxImage.src = proyectImg[index];
+      setInterval(() => {
+        if (index < proyectImg.length) {
+          parallaxImage.src = proyectImg[index];
+        } else {
+          index = 0;
+          // console.log('Se detuvo');
+          // clearInterval(intervalId);
+        }
+        index++;
+      }, 6000);
+
+    }
+    parallaxAutoplay()
+
+
+    imageContainer.innerHTML = ''
     proyectImg.forEach(imagen => {
-      pintarImagenes.innerHTML += `
+      imageContainer.innerHTML += `
       <div class="col s6 m4 l3">
           <img class="materialboxed responsive-img" src="${imagen}">
       </div>`;
     });
 
-    const recomendarBtn = document.getElementById('recomendar-Btn');
-    recomendarBtn.addEventListener('click', () => {
-      recomedar(userUid, photoURL, nombre, profecion, provincia);
-      recomendarBtn.classList.add('disabled');
-    });
 
 
     if (user) {
@@ -181,13 +196,26 @@ async function leer(user) {
         if (userRecom) {
           recomendarBtn.classList.add('green');
           recomendarBtn.classList.remove('red');
+          chipRecomns.classList.add('green-border');
+          chipRecomns.classList.remove('red-border');
         } else {
           recomendarBtn.classList.add('red');
           recomendarBtn.classList.remove('green');
+          chipRecomns.classList.add('red-border');
+          chipRecomns.classList.remove('green-border');
         }
       });
     }
+    
+    onSnapshot(doc(fs, "usuarios", userUid), (doc) => {
+      const recoms = doc.data().recoms;
+     recomendaciones.textContent = recoms;
+     })
 
+    recomendarBtn.addEventListener('click', () => {
+      recomedar(userUid, photoURL, nombre, profecion, provincia);
+      recomendarBtn.classList.add('disabled');
+    });
 
     async function recomedar(userId, photoURL, nombre, profecion, provincia) {
 
@@ -205,6 +233,7 @@ async function leer(user) {
 
       const misRecomendados = docSnap.data().misRecomendados;
       const userRecom = docSnap2.data().misRecomendados[userId];
+
       if (misRecomendados) {
         if (userRecom) {
           restarRecoms()

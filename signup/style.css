@@ -3,6 +3,8 @@ body.fixed-container {
     display: block;
     overflow: hidden;
     min-height: 100vh;
+    box-sizing: border-box;
+    background-image: radial-gradient(89.01% 112.44% at 8.9% 11.35%, #ffabd8 2.59%, #fff280 38.54%, #e7ff7d 60.18%, #a4efff 92.1%);
 
 }
 
