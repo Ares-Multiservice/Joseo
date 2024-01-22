@@ -3,7 +3,7 @@ M.AutoInit();
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore, collection, setDoc, doc, deleteDoc, updateDoc, deleteField, getDocs, getDoc, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { getStorage, ref, uploadBytesResumable, uploadBytes, getDownloadURL, listAll, deleteObject } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+import { getStorage, ref, uploadBytesResumable, uploadBytes, getDownloadURL, listAll, deleteObject, getMetadata, getBlob } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBYNAIFu_BU4oav3I3PCFncS9QU5GvkiAU",
@@ -158,7 +158,7 @@ async function leer(user) {
   var codigoGenerado = `${año}${dia}${hora < 10 ? '0' : ''}${hora}${minuto < 10 ? '0' : ''}${minuto}${segundo < 10 ? '0' : ''}${segundo}`;
 
   if (docSnap.exists()) {
-    const { id, photoURL, nombre, presentacion, profecion, habilidades, provincia, ubicacion, recoms, notificaciones, proyectos } = docSnap.data();
+    const { id, photoURL, nombre, presentacion, profecion, habilidades, provincia, ubicacion, recoms, notificaciones, servicios } = docSnap.data();
     // leer las informaciones y pintarlas en leer usuario
     if (photoURL) {
       fotoDeperfil.src = photoURL;
@@ -675,7 +675,10 @@ async function leer(user) {
               // Create the file metadata
 
               const metadata = {
-                contentType: 'image/jpeg'
+                contentType: 'image/jpeg',
+                customMetadata: {
+                  timeUploaded: new Date().toISOString()
+                }
               };
 
               // Upload file and metadata to the object 'images/mountains.jpg'
@@ -746,30 +749,39 @@ async function leer(user) {
     function leerFotos() {
       const imageContainer = document.getElementById('contenedor-imagenes');
       const parallaxImage = document.getElementById('parallax-image');
-
       const eliminarFotoBtn = document.getElementById('eliminar-foto-btn');
       const usarfotobtn = document.getElementById('usar-antigua-foto-btn');
+      const ordenSelect = document.getElementById('ordenar-imagenes');
 
       const listRef = ref(st, `${uid}/fotos de perfil`);
-      imageContainer.innerHTML = '';
-      listAll(listRef).then((result) => {
-        result.items.forEach(async (imageRef) => {
-          const url = await getDownloadURL(imageRef);
-          // comprovar que no se pueda borrar la imagen de perfil actual
-          if (url === photoURL) {
-            imageContainer.innerHTML += `
-                 <div class="col s6 m4 l3 mis-fotos">
-                     <img class="materialboxed responsive-img" src="${url}">
-                </div>
-            `;
-          } else {
-            imageContainer.innerHTML += `
-                 <div class="col s6 m4 l3 mis-fotos">
-                     <img class="materialboxed responsive-img" src="${url}">
-                     <a data-id='${imageRef}' href='#modal-foto-opciones' class="modal-trigger trigger" title='Opciones'><i class="fa-solid fa-ellipsis-vertical"></i></a>
-                </div>
-            `;
+      listAll(listRef).then(async (result) => {
 
+        async function renderizarImagenes(querySnapshot) {
+          // Volver a mostrar las fotos ordenadas
+          imageContainer.innerHTML = '';
+
+          for (const imageRef of querySnapshot) {
+            // const metadata = await getMetadata(imageRef);
+
+            const url = await getDownloadURL(imageRef);
+
+            // comprobar que no se pueda borrar la imagen de perfil actual
+            if (url === photoURL) {
+              imageContainer.innerHTML += `
+                <div class="col s6 m4 l3 mis-fotos">
+                  <img class="materialboxed responsive-img" src="${url}">
+                </div>
+              `;
+            } else {
+              imageContainer.innerHTML += `
+                <div class="col s6 m4 l3 mis-fotos">
+                  <img class="materialboxed responsive-img" src="${url}">
+                  <a data-id='${imageRef}' href='#modal-foto-opciones' class="modal-trigger trigger" title='Opciones'>
+                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                  </a>
+                </div>
+              `;
+            }
           }
 
           // Agrega un evento de clic al botón de eliminar
@@ -779,30 +791,61 @@ async function leer(user) {
               eliminarFotoBtn.dataset.id = target.dataset.id;
               usarfotobtn.dataset.id = target.parentElement.querySelector('img').src;
             }
+          });
+        }
 
+        async function ordenarImagenes() {
+
+          // Obtener el valor seleccionado en el select
+          const ordenSeleccionado = ordenSelect.value;
+
+          // Obtener metadatos para cada imagen y organizar según la propiedad updated
+          const imagesWithMetadata = await Promise.all(
+            result.items.map(async (imageRef) => {
+              const metadata = await getMetadata(imageRef);
+              return { imageRef, metadata };
+            })
+          );
+
+          // Ordenar las imágenes según la opción seleccionada
+          imagesWithMetadata.sort((a, b) => {
+            const timestampA = new Date(a.metadata.updated).getTime();
+            const timestampB = new Date(b.metadata.updated).getTime();
+
+            return ordenSeleccionado === 'Ascendente' ? timestampA - timestampB : timestampB - timestampA;
           });
 
-        });
+          // Renderizar las imágenes ordenadas
+          renderizarImagenes(imagesWithMetadata.map((item) => item.imageRef));
+        }
+
+        // Agrega un evento change al select para reordenar las imágenes
+        ordenSelect.addEventListener('change', ordenarImagenes);
+
+        // Llama a la función para ordenar y renderizar inicialmente
+        ordenarImagenes();
+
         async function parallaxAutoplay() {
+          const items = result.items;
+          console.log(items);
+          if(items.length !== 0) {
           let index = 0;
-          let dataBucked = result.items[index];
 
           const updateParallaxImage = async () => {
-            const url = await getDownloadURL(dataBucked);
+            const url = await getDownloadURL(items[index]);
             parallaxImage.src = url;
           };
 
           setInterval(() => {
-            index = (index < result.items.length - 1) ? index + 1 : 0;
-            dataBucked = result.items[index];
+            index = (index < items.length - 1) ? index + 1 : 0;
             updateParallaxImage();
           }, 30000);
 
           updateParallaxImage();
+            
+          }
         }
-
         parallaxAutoplay();
-
 
         // usar foto como perfil
         usarfotobtn.addEventListener('click', async (e) => {
@@ -810,48 +853,40 @@ async function leer(user) {
           try {
             await updateProfile(auth.currentUser, {
               photoURL: imageRef
-            }).then(() => {
-              setDoc(docRef, {
-                photoURL: imageRef,
-                notificaciones: {
-                  [codigoGenerado]: {
-                    id: codigoGenerado,
-                    visible: true,
-                    img: '/imagenes/logo bg azul.png',
-                    text: `<b>${nombre}</b>, has cambiado tu foto de perfil !`,
-                    date: `${mes} ${dia}, ${año} ${hora < 10 ? '0' : ''}${hora}:${minuto < 10 ? '0' : ''}${minuto} ${meridiano}`
-                  }
-                }
+            });
 
-              }, { merge: true }).then(() => {
-                window.location.reload();
-              })
-            }).catch(function () {
-              alert('algo salio mal, vuelve a intentarlo en un rato');
-              hideLoadWindows();
-            })
+            await setDoc(docRef, {
+              photoURL: imageRef,
+              notificaciones: {
+                [codigoGenerado]: {
+                  id: codigoGenerado,
+                  visible: true,
+                  img: '/imagenes/logo bg azul.png',
+                  text: `<b>${nombre}</b>, has cambiado tu foto de perfil !`,
+                  date: `${mes} ${dia}, ${año} ${hora < 10 ? '0' : ''}${hora}:${minuto < 10 ? '0' : ''}${minuto} ${meridiano}`
+                }
+              }
+            }, { merge: true });
+
+            window.location.reload();
           } catch (error) {
             alert('Ha ocurrido un error. Inténtalo de nuevo más tarde.');
           }
-
         });
 
-        // Luego, en tu modal, manejas el clic del botón de eliminación
+        // En tu modal, manejas el clic del botón de eliminación
         eliminarFotoBtn.addEventListener('click', async (e) => {
           const imageRef = e.target.dataset.id;
           // Elimina la imagen de Firebase Storage
-          await deleteObject(ref(st, imageRef)).then(() => {
-            window.location.reload();
-          }).catch((error) => {
-            alert('No se ha podido borrar, intenta luego')
-          });
-
+          await deleteObject(ref(st, imageRef))
+            .then(() => window.location.reload())
+            .catch(() => alert('No se ha podido borrar, intenta luego'));
         });
-
       });
-
     }
-    leerFotos()
+
+    leerFotos();
+
 
     // guardar Nuevo servicio 
     // guardar Nuevo servicio 
@@ -874,8 +909,8 @@ async function leer(user) {
         viewLoadWindows();
 
         try {
-          // Crear una referencia única para cada proyecto
-          const storageRef = ref(st, `${uid}/proyectos/${documentId}`);
+          // Crear una referencia única para cada servicio
+          const storageRef = ref(st, `${uid}/servicios/${documentId}`);
 
           // Iterar sobre las imágenes en el carusel
           await Promise.all(Array.from(splideList.children).map(async (item, index) => {
@@ -894,7 +929,7 @@ async function leer(user) {
 
             // Almacenar la URL en Firestore
             await setDoc(docRef, {
-              proyectos: {
+              servicios: {
                 [documentId]: {
                   imagenes: { [imageName]: downloadURL }
                 }
@@ -902,9 +937,9 @@ async function leer(user) {
             }, { merge: true });
           }));
 
-          // Almacenar la información general del proyecto en Firestore
+          // Almacenar la información general del servicio en Firestore
           await setDoc(docRef, {
-            proyectos: {
+            servicios: {
               [documentId]: {
                 id: documentId,
                 title: servicioTitle,
@@ -916,7 +951,7 @@ async function leer(user) {
                 id: codigoGenerado,
                 visible: true,
                 img: '/imagenes/logo bg azul.png',
-                text: `<b>${nombre}</b>, Se ha creado tu proyecto !`,
+                text: `<b>${nombre}</b>, Se ha creado tu servicio !`,
                 date: `${mes} ${dia}, ${año} ${hora < 10 ? '0' : ''}${hora}:${minuto < 10 ? '0' : ''}${minuto} ${meridiano}`
               }
             }
@@ -943,24 +978,18 @@ async function leer(user) {
 
       // Asegúrate de tener el elemento correcto aquí
 
-      function renderizarProyectos(querySnapshot) {
-        // Resto del código para renderizar los proyectos
+      function renderizarservicios(querySnapshot) {
+        // Resto del código para renderizar los servicios
         serviciosContent.innerHTML = '';
 
         querySnapshot.forEach(docs => {
           const imagenes = Object.values(docs.imagenes);
           const { title, desc } = docs;
           const proyectId = docs.id;
-
-          if (querySnapshot.length === 12) {
-            crearServicioBtn.classList.add('disabled');
-          } else if (querySnapshot.length === 0) {
-            serviciosContent.innerHTML = '<p class="center">Aun no hay servicios en este perfil...</p>';
-          }
           serviciosContent.innerHTML += `
         <div class="col s6 m4">
             <div class="card card-servicios">
-                <a href="../servicio/search?id=${id}&proyecto=${proyectId}">
+                <a href="../servicio/search?id=${id}&servicio=${proyectId}">
                     <div class="card-image waves-effect waves-block waves-light">
                         <img src="${imagenes[0]}"
                             alt="img" class="activator" />
@@ -982,18 +1011,24 @@ async function leer(user) {
                 </div>
             </div>
         </div>
-        `;
+           `;
         });
+
+        if (querySnapshot.length === 12) {
+          crearServicioBtn.classList.add('disabled');
+        } else if (querySnapshot.length === 0) {
+          serviciosContent.innerHTML = '<p class="center">Aun no hay servicios en este perfil...</p>';
+        }
 
       }
 
-      function ordenarProyectos() {
-        const querySnapshot = Object.values(proyectos);
+      function ordenarservicios() {
+        const querySnapshot = Object.values(servicios);
 
         // Obtener el valor seleccionado en el select
         const ordenSeleccionado = ordenSelect.value;
 
-        // Ordenar los proyectos según la opción seleccionada
+        // Ordenar los servicios según la opción seleccionada
         querySnapshot.sort((a, b) => {
           const idA = a.id.toString();
           const idB = b.id.toString();
@@ -1005,15 +1040,15 @@ async function leer(user) {
           }
         });
 
-        // Renderizar los proyectos ordenados
-        renderizarProyectos(querySnapshot);
+        // Renderizar los servicios ordenados
+        renderizarservicios(querySnapshot);
       }
 
-      // Agrega un evento change al select para reordenar los proyectos
-      ordenSelect.addEventListener('change', ordenarProyectos);
+      // Agrega un evento change al select para reordenar los servicios
+      ordenSelect.addEventListener('change', ordenarservicios);
 
       // Llama a la función para ordenar y renderizar inicialmente
-      ordenarProyectos();
+      ordenarservicios();
 
       // carusel splide
       var carusel = new Splide('#splide-carousel', {
@@ -1048,7 +1083,7 @@ async function leer(user) {
       serviciosContent.addEventListener('click', (e) => {
         const element = e.target;
         if (element.classList.contains('trigger')) {
-          const doc = proyectos[element.dataset.id];
+          const doc = servicios[element.dataset.id];
           handleFileSelect(doc.imagenes);
           title.value = doc.title;
           descripcion.value = doc.desc;
@@ -1165,89 +1200,108 @@ async function leer(user) {
         }
       }
 
-      eliminarServicioBtn.addEventListener('click', (e) => {
-        const folder = e.target.dataset.id
-        const storagePath = ref(st, uid + '/fotos de perfil/');
-        const url = getDownloadURL(storagePath);
-        console.log(url);
-        // deleteObject(url).then(() => {
-        //   // File deleted successfully
-        //   console.log('se elimino');
-        // }).catch((error) => {
-        //   // Uh-oh, an error occurred!
-        //   console.log(error);
-        // });
-        // Find all the prefixes and items.
-        // listAll(storagePath).then((res) => {
-        //   res.prefixes.forEach((folderRef) => {
-        //     console.log(folderRef);
-        //   });
-        // })
-        // await updateDoc(docRef, {
-        //   [`proyectos.${item.name}`]: deleteField()
-        // });
-      });
-
 
     } leerServicios()
 
-      document.getElementById('guardar-imagenes').addEventListener('click', async () => {
+    document.getElementById('eliminar-servicio-btn').addEventListener('click', async (e) => {
+      viewLoadWindows();
+      
+      const folderName = e.target.dataset.id;
+      eliminarStorageRef(folderName)
+      // Eliminar el campo del documento
+      await updateDoc(docRef, {
+        [`servicios.${folderName}`]: deleteField()
+      }).then(async () => {
+
+        // Recargar la página después de completar todas las operaciones
+        window.location.reload();
+
+      }).catch((err) => {
+        alert(err)
+      });
+
+    });
+
+    async function eliminarStorageRef(folderName) {
+
+      const listRef = ref(st, `${uid}/servicios/${folderName}`);
+
+      // Obtener una lista de todos los objetos en el directorio
+      const listResult = await listAll(listRef);
+
+      // Eliminar cada objeto en el directorio
+      const deletePromises = listResult.items.map((item) => deleteObject(item));
+
+      // Esperar a que todas las eliminaciones se completen
+      await Promise.all(deletePromises);
+
+      // Ahora puedes eliminar el directorio en sí
+      await deleteObject(listRef);
+
+    }
+
+    document.getElementById('guardar-imagenes').addEventListener('click', async () => {
+      viewLoadWindows();
+      const splideList = document.querySelector('#splideList2');
+
+      if (splideList && splideList.children.length > 0) {
+        modal.close();
         viewLoadWindows();
-        const splideList = document.querySelector('#splideList2');
 
-        if (splideList && splideList.children.length > 0) {
-          modal.close();
-          viewLoadWindows();
+        try {
+          // Crear una referencia única para cada servicio
+          const storageRef = ref(st, `${uid}/fotos de perfil`);
+          const metadata = {
+            customMetadata: {
+              timeUploaded: new Date().toISOString()
+            }
+          };
 
-          try {
-            // Crear una referencia única para cada proyecto
-            const storageRef = ref(st, `${uid}/fotos de perfil`);
+          // Iterar sobre las imágenes en el carusel
+          await Promise.all(Array.from(splideList.children).map(async (item) => {
+            const file = item.querySelector('img');
+            const response = await fetch(file.src);
+            const blob = await response.blob();
 
-            // Iterar sobre las imágenes en el carusel
-            await Promise.all(Array.from(splideList.children).map(async (item) => {
-              const file = item.querySelector('img');
-              const response = await fetch(file.src);
-              const blob = await response.blob();
+            // Subir la imagen a Firebase Storage
+            const imageRef = ref(storageRef, file.alt);
+            const uploadTask = uploadBytes(imageRef, blob, metadata);
 
-              // Subir la imagen a Firebase Storage
-              const imageRef = ref(storageRef, file.alt);
-              const uploadTask = uploadBytes(imageRef, blob);
+          }));
 
-            }));
-
-            // Almacenar la información general del proyecto en Firestore
-            await setDoc(docRef, {
-              notificaciones: {
-                [codigoGenerado]: {
-                  id: codigoGenerado,
-                  visible: true,
-                  img: '/imagenes/logo bg azul.png',
-                  text: `<b>${nombre}</b>, Se han subido nuevas imagenes a tu proyecto!`,
-                  date: `${mes} ${dia}, ${año} ${hora < 10 ? '0' : ''}${hora}:${minuto < 10 ? '0' : ''}${minuto} ${meridiano}`
-                }
+          // Almacenar la información general del servicio en Firestore
+          await setDoc(docRef, {
+            notificaciones: {
+              [codigoGenerado]: {
+                id: codigoGenerado,
+                visible: true,
+                img: '/imagenes/logo bg azul.png',
+                text: `<b>${nombre}</b>, Se han subido imagenes a tu cuenta!`,
+                date: `${mes} ${dia}, ${año} ${hora < 10 ? '0' : ''}${hora}:${minuto < 10 ? '0' : ''}${minuto} ${meridiano}`
               }
-            }, { merge: true }).then(() => {
-              
-            }).catch((err) => {
-              
-            });
+            }
+          }, { merge: true }).then(() => {
 
-            window.location.reload();
+          }).catch((err) => {
 
-          } catch (error) {
-            hideLoadWindows();
-            modal.open();
-            console.error('Error al subir el documento:', error);
-            alert('Ha ocurrido un error al subir el documento. Intente de nuevo más tarde.');
-          }
+          });
 
-        } else {
-          alert('Aún falta algo para crearlo');
+          window.location.reload();
+
+        } catch (error) {
           hideLoadWindows();
+          modal.open();
+          console.error('Error al subir el documento:', error);
+          alert('Ha ocurrido un error al subir el documento. Intente de nuevo más tarde.');
         }
 
-      })
-    
+      } else {
+        alert('Aún falta algo para crearlo');
+        hideLoadWindows();
+      }
+
+    })
+
     // se ejecuta cuando la ventana carge
     document.addEventListener('DOMContentLoaded', hideLoadWindows())
 

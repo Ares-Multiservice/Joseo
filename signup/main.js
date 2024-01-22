@@ -134,7 +134,7 @@ ui.start("#signContainer", uiConfig);
 
 
 const expresiones = {
-  usuario: /^([a-zA-ZÀ-ÿ0-9]{3,20})([_-]?)([a-zA-ZÀ-ÿ0-9]{3,20})$/,
+  usuario: /^([a-zA-ZÀ-ÿ0-9]{2,20})([_-]?)([a-zA-ZÀ-ÿ0-9]{3,20})$/,
   nombre: /^([a-zA-ZÀ-ÿ]{3,30})\s([a-zA-ZÀ-ÿ]{3,30})$/,
   correo: /^[a-zA-Z0-9_.-]+@(([g]|[h][o][t])mail|Outlook)+\.[c][o][m]$/,
   contraseña: /^.{4,16}$/, // 4 a 16 digitos.
@@ -190,12 +190,6 @@ firebase.auth().onAuthStateChanged((user) => {
     var emailVerified = user.emailVerified;
     var photoURL = user.photoURL;
     var phoneNumber = user.phoneNumber;
-    // remover los espacios al nombre y leer la ñ
-    const pathname = displayName.replace(/\s/g, "");
-    // const queryString = pathname.toString();
-    // const documentId = decodeURIComponent(queryString); // leer la ñ
-    const sliceId = uid.slice(0, 4); // obtiene los primeros 4 caracteres del id
-    const usuarioDefault = pathname + sliceId; // concatenar nombre mas 4 caracteres
 
     // var province = provincia.value;
     // const provinciaString = province.toString(); // lee la ñ en las provincias
@@ -203,16 +197,35 @@ firebase.auth().onAuthStateChanged((user) => {
 
     // pitarle el usuario y el nombre al los inputs
     if (displayName) {
+      // remover los espacios al nombre y leer la ñ
+      const pathname = displayName.replace(/\s/g, "");
+      // const queryString = pathname.toString();
+      // const documentId = decodeURIComponent(queryString); // leer la ñ
+      const sliceId = uid.slice(0, 4); // obtiene los primeros 4 caracteres del id
+      const usuarioDefault = pathname + sliceId; // concatenar nombre mas 4 caracteres
       usuario.value = usuarioDefault;
       nombre.value = displayName;
     }
 
+    const userPhoto = async () => {
+      if (photoURL) {
+        return photoURL;
+      } else {
+        return "/imagenes/user-icon black.png"
+      }
 
-    function crearFirestore() {
-      user.updateProfile({
-        displayName: nombre.value
-      }).then(() => {
-        fs.collection("usuarios").doc(`${uid}`).set({
+    }
+
+    async function crearFirestore() {
+      try {
+        const photoURL = await userPhoto();
+
+        await user.updateProfile({
+          displayName: nombre.value,
+          photoURL: photoURL
+        });
+
+        await fs.collection("usuarios").doc(`${uid}`).set({
           id: usuario.value,
           photoURL: photoURL,
           nombre: nombre.value,
@@ -237,11 +250,14 @@ firebase.auth().onAuthStateChanged((user) => {
               text: `Bienvenid@ <b>${nombre.value}</b>, ahora puedes comenzar a resivir clientes`,
               date: `${mes} ${dia}, ${año} ${hora < 10 ? '0' : ''}${hora}:${minuto < 10 ? '0' : ''}${minuto} ${meridiano}`
             }
-          }
-        }).then(() => {
-          window.location.href = "../perfil/";
-        })
-      })
+          },
+          servicios: {}
+        });
+
+        window.location.href = "../perfil/";
+      } catch (error) {
+        console.error("Error en la función crearFirestore:", error);
+      }
     }
 
     document.getElementById('continuarDataBtn').addEventListener('click', () => {
@@ -272,48 +288,55 @@ firebase.auth().onAuthStateChanged((user) => {
     function verifNombre() {
       const element = document.getElementById(`verificar-nombre`);
       if (!expresiones.nombre.test(nombre.value)) {
-        element.textContent = `nombre invalido`;
+        element.textContent = `invalido`;
         campos.nombre = false;
       } else {
         element.textContent = "";
         campos.nombre = true;
       }
     };
+
     nombre.addEventListener('keyup', verifNombre);
     nombre.addEventListener('blur', verifNombre);
-    document.addEventListener('DOMContentLoaded', verifNombre());
+
+    // validar el identificador del usuario
+    function verifUser() {
+      const verificarUsuario = document.getElementById('verificar-usuario');
+      if (expresiones.usuario.test(usuario.value)) {
+        // leer si hay algún otro usuario con el mismo id que el del usuario actual
+        const querySnap = fs.collection("usuarios").get();
+        querySnap.then((snapshot) => {
+          if (snapshot.docs.length !== 0) {
+            snapshot.forEach((doc) => {
+              var filtrarUsuarios = doc.data().id;
+              // comprobar si el valor del input es igual a otro usuario 
+              // y validarlo con la expresion regular
+              if (usuario.value === filtrarUsuarios) {
+                userValid('en uso', 'red', 'green', false);
+              } else {
+                userValid('disponible', 'green', 'red', true);
+              }
+
+            });
+          } else {
+            userValid('valido', 'green', 'red', true);
+
+          }
+        })
+      } else {
+        userValid('invalido', 'red', 'green', false)
+      }
+
+      function userValid(status, colorAdd, colorRemove, campo) {
+        verificarUsuario.textContent = `${status}`;
+        verificarUsuario.classList.add(`${colorAdd}-text`);
+        verificarUsuario.classList.remove(`${colorRemove}-text`);
+        campos.usuario = [campo];
+      }
+    }
+    usuario.addEventListener('keyup', verifUser);
+    usuario.addEventListener('blur', verifUser);
+    document.addEventListener('DOMContentLoaded', verifNombre(), verifUser());
 
   }
 });
-
-// validar el identificador del usuario
-function verifUser() {
-  const verificarUsuario = document.getElementById('verificar-usuario');
-  // leer si hay algún otro usuario con el mismo id que el del usuario actual
-  fs.collection("usuarios")
-    .get()
-    .then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        var filtrarUsuarios = doc.data().id;
-        // comprobar si el valor del input es igual a otro usuario 
-        // y validarlo con la expresion regular
-        if (usuario.value === filtrarUsuarios || !expresiones.usuario.test(usuario.value)) {
-          verificarUsuario.textContent = 'usuario invalido';
-          verificarUsuario.classList.remove('green-text');
-          verificarUsuario.classList.add('red-text');
-          campos.usuario = false;
-        } else {
-          verificarUsuario.textContent = 'usuario valido';
-          verificarUsuario.classList.add('green-text');
-          verificarUsuario.classList.remove('red-text');
-          campos.usuario = true;
-        }
-      });
-    })
-    .catch((error) => {
-      console.error("Error al obtener documentos: ", error);
-    });
-}
-usuario.addEventListener('keyup', verifUser);
-usuario.addEventListener('blur', verifUser);
-// document.addEventListener('DOMContentLoaded', verifUser);
