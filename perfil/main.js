@@ -1,4 +1,3 @@
-M.AutoInit();
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -26,8 +25,11 @@ document.getElementById('cerrarSesionBtn').addEventListener('click', () => {
     alert("ha ocurrido un error inesperado, intente de nuevo mas tarde")
   });
 })
+
 const body = document.querySelector('body');
 const loader = document.querySelector('.load-container');
+const steps = document.querySelectorAll('.step');
+const stepsIcons = document.querySelectorAll('.step .check');
 
 function viewLoadWindows() {
   body.classList.add('fixed-container');
@@ -58,11 +60,17 @@ function observador() {
       var uid = user.uid;
       var phoneNumber = user.phoneNumber;
       var providerData = user.providerData;
+
       if (photoURL) {
         dropDownImage.src = photoURL;
         navImage.src = photoURL;
-        // document.querySelector('.icon-head').href = photoURL;
+        steps[0].classList.add('valid');
+        stepsIcons[0].classList.remove('hide');
+      } else {
+        dropDownImage.src = '/';
+        navImage.src = photoURL;
       }
+
       if (displayName) {
         var nombre = `${displayName}`;
         nombre = nombre.split(' ');
@@ -71,6 +79,8 @@ function observador() {
       }
       if (emailVerified) {
         navWrapperMessage.classList.add('hide');
+        steps[2].classList.add('valid');
+        stepsIcons[2].classList.remove('hide');
       } else {
         navWrapperMessage.classList.remove('hide');
       }
@@ -107,6 +117,7 @@ async function leer(user) {
   const cardProfecion = document.getElementById('modal-card-profecion');
   const cardHabilidades = document.getElementById('modal-card-habilidades');
   const cardUbicacion = document.getElementById('modal-card-ubicacion');
+  const cardTelefono = document.getElementById('modal-card-telefono');
 
   // inputs de edicion de perfil
   const editUsuario = document.getElementById('editUsuario');
@@ -115,6 +126,7 @@ async function leer(user) {
   const editProfecion = document.getElementById('editProfecion');
   const editHabilidades = document.getElementById('editHabilidades');
   const editUbicacion = document.getElementById('editUbicacion');
+  const editTelefono = document.getElementById('editTelefono');
 
   // var hrefValue = window.location.href;
   // var pathname = window.location.pathname;
@@ -124,11 +136,17 @@ async function leer(user) {
 
   const expresiones = {
     usuario: /^([a-zA-ZÀ-ÿ0-9]{3,15})([_-]?)([a-zA-ZÀ-ÿ0-9]{3,15})$/,
-    nombre: /^([a-zA-ZÀ-ÿ]{3,20})$/
+    nombre: /^([a-zA-ZÀ-ÿ]{3,20})$/,
+    telefono: /^\((809|829|849)\)\s\d{3}\-\d{4}$/
   }
 
   const campos = {
-    usuario: false
+    usuario: false,
+    faceboo: false,
+    instagram: false,
+    xtwitter: false,
+    linkedin: false,
+    youtube: false
   }
 
   const docRef = doc(fs, "usuarios", uid);
@@ -158,7 +176,8 @@ async function leer(user) {
   var codigoGenerado = `${año}${dia}${hora < 10 ? '0' : ''}${hora}${minuto < 10 ? '0' : ''}${minuto}${segundo < 10 ? '0' : ''}${segundo}`;
 
   if (docSnap.exists()) {
-    const { id, photoURL, nombre, presentacion, profecion, habilidades, provincia, ubicacion, recoms, notificaciones, servicios } = docSnap.data();
+    const { id, photoURL, imagenDeFondo, nombre, presentacion, profecion, habilidades,
+      provincia, ubicacion, phoneNumber, redessociales, recoms, notificaciones, servicios } = docSnap.data();
     // leer las informaciones y pintarlas en leer usuario
     if (photoURL) {
       fotoDeperfil.src = photoURL;
@@ -167,7 +186,7 @@ async function leer(user) {
     profecionUbicacionCont.textContent = `${profecion} en ${provincia}`;
     presentacionCont.textContent = presentacion;
     dataPresentacion.textContent = presentacion;
-    recomendaciones.textContent = recoms;
+    recomendaciones.textContent = recoms + ' puntos';
     verPerfilBtn.href = `../v/${id}`
 
     // leer las notificaciones
@@ -279,12 +298,12 @@ async function leer(user) {
         const option = editHabilidades.querySelector(`option[value="${valor}"]`);
         if (option) {
           option.selected = true;
-
           // Opcional: Mostrar los valores en otro lugar (cardHabilidades)
           cardHabilidades.innerHTML += ` (${valor}) `;
-
         }
       });
+      steps[4].classList.add('valid');
+      stepsIcons[4].classList.remove('hide');
 
     }
 
@@ -295,6 +314,16 @@ async function leer(user) {
     editNombre2.value = nombreSplit[1];
     editProfecion.value = profecion;
     editUbicacion.value = provincia;
+
+    // pintar el numero de telefono el modal de edicion de perfil y el input de edicion
+    if (phoneNumber) {
+      cardTelefono.textContent = phoneNumber;
+      editTelefono.value = phoneNumber.replace("+1 ", "");
+      steps[3].classList.add('valid');
+      stepsIcons[3].classList.remove('hide');
+    } else {
+      cardTelefono.textContent = 'vacio';
+    }
 
     async function editarUsuario() {
 
@@ -536,6 +565,8 @@ async function leer(user) {
 
 
     // mapa de edicion de ubicaciones
+    // mapa de edicion de ubicaciones
+    // mapa de edicion de ubicaciones
     var marker = '';
     function leerMapa() {
       var map = L.map('map-container', {
@@ -682,7 +713,7 @@ async function leer(user) {
               };
 
               // Upload file and metadata to the object 'images/mountains.jpg'
-              const storageRef = ref(st, `${uid}/fotos de perfil/${file[0].name}`);
+              const storageRef = ref(st, `${uid}/galeria/${file[0].name}`);
               const uploadTask = uploadBytesResumable(storageRef, blob, metadata);
 
               // Listen for state changes, errors, and completion of the upload.
@@ -746,14 +777,205 @@ async function leer(user) {
     };
     editarUserPhotoURL();
 
-    function leerFotos() {
+    // editar numero de telefono
+    // editar numero de telefono
+    // editar numero de telefono
+
+    // editar nombre
+    function editarTelefono() {
+      const telefonoform = document.querySelector('#telefonoForm');
+      const saveTelefonoBtn = document.querySelector('#guardar-telefono');
+      const cancelTelefono = document.querySelector('#cancelTelefono');
+
+      saveTelefonoBtn.addEventListener('click', () => {
+        viewLoadWindows();
+
+        setDoc(docRef, {
+          phoneNumber: `+1 ${editTelefono.value}`,
+          notificaciones: {
+            [codigoGenerado]: {
+              id: codigoGenerado,
+              visible: true,
+              img: '/imagenes/logo bg azul.png',
+              text: `<b>${nombre}</b>, haz agregado tu nuevo numero de telefono con exito!`,
+              date: `${mes} ${dia}, ${año} ${hora < 10 ? '0' : ''}${hora}:${minuto < 10 ? '0' : ''}${minuto} ${meridiano}`
+            }
+          }
+        }, { merge: true }).then(() => {
+          window.location.reload();
+        }).catch(() => {
+          hideLoadWindows()
+          alert('ha ocurrido un error inesperado, vuelve a intentarlo despues..');
+        });
+      });
+
+      cancelTelefono.addEventListener('click', () => {
+        saveTelefonoBtn.classList.add('hide');
+        telefonoform.reset();
+        editTelefono.value = phoneNumber;
+      });
+
+      const validar = (e) => {
+        switch (e.target.name) {
+          case "telefono":
+            validarCampo(expresiones.telefono, e.target);
+            break;
+        }
+      }
+
+      const validarCampo = (expresion, input) => {
+        if (expresion.test(input.value)) {
+          saveTelefonoBtn.classList.remove('hide');
+          editTelefono.classList.add('valid');
+          editTelefono.classList.remove('invalid');
+        } else {
+          saveTelefonoBtn.classList.add('hide');
+          editTelefono.classList.remove('valid');
+          editTelefono.classList.add('invalid');
+        }
+      }
+
+      editTelefono.addEventListener('keyup', validar);
+    }
+    editarTelefono();
+
+    // editar redes sociales
+    function eventRedesSociales() {
+      const form = document.getElementById('redesSocialesForm');
+      const inputs = document.querySelectorAll('#redesSocialesForm input');
+
+      function validarCampo(input, campo) {
+        const button = document.getElementById(`save${campo}`);
+        function activarBoton() {
+          if (input.value === redessociales[campo]) {
+            button.classList.add('hide');
+          } else {
+            button.classList.remove('hide');
+          }
+        }
+
+        if (input.value.length > 3) {
+          input.classList.add('valid');
+          input.classList.remove('invalid');
+          activarBoton()
+          campos[campo] = true;
+        } else {
+          input.classList.remove('valid');
+          input.classList.add('invalid');
+          button.classList.add('hide');
+          campos[campo] = false;
+        }
+
+        function guardarRedes() {
+          viewLoadWindows();
+
+          setDoc(docRef, {
+            redessociales: { [campo]: input.value, },
+            notificaciones: {
+              [codigoGenerado]: {
+                id: codigoGenerado,
+                visible: true,
+                img: '/imagenes/logo bg azul.png',
+                text: `<b>${nombre}</b>, haz agregado el enlace a ${campo} con exito!`,
+                date: `${mes} ${dia}, ${año} ${hora < 10 ? '0' : ''}${hora}:${minuto < 10 ? '0' : ''}${minuto} ${meridiano}`
+              }
+            }
+          }, { merge: true }).then(() => {
+            window.location.reload();
+          }).catch(() => {
+            hideLoadWindows()
+            alert('ha ocurrido un error inesperado, vuelve a intentarlo despues..');
+          });
+        }
+
+        button.addEventListener('click', () => {
+          if (campos[campo]) {
+            guardarRedes()
+          }
+        });
+
+      }
+
+      inputs.forEach(input => {
+        input.addEventListener('keyup', (e) => { validarCampo(e.target, e.target.name) });
+        input.addEventListener('blur', (e) => { validarCampo(e.target, e.target.name) });
+      });
+
+      document.getElementById('cancelRedesSociales').addEventListener('click', function () {
+        form.reset();
+      });
+
+      function leerRedesSociales() {
+
+        if (redessociales) {
+          steps[5].classList.add('valid');
+          stepsIcons[5].classList.remove('hide');
+        }
+
+        // Dropdown Structure
+        const redBoton = document.querySelectorAll('#drop-redes-sociales .red-social');
+        redBoton[0].addEventListener('click', () => {
+          const enlace = 'https://www.joseo.do/' + id;
+          redBoton[1].title = enlace;
+          navigator.clipboard.writeText(enlace) // Copiar el texto al portapapeles
+            .then(() => {
+              M.toast({ html: '¡Copiado!' }); // Mostrar un mensaje de éxito
+            })
+            .catch(err => {
+              console.error('Error al copiar el texto: ', err); // Manejar cualquier error
+            });
+        });
+        if (redessociales.facebook) {
+          const enlace = 'https://facebook.com/' + redessociales.facebook;
+          redBoton[1].href = enlace;
+          redBoton[1].title = enlace;
+          redBoton[1].classList.add('green-text');
+          inputs[0].value = redessociales.facebook;
+        }
+        if (redessociales.instagram) {
+          const enlace = 'https://instagram.com/' + redessociales.instagram;
+          redBoton[2].href = enlace;
+          redBoton[2].title = enlace;
+          redBoton[2].classList.add('green-text');
+          inputs[1].value = redessociales.instagram;
+        }
+        if (redessociales.xtwitter) {
+          const enlace = 'https://twitter.com/' + redessociales.xtwitter;
+          redBoton[3].href = enlace;
+          redBoton[3].title = enlace;
+          redBoton[3].classList.add('green-text');
+          inputs[2].value = redessociales.xtwitter;
+        }
+        if (redessociales.linkedin) {
+          const enlace = 'https://linkedin.com/' + redessociales.linkedin;
+          redBoton[4].href = enlace;
+          redBoton[4].title = enlace;
+          redBoton[4].classList.add('green-text');
+          inputs[3].value = redessociales.linkedin;
+        }
+        if (redessociales.youtube) {
+          const enlace = 'https://youtube.com/@' + redessociales.youtube;
+          redBoton[5].href = enlace;
+          redBoton[5].title = enlace;
+          redBoton[5].classList.add('green-text');
+          inputs[4].value = redessociales.youtube;
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', leerRedesSociales())
+
+    }
+
+    eventRedesSociales()
+
+    function leerGaleria() {
       const imageContainer = document.getElementById('contenedor-imagenes');
       const parallaxImage = document.getElementById('parallax-image');
       const eliminarFotoBtn = document.getElementById('eliminar-foto-btn');
       const usarfotobtn = document.getElementById('usar-antigua-foto-btn');
       const ordenSelect = document.getElementById('ordenar-imagenes');
 
-      const listRef = ref(st, `${uid}/fotos de perfil`);
+      const listRef = ref(st, `${uid}/galeria`);
       listAll(listRef).then(async (result) => {
 
         async function renderizarImagenes(querySnapshot) {
@@ -825,27 +1047,26 @@ async function leer(user) {
         // Llama a la función para ordenar y renderizar inicialmente
         ordenarImagenes();
 
-        async function parallaxAutoplay() {
-          const items = result.items;
-          console.log(items);
-          if(items.length !== 0) {
-          let index = 0;
+        // async function parallaxAutoplay() {
+        //   const items = result.items;
+        //   if (items.length !== 0) {
+        //     let index = 0;
 
-          const updateParallaxImage = async () => {
-            const url = await getDownloadURL(items[index]);
-            parallaxImage.src = url;
-          };
+        //     const updateParallaxImage = async () => {
+        //       const url = await getDownloadURL(items[index]);
+        //       parallaxImage.src = url;
+        //     };
 
-          setInterval(() => {
-            index = (index < items.length - 1) ? index + 1 : 0;
-            updateParallaxImage();
-          }, 30000);
+        //     setInterval(() => {
+        //       index = (index < items.length - 1) ? index + 1 : 0;
+        //       updateParallaxImage();
+        //     }, 30000);
 
-          updateParallaxImage();
-            
-          }
-        }
-        parallaxAutoplay();
+        //     updateParallaxImage();
+
+        //   }
+        // }
+        // parallaxAutoplay();
 
         // usar foto como perfil
         usarfotobtn.addEventListener('click', async (e) => {
@@ -884,9 +1105,7 @@ async function leer(user) {
         });
       });
     }
-
-    leerFotos();
-
+    leerGaleria();
 
     // guardar Nuevo servicio 
     // guardar Nuevo servicio 
@@ -1018,6 +1237,9 @@ async function leer(user) {
           crearServicioBtn.classList.add('disabled');
         } else if (querySnapshot.length === 0) {
           serviciosContent.innerHTML = '<p class="center">Aun no hay servicios en este perfil...</p>';
+        } else if (querySnapshot.length !== 0) {
+          steps[1].classList.add('valid');
+          stepsIcons[1].classList.remove('hide');
         }
 
       }
@@ -1205,7 +1427,7 @@ async function leer(user) {
 
     document.getElementById('eliminar-servicio-btn').addEventListener('click', async (e) => {
       viewLoadWindows();
-      
+
       const folderName = e.target.dataset.id;
       eliminarStorageRef(folderName)
       // Eliminar el campo del documento
@@ -1250,7 +1472,7 @@ async function leer(user) {
 
         try {
           // Crear una referencia única para cada servicio
-          const storageRef = ref(st, `${uid}/fotos de perfil`);
+          const storageRef = ref(st, `${uid}/galeria`);
           const metadata = {
             customMetadata: {
               timeUploaded: new Date().toISOString()
@@ -1302,8 +1524,203 @@ async function leer(user) {
 
     })
 
+    // leer si ya se completaron los pasos y ocultar el desplegable
+    function hideStepsContainer() {
+      const contenedorPadre = document.querySelector('.steps-container');
+      let todosVisibles = true;
+
+      steps.forEach(step => {
+        if (!step.classList.contains('valid')) {
+          todosVisibles = false;
+        }
+      });
+
+      if (todosVisibles) {
+        contenedorPadre.classList.add('hide');
+      }
+    }
+
+    hideStepsContainer();
+
+
     // se ejecuta cuando la ventana carge
     document.addEventListener('DOMContentLoaded', hideLoadWindows())
+
+
+    function cambiarFondoPanel() {
+      // panel del usuario
+      const panel = document.querySelector('#panel-container');
+
+      // fondo animado
+      const fondo = document.querySelector('#fondo.parallax-container');
+
+      // previsualizar el fondo seleccionado
+      const fondosContainer = document.getElementById('backGrounds-container');
+      const input = document.getElementById('cambiarfondo-input');
+      const previewFondo = document.querySelector('.preview-selected');
+      const fondoImage = document.querySelectorAll('#backGrounds-container img');
+      const boton = document.querySelector('#save-panel-color');
+
+      // Crear una referencia única para cada servicio
+      const storageRef = ref(st, `${uid}/imagenes de fondo`);
+
+      // Función para guardar el color en localStorage
+      async function guardarNuevoFondo(file, fileName) {
+        try {
+          if (fileName !== null) {
+            const metadata = {
+              contentType: 'image/jpeg',
+              customMetadata: {
+                timeUploaded: new Date().toISOString()
+              }
+            };
+
+            // Subir la imagen a Firebase Storage
+            const imageRef = ref(storageRef, fileName);
+            const uploadTask = await uploadBytes(imageRef, file, metadata);
+
+            // Obtener la URL de descarga de la imagen
+            const downloadURL = await getDownloadURL(uploadTask.ref);
+
+            // Almacenar la información general del servicio en Firestore
+            await setDoc(docRef, {
+              imagenDeFondo: downloadURL
+            }, { merge: true });
+            M.toast({ html: 'En hora buena, has cambiado el fondo de pantalla con exito!' });
+
+          } else {
+            await setDoc(docRef, {
+              imagenDeFondo: file
+            }, { merge: true });
+            M.toast({ html: 'En hora buena, has cambiado el fondo de pantalla con exito!' });
+
+          }
+        } catch (error) {
+          alert(error);
+        }
+
+      }
+
+      async function iterarImagenesDeFondo() {
+
+        listAll(storageRef)
+          .then((res) => {
+            res.items.forEach((itemRef) => {
+              getDownloadURL(itemRef)
+                .then((url) => {
+                  const div = document.createElement('div');
+                  div.classList.add('col', 's4', 'm3');
+                  const img = document.createElement('img');
+                  img.classList.add('circle', 'hoverable');
+                  img.src = url;
+                  // div.innerHTML = `<img src="${url}" class="circle hoverable" alt="fondo">`
+
+                  const deleteButton = document.createElement('a');
+                  deleteButton.classList.add('delete-new-bg');
+                  deleteButton.innerHTML = '<i class="fa-solid fa-xmark cursor-pointer red" title="eliminar"></i>';
+                  deleteButton.addEventListener('click', () => {
+                    // Delete the file
+                    deleteObject(itemRef).then(() => {
+                      // File deleted successfully
+                      div.remove();
+                    }).catch((error) => {
+                      // Uh-oh, an error occurred!
+                      alert(error)
+                    });
+
+                  });
+
+                  div.appendChild(img);
+                  div.appendChild(deleteButton);
+                  fondosContainer.appendChild(div);
+
+                  // Seleccionar el círculo correspondiente al color de fondo
+                  // if (img.src === imagenDeFondo) {
+                  //   img.classList.add('selected');
+                  // } else {
+                  //   img.classList.remove('selected');
+                  // }
+                })
+            });
+          }).catch((error) => {
+            // Uh-oh, an error occurred!
+            console.error(error);
+          });
+
+        if (imagenDeFondo) {
+          establecerFondo(imagenDeFondo);
+        } else {
+          establecerFondo('/imagenes/fondo01.jpg');
+        }
+
+      } iterarImagenesDeFondo();
+
+      input.addEventListener('change', () => {
+        const imagen = input.files[0];
+        const blobURL = URL.createObjectURL(imagen);
+        if (imagen) {
+          fondoImage.forEach(imagen => {
+            imagen.classList.remove('selected');
+          });
+
+          previewFondo.style.backgroundImage = `url('${blobURL}')`;
+
+          boton.classList.remove('disabled');
+        }
+      });
+
+      // Guardar el color seleccionado en localStorage al hacer clic en el botón
+      boton.addEventListener('click', () => {
+        const imagen = input.files[0];
+        guardarNuevoFondo(imagen, imagen.name);
+      });
+
+      // Función para establecer el color de fondo
+
+      function establecerFondo(imagen) {
+        fondo.style.backgroundImage = `url(${imagen})`;
+        previewFondo.style.backgroundImage = `url(${imagen})`;
+
+        // Seleccionar el círculo correspondiente al color de fondo
+        fondoImage.forEach(img => {
+          if (img.src === imagen) {
+            img.classList.add('selected');
+          } else {
+            img.classList.remove('selected');
+          }
+        });
+      }
+
+      fondoImage.forEach(img => {
+        img.addEventListener('click', (e) => {
+          const backGround = e.target.src;
+          document.querySelectorAll('.circle.selected').forEach(selectedBg => {
+            selectedBg.classList.remove('selected');
+          });
+
+          img.classList.add('selected');
+          boton.classList.remove('disabled');
+          previewFondo.style.backgroundImage = `url(${backGround})`;
+
+          if (backGround === imagenDeFondo) {
+            boton.classList.add('disabled');
+          } else {
+            boton.classList.remove('disabled');
+          }
+
+          // Guardar el color seleccionado en localStorage al hacer clic en el botón
+          boton.addEventListener('click', async () => {
+            establecerFondo(backGround);
+            guardarNuevoFondo(backGround, null)
+          });
+        });
+      });
+
+
+    }
+
+    cambiarFondoPanel();
+
 
   }
 }

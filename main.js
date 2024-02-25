@@ -18,6 +18,59 @@ const app = initializeApp(firebaseConfig);
 const fs = getFirestore(app);
 const auth = getAuth(app);
 
+
+
+function observador() {
+  const body = document.querySelector('body');
+  const loader = document.querySelector('.load-container');
+  const entrarBtn = document.getElementById('entrarBtn');
+  const userMenuTrigger = document.getElementById('userMenu-trigger');
+  const dropDownName = document.getElementById('dropDown-name');
+  const dropDownImage = document.getElementById('dropDown-image');
+  const navImage = document.getElementById('nav-image');
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // User is signed in.
+      var displayName = user.displayName;
+      var email = user.email;
+      var emailVerified = user.emailVerified;
+      var photoURL = user.photoURL;
+      var uid = user.uid;
+      var phoneNumber = user.phoneNumber;
+      var providerData = user.providerData;
+      if (photoURL) {
+        dropDownImage.src = photoURL;
+        navImage.src = photoURL;
+      }
+      if (displayName) {
+
+        var nombre = `${displayName}`;
+        nombre = nombre.split(' ');
+        dropDownName.textContent = nombre[0];
+      }
+      entrarBtn.classList.add('hide');
+      userMenuTrigger.classList.remove('hide');
+    } else {
+      // User is signed out.
+      entrarBtn.classList.remove('hide');
+      userMenuTrigger.classList.add('hide');
+    }
+  });
+
+  body.classList.remove('fixed-container');
+  loader.classList.add('hide');
+};
+observador()
+
+
+document.getElementById('cerrarSesionBtn').addEventListener('click', () => {
+  signOut(auth).then(() => {
+    window.location.reload();
+  }).catch((err) => {
+    alert("ha ocurrido un error inesperado, intente de nuevo mas tarde")
+  });
+})
+
 const leerUsuarios = document.querySelector('#leerUsuarios');
 const noHayCoincidencias = document.querySelector('#noHayCoincidencias');
 const textoIndicador = document.querySelectorAll('#textoIndicador span');
@@ -33,12 +86,13 @@ var primerDoc = null;
 
 const leerDocumentos = (document) => {
   const documentos = document.docs;
+  const user = auth.currentUser;
   if (documentos.length > 0) {
     leerUsuarios.innerHTML = '';
     documentos.forEach((docSnap) => {
-      const { id, nombre, emailVerified, photoURL, recoms, profecion, provincia } = docSnap.data();
+      const { id, nombre, photoURL, recoms, profecion, provincia } = docSnap.data();
       // const documentId = nombre.replace(/\s/g, '');
-      if (emailVerified) {
+      if (user.emailVerified) {
         const tarjetaHTML = `
       <div class="col s6 m4 l3 xl2">
           <a href="./v/${id}">
@@ -122,56 +176,3 @@ filtrarUbicacion.addEventListener('change', () => paginarDocumentos(null));
 // filtrarOption.addEventListener('change', () => paginarDocumentos(null));
 paginacionNextBtn.addEventListener('click', paginaSiguiente)
 paginacionBackBtn.addEventListener('click', paginaAnterior)
-
-
-
-function observador() {
-  const body = document.querySelector('body');
-  const loader = document.querySelector('.load-container');
-  const entrarBtn = document.getElementById('entrarBtn');
-  const userMenuTrigger = document.getElementById('userMenu-trigger');
-  const dropDownName = document.getElementById('dropDown-name');
-  const dropDownImage = document.getElementById('dropDown-image');
-  const navImage = document.getElementById('nav-image');
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      // User is signed in.
-      var displayName = user.displayName;
-      var email = user.email;
-      var emailVerified = user.emailVerified;
-      var photoURL = user.photoURL;
-      var uid = user.uid;
-      var phoneNumber = user.phoneNumber;
-      var providerData = user.providerData;
-      if (photoURL) {
-        dropDownImage.src = photoURL;
-        navImage.src = photoURL;
-      }
-      if (displayName) {
-
-        var nombre = `${displayName}`;
-        nombre = nombre.split(' ');
-        dropDownName.textContent = nombre[0];
-      }
-      entrarBtn.classList.add('hide');
-      userMenuTrigger.classList.remove('hide');
-    } else {
-      // User is signed out.
-      entrarBtn.classList.remove('hide');
-      userMenuTrigger.classList.add('hide');
-    }
-  });
-
-  body.classList.remove('fixed-container');
-  loader.classList.add('hide');
-};
-observador()
-
-
-document.getElementById('cerrarSesionBtn').addEventListener('click', () => {
-  signOut(auth).then(() => {
-    window.location.reload();
-  }).catch((err) => {
-    alert("ha ocurrido un error inesperado, intente de nuevo mas tarde")
-  });
-})

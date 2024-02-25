@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Material Icon CDN -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!-- google fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <!-- google icons -->
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <!-- Path of the materialize.min.css file -->
+  <link rel="stylesheet" href="../node_modules/materialize-css/dist/css/materialize.css" media="screen,projection">
+  <!-- Custom css file path -->
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background: #F0FDFF;
+    }
+
+    .container {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .card {
+      border-radius: 20px !important;
+    }
+
+    .card img {
+      border-radius: 20px 20px 0 0 !important;
+    }
+
+    .card .card-action {
+      border-radius: 0 0 20px 20px !important;
+    }
+  </style>
+
+  <!-- icono de pagina -->
+  <link class="icon-head" rel="shortcut icon" href="../imagenes/logo bg teal.png" type="image/x-icon">
+  <title>Joseo.do</title>
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col s12">
+        <div class="card center z-depth-0">
+          <div class="card-image">
+            <img src="/imagenes/mail verified (2).jpg" alt="imagen" />
+            <span class="card-title"></span>
+          </div>
+          <div class="card-action">
+            <a class="btn btn-large blue">Enviar correo de verificacion</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Path of the materialize.min.js file -->
+  <script src="../node_modules/materialize-css/dist/js/materialize.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      M.Slider.init(document.querySelector('.slider'), { indicators: false });
+    });
+  </script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBYNAIFu_BU4oav3I3PCFncS9QU5GvkiAU",
+      authDomain: "joseodo-72673.firebaseapp.com",
+      projectId: "joseodo-72673",
+      storageBucket: "joseodo-72673.appspot.com",
+      messagingSenderId: "1098719522238",
+      appId: "1:1098719522238:web:1cd896005f5264ad40ddef"
+    };
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    function observar(boton) {
+      const user = auth.currentUser;
+        if (user.emailVerified) {
+          window.location.href = './';
+        } else {
+          sendEmailVerification(auth.currentUser)
+            .then(() => {
+              alert('se ha enviado un correo de verificacion a tu direccion de correo, revisa tu bandeja de entrada de correos !!');
+              boton.classList.add('disabled');
+              setTimeout(() => {
+                boton.classList.remove('disabled');
+              }, 10000);
+            });
+        }
+
+    }
+
+    document.querySelector('.btn').addEventListener('click', (e) => {
+      observar(e.target);
+    });
+  </script>
+</body>
+
+</html>

@@ -48,30 +48,15 @@
         </h6>
 
     </div>
-    <!-- no se ha encontrado la busqueda -->
-    <div id="" class="hide">
-        <div class="row">
-            <div class="card blue-grey darken-1">
-                <div class="card-content white-text center">
-                    <i class="fa-solid fa-house-circle-exclamation"></i>
-                    <span class="card-title"><b>Aun no hay profecionales aqui</b></span>
-                    <p>Intenta con algo diferente</p>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Modal Editar perfil-->
     <div id="modal-editarPerfil" class="modal z-depth-0 transparent">
         <div class="modal-content">
             <div class="card col s10 offset-s1 m8 offset-m2 ">
                 <div class="card-content">
-                    <div class="valign-wrapper space-between">
-                        <h5><b>Editar perfil</b></h5>
-                        <a class=" waves-effect waves-light btn-floating btn-small modal-close z-depth-0"
-                            title="salir"><i class="material-icons">close</i></a>
-                    </div>
-                    <div class="divider blue-grey"></div>
+                    <a class="modal-btn-action modal-close" title="cerrar"><i class="material-icons">close</i></a>
+                    <h6 class="center"><b>Editar perfil</b></h6>
+
                     <div class="row card-action">
                         <!-- modal trigger editar el usuario -->
                         <div class="col s12 valign-wrapper space-between grey">
@@ -85,12 +70,6 @@
                             <a href="#modal-editarNombre"
                                 class="modal-trigger modal-close waves-effect waves-light blue-text text-darken-2">editar</a>
                         </div>
-                        <!-- modal trigger editar la presentacion
-                        <div class="col s12 valign-wrapper space-between grey">
-                            <p><b>Presentación</b><br><span id="modal-card-nombre">cargando...</span></p>
-                            <a href="#modal-editarNombre"
-                                class="modal-trigger modal-close waves-effect waves-light blue-text text-darken-2">editar</a>
-                        </div> -->
                         <!-- modal trigger editar la profecion y habilidades -->
                         <div class="col s12 valign-wrapper space-between grey">
                             <p><b>Profecion y habilidades</b><br>
@@ -106,6 +85,12 @@
                             <a id="openUbicacionmodal" href="#modal-editarUbicacion"
                                 class="modal-trigger modal-close waves-effect waves-light blue-text text-darken-2">editar</a>
                         </div>
+                        <!-- modal trigger editar el telefono -->
+                        <div class="col s12 valign-wrapper space-between grey">
+                            <p><b>Telefono</b><br><span id="modal-card-telefono">cargando...</span></p>
+                            <a href="#modal-editarTelefono"
+                                class="modal-trigger modal-close waves-effect waves-light blue-text text-darken-2">editar</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -115,22 +100,19 @@
     <!-- Modal Editar foto de usuario -->
     <div id="modal-editarFoto" class="modal no-autoinit modal-small">
         <div class="modal-content">
-            <div class="valign-wrapper space-between">
-                <h5><b>Editar foto de perfil</b></h5>
-                <a id="cancelUserFoto" class="modal-close waves-effect waves-light btn-floating btn-small z-depth-0"
-                    title="salir"><i class="material-icons">close</i></a>
-            </div>
-            <div class="divider blue-grey"></div>
+            <a id="cancelUserFoto" class="modal-btn-action modal-close" title="cerrar"><i
+                    class="material-icons">close</i></a>
+            <h6 class="center"><b>Editar foto de perfil</b></h6>
+
             <div class="cropper-container center">
                 <img id="croppperImg" src="" alt="logo">
                 <p id="verif-foto" class="helper-text right red-text text-accent-4 hide">imagen con formato no
                     admitido</p>
             </div>
         </div>
-        <div class="modal-footer">
-            <a id="guardar-foto" class="cursor-pointer btn-flat btn-small right" title="guardar"> <i
+        <div class="center">
+            <a id="guardar-foto" class="cursor-pointer btn-large" title="guardar"> <i
                     class="fa-regular fa-floppy-disk"></i> guardar</a>
-
         </div>
     </div>
 
@@ -201,7 +183,7 @@
     </div>
 
     <!-- Modal Editar Presentacion -->
-    <div id="modal-editarPresentacion" class="modal z-depth-0 transparent">
+    <div id="modal-editarPresentacion" class="modal z-depth-0 transparent modal-centred">
         <div class="modal-content">
             <div class="card col s10 offset-s1 m8 offset-m2 ">
                 <div class="card-content">
@@ -213,8 +195,8 @@
                     <!-- editar presentacion -->
                     <form id="presentacionForm">
                         <div class="input-field col s12 m10 offset-m1 presentacion-container center">
-                            <textarea id="userpresentacion" placeholder="Presentación"
-                                class="materialize-textarea"></textarea>
+                            <textarea id="userpresentacion" placeholder="Presentación" class="materialize-textarea"
+                                data-length="120" maxlength="120"></textarea>
                             <div id="actionUserpresentacion" class="hide">
                                 <a id="cancelUserpresentacion" class=" cursor-pointer btn-flat btn-small"
                                     title="cancelar">
@@ -223,6 +205,35 @@
                                     title="guardar presentación">
                                     <i class="fa-regular fa-floppy-disk"></i> guardar</a>
                             </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Editar id de usuario -->
+    <div id="modal-editarTelefono" class="modal z-depth-0 transparent modal-centred">
+        <div class="modal-content">
+            <div class="card col s10 offset-s1 m8 offset-m2 ">
+                <div class="card-content">
+                    <div class="valign-wrapper space-between">
+                        <h5><b>Editar perfil</b></h5>
+                        <a href="#modal-editarPerfil" id="cancelTelefono"
+                            class="modal-trigger modal-close waves-effect waves-light btn-floating btn-small z-depth-0"
+                            title="salir"><i class="material-icons">close</i></a>
+                    </div>
+                    <form id="telefonoForm" class="row grey">
+                        <div class="left col s12"><b>Telefono</b></div>
+                        <div class="input-field col s12 m8 offset-m2">
+                            <input type="text" id="editTelefono" placeholder="Numero de telefono" name="telefono"
+                                class="validate" maxlength="14">
+                            <span class="helper-text center black-text">(123) 456-7890</span>
+                        </div>
+                        <div class="col s12">
+                            <a id="guardar-telefono" class="cursor-pointer btn-flat btn-small right hide"
+                                title="guardar">
+                                <i class="fa-regular fa-floppy-disk"></i> guardar</a>
                         </div>
                     </form>
                 </div>
@@ -912,7 +923,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Modal subir imagenes -->
     <div id="modal-subir-imagenes" class="modal modal-small modal-servicio">
         <div class="modal-content">
@@ -957,12 +968,114 @@
         </div><br>
     </div>
 
+    <!-- Modal agregar redes -->
+    <div id="agregar-redes-modal" class="modal z-depth-0 transparent">
+        <div class="modal-content">
+            <div class="card col s10 offset-s1 m8 offset-m2 ">
+                <div class="card-content">
+                    <div class="valign-wrapper space-between">
+                        <h5><b>Editar Redes Sociales</b></h5>
+                        <a id="cancelRedesSociales"
+                            class="modal-close waves-effect waves-light btn-floating btn-small z-depth-0"
+                            title="salir"><i class="material-icons">close</i></a>
+                    </div>
+                    <form id="redesSocialesForm" class="row grey">
+                        <div class="input-field col s12 m8 offset-m2 valign-wrapper">
+                            <b class="col s6 m4 left-align">facebook</b>
+                            <input type="text" id="editfacebook" placeholder="usuario" class="validate" name="facebook">
+                            &nbsp;&nbsp;<a id="savefacebook"
+                                class="right-align teal-text text-darken-2 cursor-pointer hide">GUARDAR</a>
+                        </div>
+                        <div class="input-field col s12 m8 offset-m2 valign-wrapper">
+                            <b class="col s6 m4 left-align">instagram</b>&nbsp;&nbsp;
+                            <input type="text" id="editinstagram" placeholder="usuario" class="validate"
+                                name="instagram">
+                            &nbsp;&nbsp;<a id="saveinstagram"
+                                class="right-align teal-text text-darken-2 cursor-pointer hide">GUARDAR</a>
+                        </div>
+                        <div class="input-field col s12 m8 offset-m2 valign-wrapper">
+                            <b class="col s6 m4 left-align">x twitter</b>&nbsp;&nbsp;
+                            <input type="text" id="editxtwitter" placeholder="usuario" class="validate" name="xtwitter">
+                            &nbsp;&nbsp;<a id="savextwitter"
+                                class="right-align teal-text text-darken-2 cursor-pointer hide">GUARDAR</a>
+                        </div>
+                        <div class="input-field col s12 m8 offset-m2 valign-wrapper">
+                            <b class="col s6 m4 left-align">linkedin</b>&nbsp;&nbsp;
+                            <input type="text" id="editlinkedin" placeholder="usuario" class="validate" name="linkedin">
+                            &nbsp;&nbsp;<a id="savelinkedin"
+                                class="right-align teal-text text-darken-2 cursor-pointer hide">GUARDAR</a>
+                        </div>
+                        <div class="input-field col s12 m8 offset-m2 valign-wrapper">
+                            <b class="col s6 m4 left-align">youtube</b>&nbsp;&nbsp;
+                            <input type="text" id="edityoutube" placeholder="usuario" class="validate" name="youtube">
+                            &nbsp;&nbsp;<a id="saveyoutube"
+                                class="right-align teal-text text-darken-2 cursor-pointer hide">GUARDAR</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- modal editar color del panel -->
+    <div id="edit-bg-contact-modal" class="modal">
+        <div class="modal-content">
+            <div id="preview-selected" class="preview-selected">
+            </div>
+            <a class="modal-btn-action modal-close btn-floating btn-small white"><i
+                    class="material-icons blue-text text-accent-4">close</i></a>
+            <h5 class="black-text center">cambiar de fondo</h5>
+            <div class="container">
+                <div id="select-panel-color" class="row">
+                    <div class="col s4 m3">
+                        <div class="circle file-field center">
+                            <input id="cambiarfondo-input" type="file" title="subir un fondo" accept="image/*">
+                            <i class="material-symbols-outlined">add_photo_alternate</i>
+
+                        </div>
+                    </div>
+                    <div id="backGrounds-container">
+                        <div class="col s4 m3">
+                            <img src="/imagenes/fondo01.jpg" class="circle hoverable selected" alt="fondo01">
+                        </div>
+                        <div class="col s4 m3">
+                            <img src="/imagenes/fondo02.jpg" class="circle hoverable" alt="fondo02">
+                        </div>
+                        <div class="col s4 m3">
+                            <img src="/imagenes/fondo03.jpg" class="circle hoverable" alt="fondo03">
+                        </div>
+                        <div class="col s4 m3">
+                            <img src="/imagenes/fondo03.png" class="circle hoverable" alt="fondo03png">
+                        </div>
+                        <div class="col s4 m3">
+                            <img src="/imagenes/fondo04.jpg" class="circle hoverable" alt="fondo04">
+                        </div>
+                        <div class="col s4 m3">
+                            <img src="/imagenes/fondo05.jpg" class="circle hoverable" alt="fondo05">
+                        </div>
+                        <div class="col s4 m3">
+                            <img src="/imagenes/fondo06.jpg" class="circle hoverable" alt="fondo06">
+                        </div>
+                        <div class="col s4 m3">
+                            <img src="/imagenes/fondo07.jpg" class="circle hoverable" alt="fondo07">
+                        </div>
+                    </div>
+                </div>
+                <div class="center">
+                    <a id="save-panel-color"
+                        class="modal-close waves-effect waves-green btn-flat blue accent-4 white-text disabled">Usar
+                        fondo</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <header>
         <div id="nav" class="navbar-fixed">
             <nav class="nav-extended z-depth-0 transparent">
                 <div class="nav-wrapper-message grey lighten-2 center hide">
-                    <b class="blue-text">Verifica tu direccion de correo electronico <i
-                            class="fa-regular fa-envelope"></i></b>
+                    <a href="./verificar-cuenta.html" class="blue-text">Verifica tu direccion de correo electronico <i
+                            class="fa-regular fa-envelope"></i></a>
                 </div>
                 <div class="nav-wrapper">
                     <a href="../" class="brand-logo left"><img src="../imagenes/logo horizontal teal.jpg" alt="i"></a>
@@ -1013,34 +1126,68 @@
             </nav>
         </div>
         <!-- portada -->
-        <div class="parallax-container center">
-            <div class="parallax black">
-                <img id="parallax-image" src="">
-            </div>
+        <div id="fondo" class="parallax-container center">
+            <!-- <div class="paralax black">
+                <img id="parallax-image" src="/imagenes/fondo01.jpg">
+            </div> -->
             <div class="subcontent container">
-                <div class="contact-container z-depth-1">
+                <div id="panel-container" class="contact-container z-depth-1">
 
                     <div class="file-field foto-container">
                         <img id="userPhoto" class="circle" src="../imagenes/user-icon black.png" alt="user">
-                        <a id="seleccionar-imagen-btn" class="waves-effect waves-light btn btn-floating btn-small"
-                            title="cambiar foto de perfil"><i class="material-symbols-outlined">add_a_photo</i>
+                        <a id="seleccionar-imagen-btn" class="waves-effect waves-light btn btn-floating btn-small white"
+                            title="cambiar foto de perfil"><i
+                                class="material-symbols-outlined blue-text">add_a_photo</i>
                             <input id="seleccionar-imagen-input" type="file" accept="image/*"></a>
                     </div>
                     <!-- nombre de usuario -->
                     <div class="data-container center">
-                        <p><span id="userName" class="data-nombre">Cargando...</span>
+                        <p>
+                            <span id="userName" class="data-nombre">Cargando...</span>
                             <b id="userProfecionUbicacion" class="teal-text"></b>
+                            <span id="recoms" class="chip-recoms "></span>
                         </p>
+                        <!-- conteo de recomendaciones
+                        <div>
+                        </div> -->
 
-                        <a href="#modal-editarPresentacion" class="modal-trigger data-presentacion"
-                            title="editar presentacion">
-                            <span id="data-presentacion"></span><br><i
-                                class="fa-regular fa-pen-to-square"></i>editar</a>
-
+                        <div class="edit-presentacion-container"><a href="#modal-editarPresentacion"
+                                class="modal-trigger data-presentacion" title="editar presentacion">
+                                <span id="data-presentacion"></span>&nbsp;&nbsp;<i
+                                    class="fa-regular fa-pen-to-square"></i>editar</a></div>
                     </div>
-                    <!-- conteo de recomendaciones -->
-                    <b class="chip-recoms chip "><span id="recoms"></span>&nbsp;recomendaciones <i
-                            class="fa-regular fa-thumbs-up"></i></b>
+                    <!-- contenedor de redes sociales -->
+                    <div class="redes-container">
+                        <div class="valign-wrapper space-between">
+                            <a class="red-social-trigger dropdown-trigger blue-text text-accent-4"
+                                data-target="drop-redes-sociales" title="compartir enlace"><i
+                                    class="material-icons">share</i></a>
+                            <a href="#modal-editarPerfil" class="modal-trigger blue-text text-accent-4"
+                                title="editar perfil"><i class="material-icons">edit</i></a>
+                            <a href="#edit-bg-contact-modal"
+                                class="blue-text text-accent-4 modal-trigger"
+                                title="cambiar fondo del panel"><i class="material-symbols-outlined">palette</i></a>
+                        </div>
+                        <!-- Dropdown Structure -->
+                        <ul id='drop-redes-sociales' class='dropdown-content'>
+                            <li><a class="red-social" title="copiar enlace"><i
+                                        class="fa-solid fa-link"></i>&nbsp;&nbsp;copiar enlace</a></li>
+                            <div class="divider"></div>
+                            <li><a class="red-social" title="sin enlace a facebook"><i
+                                        class="fa-brands fa-facebook-f"></i>&nbsp;&nbsp;facebook</a></li>
+                            <li><a class="red-social" title="sin enlace a instagram"><i
+                                        class="fa-brands fa-instagram"></i>&nbsp;&nbsp;instagram</a></li>
+                            <li><a class="red-social" title="sin enlace a x twitter"><i
+                                        class="fa-brands fa-x-twitter"></i>&nbsp;&nbsp;x twitter</a></li>
+                            <li><a class="red-social" title="sin enlace a linkedin"><i
+                                        class="fa-brands fa-linkedin-in"></i>&nbsp;&nbsp;linkedin</a></li>
+                            <li><a class="red-social" title="sin enlace a youtube"><i
+                                        class="fa-brands fa-youtube"></i>&nbsp;&nbsp;youtube</a></li>
+                            <li><a href="#agregar-redes-modal" class="teal white-text modal-trigger center"
+                                    title="agregar redes sociales">&nbsp;&nbsp;agregar redes</a></li>
+                        </ul>
+                    </div>
+
                     <!-- botones del perfil -->
                     <div class="action-container">
                         <a href="#modal-editarPerfil"
@@ -1051,74 +1198,30 @@
                             <i class="fa-regular fa-message"></i> ver mensajes
                         </a>
                     </div>
-
+                    <!-- contenedor desplegable de pasos a completar -->
+                    <div class="steps-container">
+                        <div>
+                            <h6><b>completa tu perfil</b></h6>
+                        </div>
+                        <div class="step"><i class="material-icons">account_circle</i>&nbsp;cambia tu foto <i
+                                class="material-icons check hide">check</i></div>
+                        <div class="step"><i class="material-icons">construction</i>&nbsp;agrega un servicio <i
+                                class="material-icons check hide">check</i></div>
+                        <div class="step"><i class="material-icons">mail</i>&nbsp;verifica tu email <i
+                                class="material-icons check hide">check</i></div>
+                        <div class="step"><i class="material-icons">call</i>&nbsp;agrega un telefono <i
+                                class="material-icons check hide">check</i></div>
+                        <div class="step"><i class="material-icons">engineering</i>&nbsp;agrega tus habilidades <i
+                                class="material-icons check hide">check</i></div>
+                        <div class="step"><i class="material-icons">link</i>&nbsp;agrega redes sociales <i
+                                class="material-icons check hide">check</i></div>
+                        <div class="steps-container-activator"><i class="material-icons blue-text">arrow_right</i></div>
+                    </div>
                 </div>
             </div>
         </div>
     </header>
     <main>
-
-        <!-- contenedor de cartas
-            <div class="row cartas-container hide">
-
-                <div class="col s3 m3">
-                    <a href="">
-                        <div class="card ">
-                            <img src="../imagenes/casas-ecológicas_apertura-hogar-sostenibilidad-certificado-.jpg"
-                                alt="image">
-                            <div class="card-content display-right blue-grey darken-1 white-text">
-                                <span class="card-title">servicio santo lino</span>
-                                <p>I am a very simple card. I am good at containing small bits of information. I am
-                                    convenient because I require little markup to use effectively.</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="col s3 m3">
-                    <a href="">
-                        <div class="card ">
-                            <img src="../imagenes/casas-ecológicas_apertura-hogar-sostenibilidad-certificado-.jpg"
-                                alt="image">
-                            <div class="card-content display-right blue-grey darken-1 white-text">
-                                <span class="card-title">servicio santo lino</span>
-                                <p>I am a very simple card. I am good at containing small bits of information. I am
-                                    convenient because I require little markup to use effectively.</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="col s3 m3">
-                    <a href="">
-                        <div class="card ">
-                            <img src="../imagenes/casas-ecológicas_apertura-hogar-sostenibilidad-certificado-.jpg"
-                                alt="image">
-                            <div class="card-content display-right blue-grey darken-1 white-text">
-                                <span class="card-title">servicio santo lino</span>
-                                <p>I am a very simple card. I am good at containing small bits of information. I am
-                                    convenient because I require little markup to use effectively.</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="col s3 m3">
-                    <a href="">
-                        <div class="card ">
-                            <img src="../imagenes/casas-ecológicas_apertura-hogar-sostenibilidad-certificado-.jpg"
-                                alt="image">
-                            <div class="card-content display-left blue-grey darken-1 white-text">
-                                <span class="card-title">servicio santo lino</span>
-                                <p>I am a very simple card. I am good at containing small bits of information. I am
-                                    convenient because I require little markup to use effectively.</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-
-            </div> -->
-
         <div id="leerPerfiles" class="section">
             <div class="fixed-action-btn hide">
                 <a id="scrollUnlockButton" class="btn-floating blue-grey hide">
@@ -1134,65 +1237,67 @@
                             <li class="tab col s6 "><a href="#misServicios">Mis servicios</a></li>
                             <li class="tab col s6 "><a href="#galeria">Galeria</a></li>
                         </ul>
-                    </div>
 
-                    <div id="galeria" class="col s12 tabed-container">
-                        <!-- todos mis servicios -->
-                        <div class="crear-servicio-container center">
-                            <p class="header-text">agrega imagenes de los servicios que hayas realizado, muestra lo que haces a cientos
-                                de clientes potenciales !!</p>
+                        <div id="galeria">
+                            <!-- todos mis servicios -->
+                            <div class="crear-servicioEimagenes-container center">
+                                <p class="header-text">agrega imagenes de los servicios que hayas realizado, muestra lo
+                                    que haces a cientos
+                                    de clientes potenciales !!</p>
 
-                            <a id="agregar-imagenes-btn"
-                                class="waves-effect waves-light file-field btn btn-large blue accent-4 tooltipped z-depth-0"
-                                title="" data-position="top"
-                                data-tooltip="selecciona algunas imagenes para agregar a tu nuevo servicio">
-                                Subir imagenes
-                                <form><input type="file" accept="image/*" multiple></form>
-                            </a>
-                            <div class="divider"></div>
+                                <a id="agregar-imagenes-btn"
+                                    class="waves-effect waves-light file-field btn btn-large blue accent-4 tooltipped z-depth-0"
+                                    title="" data-position="top"
+                                    data-tooltip="selecciona algunas imagenes para agregar a tu nuevo servicio">
+                                    Subir imagenes
+                                    <form><input type="file" accept="image/*" multiple></form>
+                                </a>
+                                <div class="divider"></div>
 
-                            <div class="filter-container">
-                                <div class="input-field grey">
-                                    <select id="ordenar-imagenes" class="browser-default">
-                                        <option value=""disabled>Ordenar por</option>
-                                        <option value="Descendente" selected >Mas Resiente</option>
-                                        <option value="Ascendente">Mas Antigua</option>
-                                    </select>
+                                <div class="filter-container">
+                                    <div class="input-field grey">
+                                        <select id="ordenar-imagenes" class="browser-default">
+                                            <option value="" disabled>Ordenar por</option>
+                                            <option value="Descendente" selected>Mas Resiente</option>
+                                            <option value="Ascendente">Mas Antigua</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <div id="contenedor-imagenes" class="row no-padding">
-                            <p class="center">Aun no hay fotos en este perfil...</p>
-                        </div>
-                    </div>
-                    <div id="misServicios" class="col s12">
-                        <!-- todos mis servicios -->
-                        <div class="crear-servicio-container center">
-                            <p class="header-text">agrega tus servicios a tu perfil, comparte lo que haces con cientos
-                                de clientes potenciales !!</p>
 
-                            <a id="crear-servicio-btn"
-                                class="waves-effect waves-light file-field btn btn-large blue accent-4 tooltipped z-depth-0"
-                                title="" data-position="top"
-                                data-tooltip="selecciona algunas imagenes para agregar a tu nuevo servicio">
-                                Agregar servicio
-                                <form><input type="file" accept="image/*" multiple></form>
-                            </a>
-                            <div class="divider"></div>
-
-                            <div class="filter-container">
-                                <div class="input-field grey">
-                                    <select id="orden-select" class="browser-default">
-                                        <option value="" selected disabled>Ordenar en</option>
-                                        <option value="Ascendente">Ascendente (A-Z)</option>
-                                        <option value="Descendente">Descendente (Z-A)</option>
-                                    </select>
-                                </div>
+                            <div id="contenedor-imagenes" class="row no-padding">
+                                <p class="center">Aun no hay fotos en este perfil...</p>
                             </div>
                         </div>
-                        <div id="leer-servicios" class="row servicios-container">
-                            <p class="center">Aun no hay servicios en este perfil...</p>
+                        <div id="misServicios">
+                            <!-- todos mis servicios -->
+                            <div class="crear-servicioEimagenes-container center">
+                                <p class="header-text">agrega tus servicios a tu perfil, comparte lo que haces con
+                                    cientos
+                                    de clientes potenciales !!</p>
+
+                                <a id="crear-servicio-btn"
+                                    class="waves-effect waves-light file-field btn btn-large blue accent-4 tooltipped z-depth-0"
+                                    title="" data-position="top"
+                                    data-tooltip="selecciona algunas imagenes para agregar a tu nuevo servicio">
+                                    Agregar servicio
+                                    <form><input type="file" accept="image/*" multiple></form>
+                                </a>
+                                <div class="divider"></div>
+
+                                <div class="filter-container">
+                                    <div class="input-field grey">
+                                        <select id="orden-select" class="browser-default">
+                                            <option value="" selected disabled>Ordenar en</option>
+                                            <option value="Ascendente">Ascendente (A-Z)</option>
+                                            <option value="Descendente">Descendente (Z-A)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="leer-servicios" class="row servicios-container">
+                                <p class="center">Aun no hay servicios en este perfil...</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1200,6 +1305,9 @@
         </div>
     </main>
 
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <!-- Path of the materialize.min.js file -->
     <script src="../node_modules/materialize-css/dist/js/materialize.js"></script>
     <!-- fontawesome JS -->
@@ -1222,8 +1330,6 @@
 </body>
 
 </html>
-
-
 <!-- agregar la opcion de que los usuarios puedan elegir el fondo o el tema de su terjeta de presentacion -->
 <!-- hacer que se lean los servicios en ves de los perfiles -->
 <!-- que las cartas display esten en la cabecera de la pagina de inicio para que los mas recomendados aparezcan o los usuarios de paga -->

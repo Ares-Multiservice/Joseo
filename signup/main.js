@@ -211,7 +211,7 @@ firebase.auth().onAuthStateChanged((user) => {
       if (photoURL) {
         return photoURL;
       } else {
-        return "/imagenes/user-icon black.png"
+        return "/imagenes/user-icon.png"
       }
 
     }
@@ -231,7 +231,6 @@ firebase.auth().onAuthStateChanged((user) => {
           nombre: nombre.value,
           presentacion: presentacion.value,
           email: email,
-          emailVerified: emailVerified,
           phoneNumber: phoneNumber,
           recoms: 0,
           profecion: profecion.value,
@@ -284,6 +283,9 @@ firebase.auth().onAuthStateChanged((user) => {
       }
     });
 
+  }
+});
+
     // validar el nombre de usuario
     function verifNombre() {
       const element = document.getElementById(`verificar-nombre`);
@@ -298,7 +300,7 @@ firebase.auth().onAuthStateChanged((user) => {
 
     nombre.addEventListener('keyup', verifNombre);
     nombre.addEventListener('blur', verifNombre);
-
+    
     // validar el identificador del usuario
     function verifUser() {
       const verificarUsuario = document.getElementById('verificar-usuario');
@@ -337,6 +339,3 @@ firebase.auth().onAuthStateChanged((user) => {
     usuario.addEventListener('keyup', verifUser);
     usuario.addEventListener('blur', verifUser);
     document.addEventListener('DOMContentLoaded', verifNombre(), verifUser());
-
-  }
-});

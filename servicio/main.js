@@ -93,26 +93,26 @@ async function leer(user) {
   // Crear un objeto URL
   var url = new URL(urlActual);
   // Obtener los parámetros de la consulta
-  var proyectoId = url.searchParams.get("id");
-  var proyecto = url.searchParams.get("proyecto");
+  var servicioId = url.searchParams.get("id");
+  var servicio = url.searchParams.get("servicio");
 
   // leer los datos
   var filtrar = query(collection(fs, "usuarios"));
   // const query = await getDocs(filtrar);
-  var docRef = query(filtrar, where(`id`, "==", proyectoId));
+  var docRef = query(filtrar, where(`id`, "==", servicioId));
   const docSnap = await getDocs(docRef);
   docSnap.forEach((docSnap) => {
     const userUid = docSnap.id;
     const { id, photoURL, nombre, profecion, provincia, recoms } = docSnap.data();
     recomendaciones.textContent = recoms;
-    document.title = 'Proyecto de ' + nombre;
+    document.title = 'Servicio de ' + nombre;
     chipContact.href = `../v/${id}`;
-    const querySnap = Object.values(docSnap.data().proyectos);
+    const querySnap = Object.values(docSnap.data().servicios);
 
     // leer la informacion de los servicios
     querySnap.forEach((doc) => {
       const { id, title, desc } = doc;
-      if (id === proyecto) {
+      if (id === servicio) {
         fotoDeperfil.src = photoURL;
         displayName.textContent = nombre;
         miProfecion.textContent = profecion;
@@ -141,7 +141,7 @@ async function leer(user) {
     //   loop: true
     // });
 
-    // leer las imagenes del proyecto
+    // leer las imagenes del servicio
     // Crear elemento de lista para Splide
     // const listItem = document.createElement('li');
     // listItem.classList.add('splide__slide');
@@ -159,7 +159,7 @@ async function leer(user) {
     // Montar el carrusel después de agregar todas las imágenes
     // carousel.mount();
 
-    const proyectImg = Object.values(docSnap.data().proyectos[proyecto].imagenes);
+    const proyectImg = Object.values(docSnap.data().servicios[servicio].imagenes);
 
     function parallaxAutoplay() {
       let index = 0;

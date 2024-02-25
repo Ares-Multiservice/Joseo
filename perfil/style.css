@@ -71,15 +71,14 @@ nav {
     position: absolute;
 }
 
-
 .nav-wrapper-message {
     height: 20px;
+    line-height: 20px;
     text-align: center;
     font-size: 10pt;
-    line-height: 20px;
 }
 
-.nav-wrapper-message b {
+.nav-wrapper-message a {
     margin: -10px 0 !important;
 }
 
@@ -87,11 +86,11 @@ nav {
     padding: 0 20px;
 }
 
-.nav-wrapper #navbar svg {
+.nav-wrapper #navbar svg, #navbar  i {
     border-radius: 50%;
-    box-shadow: 0 0 5px black;
+    filter: drop-shadow( 0 0 1px black);
+    /* box-shadow:; */
 }
-
 
 .nav-wrapper .btn-small {
     width: 25px;
@@ -118,15 +117,36 @@ nav .brand-logo>img {
 /* portada */
 .parallax-container {
     height: 100vh;
+    background-size: cover;
+    animation: fondoAnimation 30s ease infinite;
+    overflow: hidden;
+
 }
 
-.parallax img {
+@keyframes fondoAnimation {
+    0% {
+        background-position: 0% 100%;
+        /* Posición inicial del gradiente */
+    }
+
+    50% {
+        background-position: 100% 0%;
+        /* Posición intermedia del gradiente */
+    }
+
+    100% {
+        background-position: 0% 100%;
+        /* Posición final del gradiente */
+    }
+}
+
+/* .parallax img {
     object-fit: cover;
-    /* height: 150vh; */
-    /* object-position: center top !important; */
+    height: 150vh;
+    object-position: center top !important;
     filter: blur(10px);
 
-}
+} */
 
 .parallax-container .subcontent {
     height: 100vh;
@@ -140,21 +160,6 @@ nav .brand-logo>img {
     height: 90vh !important;
 } */
 
-/* hacer un elemento scrolable
-.section .scrollable-container {
-    overflow: hidden !important;
-    height: 55vh;
-}
-
-.section .scrollable-container .content {
-    width: 100%;
-    max-height: 100%;
-    overflow-y: scroll;
-    margin: 0 !important;
-    padding: 0 !important;
-    border-radius: 3px;
-} */
-
 /* informacion del usuario leido */
 .contact-container {
     position: relative;
@@ -165,7 +170,72 @@ nav .brand-logo>img {
     align-items: center;
     border-radius: 20px;
     padding: 50px;
-    background-image: radial-gradient(89.01% 112.44% at 8.9% 11.35%, #ffabd8 2.59%, #fff280 38.54%, #e7ff7d 60.18%, #a4cbff 92.1%);
+    overflow: hidden;
+    background-image: linear-gradient(to bottom,rgba(255, 255, 255, 0.5), rgb(255, 255, 255) 70%);
+}
+/* editar el color del panel */
+/* editar el color del panel orange-yellow*/
+
+/* .edit-bg-contact {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    margin-left: 30px;
+    cursor: pointer;
+} */
+
+#edit-bg-contact-modal {
+    border-radius: 20px;
+}
+
+#edit-bg-contact-modal .preview-selected{
+    height: 150px;
+    width: 100%;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    
+}
+
+#edit-bg-contact-modal .container {
+    padding: 10px;
+}
+
+#edit-bg-contact-modal .circle {
+    width: 80px;
+    height: 80px;
+    margin-top: 10px;
+    cursor: pointer;
+    border: 1px solid #7e7e7e;
+    overflow: hidden;
+}
+
+#edit-bg-contact-modal .circle.selected {
+    border: 1px solid #00e056;
+}
+
+#edit-bg-contact-modal .col a.btn {
+    position: static;
+    background-color: #0086c4;
+    color: #000;
+    border-radius: 0 0 20px 20px;
+    width: 80px;
+    height: 20px;
+    margin-top: 60px;
+    text-align: center;
+    line-height: 1em;
+    
+}
+
+#select-panel-color .file-field i{
+    font-size: 24pt;
+    line-height: 80px;
+}
+
+#select-panel-color .col{
+    text-align: center;
+    display: flex;
+    justify-content: center;
 }
 
 .foto-container {
@@ -195,7 +265,7 @@ nav .brand-logo>img {
 
 /* cortar la imagen */
 .cropper-container {
-    height: 400px;
+    height: 400px !important;
 }
 
 .cropper-container img {
@@ -205,35 +275,47 @@ nav .brand-logo>img {
 }
 
 .cropper-modal {
-    background-color: rgb(255, 255, 255, 0.6) !important;
+    background-color: rgba(75, 75, 75, 0.6) !important;
     opacity: 0.5;
 }
 
+/* .cropper-view-box {
+    outline: 1px solid rgb(0, 0, 0) !important;
+    outline-color: rgba(0, 0, 0, 0.75) !important;
+}
+
+.cropper-crop-box {
+    border: 1px solid black !important;
+} */
+
 /* botones e informaciones del contenedor del usuario */
 /* botones e informaciones del contenedor del usuario */
 /* botones e informaciones del contenedor del usuario */
 
-.data-container p {
-    margin-top: -10px;
+.data-container {
+    display: flex;
+    flex-direction: column;
 }
 
 .data-container p {
     display: flex;
     flex-direction: column;
+    line-height: 1;
 }
 
 .data-container .data-nombre {
     font-size: 28pt;
     font-weight: bold;
+    color: rgb(63, 59, 54);
 }
 
-.data-container p b {
-    margin-top: -10px;
+.data-container .edit-presentacion-container {
+    width: 300px;
 }
 
 .data-container a.data-presentacion {
-    color: #000000;
-    margin-top: 20px;
+    color: grey;
+    margin: 10px 0 30px 0;
 }
 
 .data-container a.data-presentacion:hover {
@@ -241,12 +323,33 @@ nav .brand-logo>img {
 }
 
 .chip-recoms {
-    position: absolute;
-    top: 20px;
-    right: 10px;
+    margin: 10px 0;
+    font-size: 12px;
+    color: grey;
 }
 
-/* botones de accion */
+.redes-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.dropdown-content {
+    border-radius: 10px !important;
+
+}
+
+.redes-container #drop-redes-sociales {
+    width: 200px !important;
+}
+
+.redes-container #drop-redes-sociales .red-social {
+    margin: 0 10px;
+}
+
 .action-container {
     position: absolute;
     bottom: 0;
@@ -261,8 +364,65 @@ nav .brand-logo>img {
 
 .action-container .btn-small {
     margin: 6px;
+    box-shadow: transparent;
 }
 
+/* contenedor de pasos de verificacion del usuario */
+
+.steps-container {
+    position: absolute;
+    left: 0;
+    padding: 10px;
+    background: #ffffff;
+    border-radius: 0 20px 20px 0;
+    box-shadow: 5px 5px 10px -1px rgba(0, 0, 0, 0.144);
+    z-index: 1000;
+    width: -250px;
+    left: -250px;
+    transition: left 0.5s ease;
+}
+
+.steps-container:hover {
+    left: 0;
+}
+
+.steps-container .step {
+    background: #e0e0e0;
+    border-radius: 20px;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 20px;
+    margin: 10px 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: #678bff;
+}
+
+.steps-container .step.valid {
+    color: #00b972;
+}
+
+.steps-container-activator {
+    background-color: rgb(255, 255, 255);
+    position: absolute;
+    top: 33.3%;
+    right: -27px;
+    width: 30px;
+    height: 33.3%;
+    border-radius: 0 50% 50% 0;
+    box-shadow: 5px 5px 10px -1px rgba(0, 0, 0, 0.144);
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+}
+
+.steps-container .check {
+    font-size: 10px;
+}
 
 /* contenedor de notificaciones */
 /* contenedor de notificaciones */
@@ -458,6 +618,14 @@ img {
     max-height: 100% !important;
 }
 
+/* boton de la esquina superior derecha */
+
+.modal-btn-action {
+    position: absolute;
+    right: 0;
+    top: 5px;
+}
+
 .modal-small {
     width: 40% !important;
     border-radius: 10px;
@@ -483,7 +651,7 @@ img {
 
 .modal .card .card-action div {
     border-radius: 10px !important;
-    padding: 20px;
+    padding: 10px;
     margin: 6px 0;
 }
 
@@ -628,6 +796,14 @@ ul.tabs li.indicator {
     color: #000;
 }
 
+#modal-editarTelefono .input-field input {
+    font-size: 12pt !important;
+    font-weight: bolder !important;
+    text-align: center;
+    color: grey;
+    padding-left: -30px !important;
+}
+
 /* poner pantalla complata las imagenes */
 /* poner pantalla complata las imagenes */
 /* poner pantalla complata las imagenes */
@@ -682,21 +858,20 @@ a.trigger svg {
     font-size: 14pt;
 }
 
-
 /* boton de crear servicio */
-.crear-servicio-container {
+.crear-servicioEimagenes-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
-.crear-servicio-container .header-text {
+.crear-servicioEimagenes-container .header-text {
     font-family: 'Roboto', sans-serif;
     color: #212121;
     text-shadow: none !important;
 }
 
-#crear-servicio-btn {
+.crear-servicioEimagenes-container a {
     /* font-size: 14pt !important;
     font-family: 'Roboto', sans-serif;
     width: 30%;
@@ -734,10 +909,6 @@ a.trigger svg {
     background: grey;
 }
 
-
-
-
-
 /* carta de servicios */
 /* carta de servicios */
 /* carta de servicios */
@@ -771,6 +942,18 @@ a.trigger svg {
     padding: 12px;
 }
 
+/* editar redes sociales modal */
+#agregar-redes-modal.modal {
+    top: 5% !important;
+}
+
+#agregar-redes-modal.modal form {
+    padding-top: 25px !important;
+}
+
+#agregar-redes-modal.modal .input-field {
+    margin-top: -5px !important;
+}
 @media only screen and (max-width:785px) {
 
 
@@ -801,7 +984,9 @@ a.trigger svg {
         justify-items: center;
     }
 
-
+    .steps-container {
+        left: -237px;
+    }
 }
 
 @media only screen and (max-width:580px) {
@@ -886,5 +1071,11 @@ a.trigger svg {
     .card-servicios img {
         height: 150px;
 
+    }
+
+
+    /* editar redes sociales modal */
+    #agregar-redes-modal.modal {
+        top: 10%;
     }
 }

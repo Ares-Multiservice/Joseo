@@ -24,6 +24,10 @@ window.addEventListener('DOMContentLoaded', () => {
     onScroll();
 });
 
+$(document).ready(function () {
+    $('textarea').characterCounter();
+});
+
 // funcion para poner las imagenes en pantalla completa al hacerle click
 var bodyOverflow = '';
 
@@ -195,3 +199,46 @@ function disableBtn() {
     }
 }
 
+
+// agregar formato al input de edicion del numero de telefono y edicion de redes sociales
+document.addEventListener('DOMContentLoaded', function () {
+    const phoneInput = document.getElementById('editTelefono');
+
+    phoneInput.addEventListener('input', formatPhoneNumber);
+
+    function formatPhoneNumber() {
+        let value = phoneInput.value.replace(/\D/g, ''); // Eliminar todos los caracteres que no sean dígitos
+        const formattedValue = format(value); // Formatear el número de teléfono
+
+        phoneInput.value = formattedValue; // Establecer el valor del input con el número de teléfono formateado
+    }
+
+    function format(value) {
+        const match = value.match(/^(\d{0,3})(\d{0,3})(\d{0,4})$/); // Capturar grupos de dígitos
+
+        if (match) {
+            return `(${match[1]}) ${match[2]}-${match[3]}`; // Formato (123) 456-7890
+        }
+
+        return value;
+    }
+
+    // dar formato a los links
+    const inputs = document.querySelectorAll('#redesSocialesForm input');
+
+    function formatFacebookLink(e) {
+        const input = e.target;
+        let value = input.value.trim(); // Eliminar espacios en blanco al principio y al final
+
+        // Verificar si el valor no está vacío antes de aplicar el formato
+        if (value) {
+            // Eliminar caracteres no permitidos en un enlace de Facebook
+            value = value.replace(/[^a-zA-Z0-9_-]/g, '');
+        }
+
+        input.value = value; // Establecer el valor del input con el enlace formateado
+    }
+    inputs.forEach(input => {
+        input.addEventListener('input', formatFacebookLink);
+    });
+});
