@@ -78,7 +78,7 @@ document.addEventListener('fullscreenchange', function () {
 document.addEventListener('DOMContentLoaded', function () {
 
     const imageContainer = document.querySelector('#contenedor-imagenes');
-    imageContainer.addEventListener('click', (event) => {
+    imageContainer.addEventListener('dblclick', (event) => {
         const imagen = event.target;
 
         if (imagen.classList.contains('materialboxed')) {
@@ -115,8 +115,7 @@ const selectMoreFileBtn = document.querySelector('#agregar-mas-imagenes2');
 const splideCarousel = document.querySelector('#splide-carousel2');
 const splideList = document.querySelector('#splideList2');
 
-
-// cancelar la creacion del nuevo servicio
+// cancelar la subida de imagenes a la galeria
 document.querySelector('#cancelar-subir-imagenes').addEventListener('click', () => {
     modal.close();
     form.reset();
@@ -161,11 +160,13 @@ function handleFileSelect(files) {
             image.alt = file.name;
 
             const deleteButton = document.createElement('a');
-            deleteButton.innerHTML = '<i class="fa-solid fa-xmark" title="eliminar"></i>';
+            deleteButton.classList.add('btn', 'btn-floating', 'btn-small', 'waves-effect', 'waves-light', 'z-depth-0');
+            deleteButton.title='eliminar esta imagen';
+            deleteButton.innerHTML = '<i class="fa-regular fa-trash-can"></i>';
             deleteButton.addEventListener('click', () => {
-                listItem.remove();
-                carusel.refresh();
-                disableBtn();
+              listItem.remove();
+              carusel.refresh();
+              disableBtn();
             });
 
             listItem.appendChild(deleteButton);
@@ -198,7 +199,6 @@ function disableBtn() {
 
     }
 }
-
 
 // agregar formato al input de edicion del numero de telefono y edicion de redes sociales
 document.addEventListener('DOMContentLoaded', function () {

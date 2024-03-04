@@ -182,6 +182,7 @@ async function leer(user) {
     if (photoURL) {
       fotoDeperfil.src = photoURL;
     }
+
     nombreCont.textContent = nombre;
     profecionUbicacionCont.textContent = `${profecion} en ${provincia}`;
     presentacionCont.textContent = presentacion;
@@ -291,6 +292,7 @@ async function leer(user) {
     cardNombre.textContent = nombre;
     cardProfecion.textContent = profecion;
     cardUbicacion.textContent = provincia;
+
     if (habilidades) {
 
       habilidades.forEach(valor => {
@@ -965,7 +967,6 @@ async function leer(user) {
       document.addEventListener('DOMContentLoaded', leerRedesSociales())
 
     }
-
     eventRedesSociales()
 
     function leerGaleria() {
@@ -1069,6 +1070,7 @@ async function leer(user) {
         // parallaxAutoplay();
 
         // usar foto como perfil
+
         usarfotobtn.addEventListener('click', async (e) => {
           const imageRef = e.target.dataset.id;
           try {
@@ -1107,95 +1109,311 @@ async function leer(user) {
     }
     leerGaleria();
 
-    // guardar Nuevo servicio 
-    // guardar Nuevo servicio 
+    // guardar servicio editado
 
-    document.getElementById('guardar-servicio').addEventListener('click', () => {
-      guardarServicio();
-    });
+    function crearYeditaServicios() {
+      // input type file multiple que ejecuta la accion inicial de crear un servicio
+      const selectFileBtn = document.querySelector('#crear-servicio-btn');
+      const selectMoreFileBtn = document.querySelector('#agregar-mas-imagenes');
 
-    var modal = M.Modal.init(document.getElementById('modal-crear-servicio'));
-
-    async function guardarServicio() {
-      viewLoadWindows();
-      const servicioTitle = document.getElementById('servicio-title').value;
-      const servicioDescripcion = document.getElementById('servicio-descripcion').value;
+      // contenedor donde se pintaran los servicios
+      const guardarServicioBtn = document.getElementById('guardar-servicio');
+      const eliminarServicioBtn = document.getElementById('eliminar-servicio-btn');
+      const form = document.querySelector('#crear-servicio-btn form');
+      const splideCarousel = document.querySelector('#splide-carousel');
       const splideList = document.querySelector('#splideList');
-      const documentId = servicioTitle.replace(/\s/g, "");
+      const h5Header = document.querySelector('#modal-crear-servicio h6');
 
-      if (servicioTitle !== '' && servicioDescripcion !== '' && splideList && splideList.children.length > 0) {
+      const title = document.querySelector('#servicio-title');
+      const descripcion = document.querySelector('#servicio-descripcion');
+
+      // carusel splide
+      var carusel = new Splide('#splide-carousel', {
+        fixedHeight: 290,
+        fixedWidth: 290,
+        gap: 5,
+        // perPage: 2,
+        perMove: 2,
+        rewind: false,
+        arrows: true,
+        breakpoints: {
+          640: {
+            fixedHeight: 240,
+            fixedWidth: false,
+            perPage: 1,
+            perMove: 1,
+          }
+        }
+      });
+      carusel.mount();
+
+      var modal = M.Modal.init(document.getElementById('modal-crear-servicio'));
+
+      // iniciar la edicion del servicio
+      document.querySelector('#leer-servicios').addEventListener('click', (e) => {
+        const element = e.target;
+        if (element.classList.contains('trigger')) {
+          const doc = servicios[element.dataset.id];
+          title.value = doc.title;
+          descripcion.value = doc.desc;
+          h5Header.textContent = "Editar servicio";
+          eliminarServicioBtn.dataset.id = doc.id;
+          guardarServicioBtn.dataset.id = doc.id;
+
+
+          splideCarousel.classList.remove('hide');
+          const imagenes = Object.values(doc.imagenes);
+
+          imagenes.forEach(url => {
+
+            const listItem = document.createElement('li');
+            listItem.classList.add('splide__slide');
+
+            var image = document.createElement('img');
+            image.src = url;
+
+            const deleteButton = document.createElement('a');
+            deleteButton.classList.add('btn', 'btn-floating', 'btn-small', 'waves-effect', 'waves-light', 'z-depth-0');
+            deleteButton.title = 'eliminar esta imagen';
+            deleteButton.innerHTML = '<i class="fa-regular fa-trash-can"></i>';
+            deleteButton.addEventListener('click', () => {
+              listItem.remove();
+              carusel.refresh();
+              disableBtn();
+            });
+
+            listItem.appendChild(deleteButton);
+            listItem.appendChild(image);
+            splideList.appendChild(listItem);
+
+          });
+          carusel.refresh();
+          disableBtn();
+
+        }
+      });
+
+      // cancela la edicion del servicio
+      document.querySelector('#cancelar-edicion').addEventListener('click', () => {
         modal.close();
-        viewLoadWindows();
+        form.reset();
+        splideList.innerHTML = ''
+      });
 
-        try {
-          // Crear una referencia única para cada servicio
-          const storageRef = ref(st, `${uid}/servicios/${documentId}`);
+      // boton inicial de seleccion de imagenes
+      selectFileBtn.addEventListener('change', (e) => {
+        const files = e.target.files;
+        addCaruselFiles(files);
+        form.reset();
+        modal.open();
+        h5Header.textContent = "Agregar servicio";
+        title.value = '';
+        descripcion.value = '';
+        guardarServicioBtn.dataset.id = ''
+      });
 
-          // Iterar sobre las imágenes en el carusel
-          await Promise.all(Array.from(splideList.children).map(async (item, index) => {
-            const file = item.querySelector('img');
-            const response = await fetch(file.src);
-            const blob = await response.blob();
-            const imageName = `url${index + 1}`;
+      // cargar mas imagenes y agregarlas al carusel
+      selectMoreFileBtn.addEventListener('change', (e) => {
+        const files = e.target.files;
+        addCaruselFiles(files);
+      });
 
-            // Subir la imagen a Firebase Storage
-            const imageRef = ref(storageRef, file.alt);
-            const uploadTask = uploadBytes(imageRef, blob);
-            const snapshot = await uploadTask;
+      // cargar y agregar las imagenes seleccionadas desde el dispositivo al carusel
+      function addCaruselFiles(files) {
+        splideCarousel.classList.remove('hide');
 
-            // Obtener la URL de descarga de la imagen
-            const downloadURL = await getDownloadURL(snapshot.ref);
+        // bucle iterador de imagenes
+        for (const file of files) {
+          if (splideList.children.length >= 10) {
+            alert('Solo puedes seleccionar 10 imágenes, por lo que algunas fueron omitidas.');
+            break;
+          }
 
-            // Almacenar la URL en Firestore
+          const extension = file.name.split('.').pop().toLowerCase();
+          const allowedExtensions = ['jpeg', 'jpg', 'png', "svg", 'jfif'];
+
+          if (allowedExtensions.includes(extension)) {
+            const listItem = document.createElement('li');
+            listItem.classList.add('splide__slide');
+
+            var image = document.createElement('img');
+            image.src = URL.createObjectURL(file);
+            image.alt = file.name;
+
+            const deleteButton = document.createElement('a');
+            deleteButton.classList.add('btn', 'btn-floating', 'btn-small', 'waves-effect', 'waves-light', 'z-depth-0');
+            deleteButton.title = 'eliminar esta imagen';
+            deleteButton.innerHTML = '<i class="fa-regular fa-trash-can"></i>';
+            deleteButton.addEventListener('click', () => {
+              listItem.remove();
+              carusel.refresh();
+              disableBtn();
+            });
+
+            listItem.appendChild(deleteButton);
+            listItem.appendChild(image);
+            splideList.appendChild(listItem);
+            console.log(image.src);
+          } else {
+            alert(`El archivo ${file.name} no es una imagen y será omitido.`);
+          }
+        }
+        carusel.refresh();
+        disableBtn();
+      }
+
+      // Desactivar el botón de agregar mas imagenes al carusel al alcanzar el límite de 10 imágenes
+      function disableBtn() {
+        if (splideList.children.length >= 10) {
+          selectMoreFileBtn.classList.add('disabled');
+        } else {
+          selectMoreFileBtn.classList.remove('disabled');
+        }
+        // si no hay imagenes aparece el mensaje que indica que se deben agregar algunas imagenes
+        const noFileAlert = document.getElementById('no-file-alert');
+        if (!splideList.children.length > 0) {
+          console.log(splideList.children.length);
+          splideCarousel.classList.add('hide');
+          noFileAlert.classList.remove('hide');
+        } else {
+          splideCarousel.classList.remove('hide');
+          noFileAlert.classList.add('hide');
+
+        }
+      }
+
+      // generar un id aleatorio para el servicio
+      function generarServicioID() {
+        // Longitud deseada para el ID
+        const longitud = 24;
+        // Caracteres posibles para el ID
+        const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let resultado = '';
+
+        for (let i = 0; i < longitud; i++) {
+          resultado += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+        }
+
+        return resultado;
+      }
+      const newServiceID = generarServicioID();
+
+      // obtener los id de cada servicio
+      function serviceID() {
+        let serId = '';
+        Object.values(servicios).forEach(docs => {
+          serId = docs.id;
+        });
+        return serId;
+
+      }
+      const allServiceID = serviceID();
+
+
+      // guardar servicio 
+      // guardar servicio 
+      guardarServicioBtn.addEventListener('click', async (e) => {
+        const currentServiceId = e.target.dataset.id;
+
+        const servicioTitle = document.getElementById('servicio-title').value;
+        const servicioDescripcion = document.getElementById('servicio-descripcion').value;
+        const splideList = document.querySelector('#splideList');
+
+        // Comprobar que el formulario no esté vacío antes de guardar
+        if (servicioTitle !== '' && servicioDescripcion !== '' && splideList.children.length > 0) {
+          modal.close();
+          viewLoadWindows();
+
+          // Comprobar si el id es de un nuevo documento o no
+          async function almacenar() {
+            let storageRef = '';
+            let servicioID = '';
+
+            // Si no se encuentra el servicio en la base de datos genera un nuevo documento
+            //  de lo contrario edita el documento actual
+            if (currentServiceId !== allServiceID) {
+              storageRef = ref(st, `${uid}/servicios/${newServiceID}`);
+              servicioID = newServiceID;
+            } else {
+              storageRef = ref(st, `${uid}/servicios/${currentServiceId}`);
+              servicioID = currentServiceId;
+
+              // Eliminar las imágenes del storage
+              const listResult = await listAll(storageRef); // Obtener una lista de todos los objetos en el directorio
+              const deletePromises = listResult.items.map(item => deleteObject(item)); // Eliminar cada objeto en el directorio
+              await Promise.all(deletePromises); // Esperar a que todas las eliminaciones se completen
+
+              // Eliminar las imágenes de Firestore
+              await setDoc(docRef, {
+                servicios: { [servicioID]: { imagenes: {} } }
+              }, { merge: true });
+            }
+
+            return { storageRef, servicioID };
+          }
+
+          const { storageRef, servicioID } = await almacenar();
+
+          try {
+            // Iterar sobre las imágenes en el carrusel
+            await Promise.all(Array.from(splideList.children).map(async (item, index) => {
+              const file = item.querySelector('img');
+              const response = await fetch(file.src);
+              const blob = await response.blob();
+              const imageName = `url${index + 1}`;
+
+              // Subir la imagen a Firebase Storage
+              const imageRef = ref(storageRef, imageName);
+              await uploadBytes(imageRef, blob);
+
+              // Obtener la URL de descarga de la imagen
+              const downloadURL = await getDownloadURL(imageRef);
+
+              // Almacenar la URL en Firestore
+              await setDoc(docRef, {
+                servicios: {
+                  [servicioID]: {
+                    imagenes: { [imageName]: downloadURL }
+                  }
+                }
+              }, { merge: true });
+            }));
+
+            // Almacenar la información general del servicio en Firestore
             await setDoc(docRef, {
               servicios: {
-                [documentId]: {
-                  imagenes: { [imageName]: downloadURL }
+                [servicioID]: {
+                  id: servicioID,
+                  title: servicioTitle,
+                  desc: servicioDescripcion,
+                  recoms: 0
                 }
               }
             }, { merge: true });
-          }));
 
-          // Almacenar la información general del servicio en Firestore
-          await setDoc(docRef, {
-            servicios: {
-              [documentId]: {
-                id: documentId,
-                title: servicioTitle,
-                desc: servicioDescripcion
-              }
-            },
-            notificaciones: {
-              [codigoGenerado]: {
-                id: codigoGenerado,
-                visible: true,
-                img: '/imagenes/logo bg azul.png',
-                text: `<b>${nombre}</b>, Se ha creado tu servicio !`,
-                date: `${mes} ${dia}, ${año} ${hora < 10 ? '0' : ''}${hora}:${minuto < 10 ? '0' : ''}${minuto} ${meridiano}`
-              }
-            }
-          }, { merge: true });
+            window.location.reload();
 
-          window.location.reload();
-        } catch (error) {
+          } catch (error) {
+            hideLoadWindows();
+            modal.open();
+            console.error('Error al subir el documento:', error);
+            alert('Ha ocurrido un error al subir el documento. Intente de nuevo más tarde.');
+          }
+
+        } else {
+          alert('Verifica que todo esté correcto antes de guardar');
           hideLoadWindows();
-          modal.open();
-          console.error('Error al subir el documento:', error);
-          alert('Ha ocurrido un error al subir el documento. Intente de nuevo más tarde.');
         }
+      });
 
-      } else {
-        alert('Aún falta algo para crearlo');
-        hideLoadWindows();
-      }
-    }
 
+    } crearYeditaServicios()
+
+    // leer, presentar y organizar los servicios
     function leerServicios() {
       const crearServicioBtn = document.getElementById('crear-servicio-btn');
       const serviciosContent = document.getElementById('leer-servicios');
       const ordenSelect = document.getElementById('orden-select');
-
-      // Asegúrate de tener el elemento correcto aquí
 
       function renderizarservicios(querySnapshot) {
         // Resto del código para renderizar los servicios
@@ -1203,29 +1421,27 @@ async function leer(user) {
 
         querySnapshot.forEach(docs => {
           const imagenes = Object.values(docs.imagenes);
-          const { title, desc } = docs;
+          const { title, desc, recoms } = docs;
           const proyectId = docs.id;
+
+          const recom = recoms || 0;
+
           serviciosContent.innerHTML += `
         <div class="col s6 m4">
             <div class="card card-servicios">
                 <a href="../servicio/search?id=${id}&servicio=${proyectId}">
                     <div class="card-image waves-effect waves-block waves-light">
-                        <img src="${imagenes[0]}"
-                            alt="img" class="activator" />
+                        <img src="${imagenes[0]}" alt="img"/>
 
                     <a data-id='${proyectId}' href='#modal-servicio-opciones' class="modal-trigger trigger"
                         title='Opciones'><i class="fa-solid fa-ellipsis-vertical"></i></a>
                     </div>
                 </a>
                 <div class="card-content">
-                    <b class="activator valign-wrapper space-between"><span
-                            class="truncate">${title}</span>
-                        <i class="material-icons cursor-pointer">visibility</i></b>
-                </div>
-                <div class="card-reveal">
-                    <b class="activator valign-wrapper space-between"><span
-                            class="truncate">${title}</span>
-                        <i class="material-icons cursor-pointer card-title activator">close</i></b>
+                    <b class="valign-wrapper space-between">
+                    <span class="truncate">${title}</span>
+                        <span class="valign-wrapper"> <i class="material-icons cursor-pointer">favorite_border</i>${recom}</span>
+                    </b>
                     <p>${desc}</p>
                 </div>
             </div>
@@ -1271,157 +1487,6 @@ async function leer(user) {
 
       // Llama a la función para ordenar y renderizar inicialmente
       ordenarservicios();
-
-      // carusel splide
-      var carusel = new Splide('#splide-carousel', {
-        fixedHeight: 290,
-        gap: 5,
-        perPage: 1,
-        perMove: 1,
-        rewind: true,
-        arrows: true
-      });
-
-      carusel.mount();
-
-      const form = document.querySelector('#crear-servicio-btn form');
-      const selectFileBtn = document.querySelector('#crear-servicio-btn');
-      const selectMoreFileBtn = document.querySelector('#agregar-mas-imagenes');
-      const eliminarServicioBtn = document.getElementById('eliminar-servicio-btn');
-      const splideCarousel = document.querySelector('#splide-carousel');
-      const splideList = document.querySelector('#splideList');
-      const h5Header = document.querySelector('#modal-crear-servicio h5 b');
-
-      const title = document.querySelector('#servicio-title');
-      const descripcion = document.querySelector('#servicio-descripcion');
-
-      // cancela la edicion del servicio
-      document.querySelector('#cancelar-servicio').addEventListener('click', () => {
-        modal.close();
-        form.reset();
-        splideList.innerHTML = ''
-      });
-
-      serviciosContent.addEventListener('click', (e) => {
-        const element = e.target;
-        if (element.classList.contains('trigger')) {
-          const doc = servicios[element.dataset.id];
-          handleFileSelect(doc.imagenes);
-          title.value = doc.title;
-          descripcion.value = doc.desc;
-          h5Header.textContent = "Editar servicio";
-          eliminarServicioBtn.dataset.id = doc.id;
-
-        }
-      });
-
-      // boton inicial de seleccion de imagenes
-      selectFileBtn.addEventListener('change', (e) => {
-        const files = e.target.files;
-        handleMoreFileSelect(files);
-        title.value = '';
-        descripcion.value = '';
-        modal.open();
-        h5Header.textContent = "Agregar servicio";
-
-      });
-
-      // agregar mas imagenes al carusel
-      selectMoreFileBtn.addEventListener('change', (e) => {
-        const files = e.target.files;
-        handleMoreFileSelect(files);
-      });
-
-      function handleFileSelect(doc) {
-        splideCarousel.classList.remove('hide');
-        const imagenes = Object.values(doc);
-
-        imagenes.forEach(url => {
-
-          const listItem = document.createElement('li');
-          listItem.classList.add('splide__slide');
-
-          var image = document.createElement('img');
-          image.src = url;
-
-          const deleteButton = document.createElement('a');
-          deleteButton.innerHTML = '<i class="fa-solid fa-xmark" title="eliminar"></i>';
-          deleteButton.addEventListener('click', () => {
-            listItem.remove();
-            carusel.refresh();
-            disableBtn();
-          });
-
-          listItem.appendChild(deleteButton);
-          listItem.appendChild(image);
-          splideList.appendChild(listItem);
-
-        });
-        carusel.refresh();
-        disableBtn();
-
-      }
-
-      function handleMoreFileSelect(files) {
-        splideCarousel.classList.remove('hide');
-
-        // bucle iterador de imagenes
-        for (const file of files) {
-          if (splideList.children.length >= 10) {
-            alert('Solo puedes seleccionar 10 imágenes, algunas fueron omitidas.');
-            break;
-          }
-
-          const extension = file.name.split('.').pop().toLowerCase();
-          const allowedExtensions = ['jpeg', 'jpg', 'png'];
-
-          if (allowedExtensions.includes(extension)) {
-            const listItem = document.createElement('li');
-            listItem.classList.add('splide__slide');
-
-            var image = document.createElement('img');
-            image.src = URL.createObjectURL(file);
-            image.alt = file.name;
-
-            const deleteButton = document.createElement('a');
-            deleteButton.innerHTML = '<i class="fa-solid fa-xmark" title="eliminar"></i>';
-            deleteButton.addEventListener('click', () => {
-              listItem.remove();
-              carusel.refresh();
-              disableBtn();
-            });
-
-            listItem.appendChild(deleteButton);
-            listItem.appendChild(image);
-            splideList.appendChild(listItem);
-          } else {
-            alert(`El archivo ${file.name} no es una imagen JPEG, JPG o PNG y será omitido.`);
-          }
-        }
-        carusel.refresh();
-        disableBtn();
-      }
-
-      function disableBtn() {
-        // Desactivar el botón si se alcanza el límite de 10 imágenes
-        if (splideList.children.length >= 10) {
-          selectMoreFileBtn.classList.add('disabled');
-        } else {
-          selectMoreFileBtn.classList.remove('disabled');
-        }
-        // si no hay imagenes aparece el mensaje que indica que se deben agregar algunas imagenes
-        const noFileAlert = document.getElementById('no-file-alert');
-        if (!splideList.children.length > 0) {
-          console.log(splideList.children.length);
-          splideCarousel.classList.add('hide');
-          noFileAlert.classList.remove('hide');
-        } else {
-          splideCarousel.classList.remove('hide');
-          noFileAlert.classList.add('hide');
-
-        }
-      }
-
 
     } leerServicios()
 
@@ -1539,7 +1604,6 @@ async function leer(user) {
         contenedorPadre.classList.add('hide');
       }
     }
-
     hideStepsContainer();
 
 
@@ -1548,31 +1612,79 @@ async function leer(user) {
 
 
     function cambiarFondoPanel() {
-      // panel del usuario
       const panel = document.querySelector('#panel-container');
-
-      // fondo animado
       const fondo = document.querySelector('#fondo.parallax-container');
-
-      // previsualizar el fondo seleccionado
       const fondosContainer = document.getElementById('backGrounds-container');
       const input = document.getElementById('cambiarfondo-input');
       const previewFondo = document.querySelector('.preview-selected');
+      const fondoImageContainer = document.querySelectorAll('#backGrounds-container .hoverable');
       const fondoImage = document.querySelectorAll('#backGrounds-container img');
       const boton = document.querySelector('#save-panel-color');
-
-      // Crear una referencia única para cada servicio
       const storageRef = ref(st, `${uid}/imagenes de fondo`);
 
-      // Función para guardar el color en localStorage
+      async function iterarImagenesDeFondo() {
+
+        listAll(storageRef)
+          .then((res) => {
+            res.items.forEach(async (itemRef) => {
+              const url = await getDownloadURL(itemRef);
+              const metadata = await getMetadata(itemRef);
+              const fileName = metadata.name;
+
+              const div = document.createElement('div');
+              div.classList.add('col', 's4', 'm3');
+
+              const secundaryContent = document.createElement('div');
+              secundaryContent.classList.add('circle', 'hoverable');
+
+              const img = document.createElement('img');
+              img.src = url;
+              img.alt = fileName;
+
+
+              if (img.src !== imagenDeFondo) {
+                const deleteButton = document.createElement('a');
+                deleteButton.href = '#modal-delete-fondoImage'
+                deleteButton.classList.add('delete-new-bg', 'modal-trigger');
+                deleteButton.innerHTML = '<i class="fa-solid fa-xmark cursor-pointer" title="eliminar"></i>';
+                deleteButton.addEventListener('click', () => {
+                  // Delete the file
+                  deleteObject(itemRef).then(() => {
+                    // File deleted successfully
+                    div.remove();
+                  }).catch((error) => {
+                    // Uh-oh, an error occurred!
+                    alert(error)
+                  });
+
+                });
+                secundaryContent.appendChild(deleteButton);
+
+              }
+
+              div.appendChild(secundaryContent);
+              secundaryContent.appendChild(img);
+              fondosContainer.appendChild(div);
+
+              secundaryContent.classList.toggle('selected', img.src === imagenDeFondo);
+
+            });
+          }).catch((error) => {
+            // Uh-oh, an error occurred!
+            console.error(error);
+          });
+
+        establecerFondo(imagenDeFondo || '/imagenes/fondo01.jpg');
+
+      }
+      iterarImagenesDeFondo();
+
+      // Función para guardar la imagen en localStorage
       async function guardarNuevoFondo(file, fileName) {
         try {
           if (fileName !== null) {
             const metadata = {
-              contentType: 'image/jpeg',
-              customMetadata: {
-                timeUploaded: new Date().toISOString()
-              }
+              contentType: 'image/jpeg'
             };
 
             // Subir la imagen a Firebase Storage
@@ -1589,6 +1701,7 @@ async function leer(user) {
             M.toast({ html: 'En hora buena, has cambiado el fondo de pantalla con exito!' });
 
           } else {
+
             await setDoc(docRef, {
               imagenDeFondo: file
             }, { merge: true });
@@ -1601,122 +1714,60 @@ async function leer(user) {
 
       }
 
-      async function iterarImagenesDeFondo() {
-
-        listAll(storageRef)
-          .then((res) => {
-            res.items.forEach((itemRef) => {
-              getDownloadURL(itemRef)
-                .then((url) => {
-                  const div = document.createElement('div');
-                  div.classList.add('col', 's4', 'm3');
-                  const img = document.createElement('img');
-                  img.classList.add('circle', 'hoverable');
-                  img.src = url;
-                  // div.innerHTML = `<img src="${url}" class="circle hoverable" alt="fondo">`
-
-                  const deleteButton = document.createElement('a');
-                  deleteButton.classList.add('delete-new-bg');
-                  deleteButton.innerHTML = '<i class="fa-solid fa-xmark cursor-pointer red" title="eliminar"></i>';
-                  deleteButton.addEventListener('click', () => {
-                    // Delete the file
-                    deleteObject(itemRef).then(() => {
-                      // File deleted successfully
-                      div.remove();
-                    }).catch((error) => {
-                      // Uh-oh, an error occurred!
-                      alert(error)
-                    });
-
-                  });
-
-                  div.appendChild(img);
-                  div.appendChild(deleteButton);
-                  fondosContainer.appendChild(div);
-
-                  // Seleccionar el círculo correspondiente al color de fondo
-                  // if (img.src === imagenDeFondo) {
-                  //   img.classList.add('selected');
-                  // } else {
-                  //   img.classList.remove('selected');
-                  // }
-                })
-            });
-          }).catch((error) => {
-            // Uh-oh, an error occurred!
-            console.error(error);
-          });
-
-        if (imagenDeFondo) {
-          establecerFondo(imagenDeFondo);
-        } else {
-          establecerFondo('/imagenes/fondo01.jpg');
-        }
-
-      } iterarImagenesDeFondo();
+      let selectedImage = false;
 
       input.addEventListener('change', () => {
         const imagen = input.files[0];
         const blobURL = URL.createObjectURL(imagen);
         if (imagen) {
-          fondoImage.forEach(imagen => {
-            imagen.classList.remove('selected');
-          });
-
+          fondoImageContainer.forEach(div => div.classList.remove('selected'));
           previewFondo.style.backgroundImage = `url('${blobURL}')`;
-
           boton.classList.remove('disabled');
+          selectedImage = true;
+        }
+      });
+
+      // seleccionar la nueva imagen de fondo al hacer click
+      fondosContainer.addEventListener('click', (e) => {
+        const imagenSeleccionada = e.target;
+        if (imagenSeleccionada.parentElement.classList.contains('circle')) {
+          const backGround = imagenSeleccionada.src;
+          document.querySelectorAll('.circle.selected').forEach(selectedBg => selectedBg.classList.remove('selected'));
+          imagenSeleccionada.parentElement.classList.add('selected');
+          boton.classList.remove('disabled');
+          boton.dataset.file = backGround;
+          boton.dataset.fileName = null;
+          previewFondo.style.backgroundImage = `url(${backGround})`;
+          boton.classList.toggle('disabled', backGround === imagenDeFondo);
         }
       });
 
       // Guardar el color seleccionado en localStorage al hacer clic en el botón
       boton.addEventListener('click', () => {
-        const imagen = input.files[0];
-        guardarNuevoFondo(imagen, imagen.name);
+        if (selectedImage) {
+          const file = input.files[0];
+          guardarNuevoFondo(file, file.name);
+          const blobURL = URL.createObjectURL(file);
+          establecerFondo(blobURL);
+        } else {
+          const file = boton.dataset.file;
+          guardarNuevoFondo(file, null);
+          establecerFondo(file);
+        }
+
+        boton.classList.add('disabled');
       });
 
-      // Función para establecer el color de fondo
-
+      // función para establecer la imagen de fondo
       function establecerFondo(imagen) {
         fondo.style.backgroundImage = `url(${imagen})`;
         previewFondo.style.backgroundImage = `url(${imagen})`;
+        fondoImageContainer.forEach(div => {
+          const img = div.children[0]
+          div.classList.toggle('selected', img.src === imagen)
 
-        // Seleccionar el círculo correspondiente al color de fondo
-        fondoImage.forEach(img => {
-          if (img.src === imagen) {
-            img.classList.add('selected');
-          } else {
-            img.classList.remove('selected');
-          }
         });
       }
-
-      fondoImage.forEach(img => {
-        img.addEventListener('click', (e) => {
-          const backGround = e.target.src;
-          document.querySelectorAll('.circle.selected').forEach(selectedBg => {
-            selectedBg.classList.remove('selected');
-          });
-
-          img.classList.add('selected');
-          boton.classList.remove('disabled');
-          previewFondo.style.backgroundImage = `url(${backGround})`;
-
-          if (backGround === imagenDeFondo) {
-            boton.classList.add('disabled');
-          } else {
-            boton.classList.remove('disabled');
-          }
-
-          // Guardar el color seleccionado en localStorage al hacer clic en el botón
-          boton.addEventListener('click', async () => {
-            establecerFondo(backGround);
-            guardarNuevoFondo(backGround, null)
-          });
-        });
-      });
-
-
     }
 
     cambiarFondoPanel();
@@ -1724,3 +1775,6 @@ async function leer(user) {
 
   }
 }
+
+// se estan borrando las imagenes al editar el documento aun que no haya detectado cambio
+// hacer que solo se eliminen las imagenes si el lenght = 0

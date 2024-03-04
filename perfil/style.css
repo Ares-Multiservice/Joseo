@@ -86,9 +86,10 @@ nav {
     padding: 0 20px;
 }
 
-.nav-wrapper #navbar svg, #navbar  i {
+.nav-wrapper #navbar svg,
+#navbar i {
     border-radius: 50%;
-    filter: drop-shadow( 0 0 1px black);
+    filter: drop-shadow(0 0 1px black);
     /* box-shadow:; */
 }
 
@@ -153,6 +154,7 @@ nav .brand-logo>img {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    cursor: pointer;
 
 }
 
@@ -171,73 +173,99 @@ nav .brand-logo>img {
     border-radius: 20px;
     padding: 50px;
     overflow: hidden;
-    background-image: linear-gradient(to bottom,rgba(255, 255, 255, 0.5), rgb(255, 255, 255) 70%);
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgb(255, 255, 255) 70%);
 }
+
 /* editar el color del panel */
 /* editar el color del panel orange-yellow*/
 
-/* .edit-bg-contact {
+.edit-bg-contact {
     position: absolute;
     top: 10px;
     right: 10px;
-    margin-left: 30px;
     cursor: pointer;
-} */
+}
 
 #edit-bg-contact-modal {
     border-radius: 20px;
 }
 
-#edit-bg-contact-modal .preview-selected{
+#edit-bg-contact-modal .preview-selected {
     height: 150px;
     width: 100%;
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
-    
+
 }
 
-#edit-bg-contact-modal .container {
-    padding: 10px;
+#edit-bg-contact-modal .scroll-container {
+    /* display: block; */
+    overflow: hidden;
+}
+
+#edit-bg-contact-modal .scroll {
+    /* padding: 20px; */
+    overflow-y: scroll;
+    height: 290px;
+}
+
+#edit-bg-contact-modal .col {
+    display: flex;
+    justify-content: center;
 }
 
 #edit-bg-contact-modal .circle {
+    position: relative;
     width: 80px;
     height: 80px;
     margin-top: 10px;
     cursor: pointer;
     border: 1px solid #7e7e7e;
-    overflow: hidden;
+    /* overflow: hidden; */
+    /* display: block; */
+}
+
+#edit-bg-contact-modal .circle img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
 }
 
 #edit-bg-contact-modal .circle.selected {
     border: 1px solid #00e056;
+    box-shadow: 0 0 10px #00e056;
 }
 
-#edit-bg-contact-modal .col a.btn {
-    position: static;
-    background-color: #0086c4;
+#edit-bg-contact-modal .col .delete-new-bg {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: #8ca5b1;
     color: #000;
-    border-radius: 0 0 20px 20px;
-    width: 80px;
-    height: 20px;
-    margin-top: 60px;
     text-align: center;
-    line-height: 1em;
-    
+    line-height: 25px;
+    visibility: hidden;
+
 }
 
-#select-panel-color .file-field i{
+#edit-bg-contact-modal .col:hover a.delete-new-bg {
+    visibility: visible !important;
+}
+
+#edit-bg-contact-modal a.delete-new-bg:hover {
+    background-color: #009de6;
+}
+
+#edit-bg-contact-modal .file-field i {
     font-size: 24pt;
     line-height: 80px;
 }
 
-#select-panel-color .col{
-    text-align: center;
-    display: flex;
-    justify-content: center;
-}
-
+/* foto de perfil del usuario */
 .foto-container {
     position: relative;
     display: flex;
@@ -331,7 +359,7 @@ nav .brand-logo>img {
 .redes-container {
     position: absolute;
     top: 10px;
-    right: 10px;
+    left: 10px;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
@@ -350,7 +378,13 @@ nav .brand-logo>img {
     margin: 0 10px;
 }
 
-.action-container {
+.editar-perfil {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
+/* .action-container {
     position: absolute;
     bottom: 0;
     right: 10px;
@@ -365,7 +399,7 @@ nav .brand-logo>img {
 .action-container .btn-small {
     margin: 6px;
     box-shadow: transparent;
-}
+} */
 
 /* contenedor de pasos de verificacion del usuario */
 
@@ -498,7 +532,6 @@ nav .brand-logo>img {
 
 img {
     object-fit: cover;
-
 }
 
 #userMenu.dropdown-content b {
@@ -616,6 +649,7 @@ img {
 
 .modal {
     max-height: 100% !important;
+    border-radius: 10px;
 }
 
 /* boton de la esquina superior derecha */
@@ -628,7 +662,6 @@ img {
 
 .modal-small {
     width: 40% !important;
-    border-radius: 10px;
 }
 
 .modal h5 {
@@ -726,15 +759,24 @@ ul.tabs li.indicator {
 /* agregar y editar los servicios */
 /* agregar y editar los servicios */
 
-.modal-servicio {
+/* .modal-servicio {
     top: 3% !important;
     bottom: 3% !important;
+} */
+
+
+.modal-servicio a#cancelar-edicion {
+    position: absolute;
+    top: 3px;
+    left: 0;
 }
 
+/* contenedor padre del carusel */
 .modal-servicio .splide-container {
     height: 300px;
     padding: 5px;
     background: grey;
+    position: relative;
 }
 
 .modal-servicio .splide-container h6 {
@@ -742,40 +784,50 @@ ul.tabs li.indicator {
     color: white;
 }
 
-.modal-servicio .splide__slide {
-    margin: 0 3px 0 3px;
+/* seleccionar mas imagenes */
+.modal-servicio .splide-container a.file-field {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
 }
 
+/* carusel */
+.modal-servicio .splide {
+    width: 100% !important;
+}
+
+/* contenedor de cada imagen dentro del carusel */
+.modal-servicio .splide__slide {
+    margin: 0 10px 0 3px;
+}
+
+/* imagen del carrusel */
 .modal-servicio .splide__slide img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.modal-servicio .splide {
-    width: 100% !important;
-}
-
+/* boton para eliminar imagen de la lista de imagenes*/
 .modal-servicio .splide__slide a {
-    position: absolute !important;
-    top: -7px !important;
-    right: 0 !important;
-    font-size: 16pt;
-    color: #F44336;
-    width: 20px;
-    height: 20px;
+    position: absolute;
+    cursor: pointer;
+    right: 5px;
+    top: 5px;
+    background: rgba(255, 255, 255, 0.39);
 
 }
 
-.modal-servicio .splide__slide a:hover {
-    color: rgb(134, 38, 38);
-
+.modal-servicio .splide__slide a svg{
+    color: #ff0000;
 }
 
-.modal-servicio .btns {
-    margin-top: -40px;
-    text-align: right;
-    padding-right: 20px;
+.modal-servicio form {
+    margin-top: 15px;
+}
+
+.modal-servicio .input-field {
+    margin-top: -15px;
 }
 
 .modal-servicio .input-field input {
@@ -787,14 +839,17 @@ ul.tabs li.indicator {
     background: rgb(221, 221, 221) !important;
     border-radius: 3px;
     width: 101%;
-    padding: 10px 0 0 10px;
-    margin-top: -15px;
 }
 
 .modal-servicio .input-field input::placeholder,
 .modal-servicio .input-field textarea::placeholder {
     color: #000;
 }
+
+
+/* editar el telefono */
+/* editar el telefono */
+/* editar el telefono */
 
 #modal-editarTelefono .input-field input {
     font-size: 12pt !important;
@@ -838,19 +893,24 @@ ul.tabs li.indicator {
 
 a.trigger {
     position: absolute;
-    top: 13px;
-    right: 13px;
+    top: 15px;
+    right: 10px;
     float: right;
     cursor: pointer;
-    /* visibility: hidden; */
     width: 20px;
     height: 20px;
     line-height: 20px;
-    background: rgb(0, 0, 0, 0.3);
+    /* background: rgb(0, 0, 0, 0.3); */
     color: white;
     text-align: center;
     border-radius: 50%;
-    box-shadow: 0 0 5px black;
+    filter: drop-shadow(0 0 1px black);
+    /* box-shadow: 0 0 5px black; */
+    visibility: hidden;
+}
+
+.mis-fotos:hover>a.trigger {
+    visibility: visible;
 }
 
 a.trigger svg {
@@ -894,7 +954,7 @@ a.trigger svg {
 .filter-container .input-field {
     width: 150px;
     float: right;
-    right: 20px;
+    /* right: 20px; */
     position: relative;
     border-radius: 10px;
 }
@@ -928,6 +988,11 @@ a.trigger svg {
 .card-servicios {
     border-radius: 10px;
     padding: 0 !important;
+    /* height: 320px; */
+}
+
+.card-servicios a.trigger {
+    visibility: visible;
 }
 
 .card-servicios img {
@@ -938,8 +1003,17 @@ a.trigger svg {
 
 }
 
-.card-servicios .card-content+.card-reveal {
-    padding: 12px;
+.card-servicios .card-content {
+    height: 100px;
+    overflow: hidden;
+}
+
+.card-servicios .card-content p {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 10px;
 }
 
 /* editar redes sociales modal */
@@ -954,8 +1028,12 @@ a.trigger svg {
 #agregar-redes-modal.modal .input-field {
     margin-top: -5px !important;
 }
+
 @media only screen and (max-width:785px) {
 
+    .contact-container {
+        padding: 30px;
+    }
 
     /* informacion del usuario leido */
     .foto-container {
@@ -972,7 +1050,15 @@ a.trigger svg {
         right: 0;
     }
 
-    .action-container {
+    .editar-perfil {
+        position: relative;
+        margin-top: 30px;
+        right: auto;
+        bottom: auto;
+
+    }
+
+    /* .action-container {
         position: relative;
         height: 46px;
         line-height: 46px;
@@ -982,7 +1068,7 @@ a.trigger svg {
         flex-direction: row;
         justify-content: space-around;
         justify-items: center;
-    }
+    } */
 
     .steps-container {
         left: -237px;
@@ -1064,8 +1150,16 @@ a.trigger svg {
     }
 
 
-    .action-container {
+    /* .action-container {
         width: 100%;
+    } */
+
+    /* contenedor padre del carusel */
+    .modal-servicio .splide-container {
+        height: 250px;
+        padding: 5px;
+        background: grey;
+        position: relative;
     }
 
     .card-servicios img {
